@@ -248,6 +248,9 @@ public class SobotSessionServer extends Service {
         config.userInfoTimeTask = true;
         config.customTimeTask = false;
 
+        // 把机器人回答中的转人工按钮都隐藏掉
+        config.hideItemTransferBtn();
+
         if (!CommonUtils.getRunningActivityName(getApplicationContext().getApplicationContext()).contains(
                 "SobotChatActivity") || CommonUtils.isApplicationBroughtToBackground(getApplicationContext())|| CommonUtils.isScreenLock(getApplicationContext())) {
             showNotification(String.format(getResString("sobot_service_accept"), config.currentUserName));

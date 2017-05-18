@@ -4,24 +4,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sobot.chat.R;
 import com.sobot.chat.activity.SobotChatActivity;
 import com.sobot.chat.activity.WebViewActivity;
 import com.sobot.chat.api.apiUtils.GsonUtil;
 import com.sobot.chat.api.model.Suggestions;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.api.model.ZhiChiReplyAnswer;
+import com.sobot.chat.listener.NoDoubleClickListener;
 import com.sobot.chat.utils.BitmapUtil;
 import com.sobot.chat.utils.CommonUtils;
 import com.sobot.chat.utils.HtmlTools;
 import com.sobot.chat.utils.ResourceUtils;
 import com.sobot.chat.utils.ToastUtil;
+import com.sobot.chat.utils.VersionUtils;
 import com.sobot.chat.viewHolder.base.MessageHolderBase;
 
 import java.util.ArrayList;
@@ -31,24 +31,29 @@ import java.util.ArrayList;
  * Created by jinxl on 2017/3/17.
  */
 public class RichTextMessageHolder extends MessageHolderBase {
-    LinearLayout sobot_real_ll_content;
-    TextView msg; // 聊天的消息内容
-    TextView sobot_msg_title; // 机会人回复的富文本标题
-    LinearLayout ll_content;
-    LinearLayout answersList;
-    LinearLayout my_msg;
-    TextView stripe;
+    public ZhiChiMessageBase message;
+    private Context mContext;
+    private LinearLayout sobot_real_ll_content;
+    private TextView msg; // 聊天的消息内容
+    private TextView sobot_msg_title; // 机会人回复的富文本标题
+    private LinearLayout ll_content;
+    private LinearLayout answersList;
+    private LinearLayout my_msg;
+    private TextView stripe;
     // 答案
-    ImageView bigPicImage; // 大的图片的展示
-    TextView rendAllText; // 阅读全文
-    View read_alltext_line;
-    FrameLayout frameLayout;
-    ImageView simple_picture;// 单图片
-    TextView isGif;
-    RelativeLayout sobot_rl_real_pic;
+    private ImageView bigPicImage; // 大的图片的展示
+    private TextView rendAllText; // 阅读全文
+    private View read_alltext_line;
+    private ImageView simple_picture;// 单图片
+    private TextView isGif;
+    private RelativeLayout sobot_rl_real_pic;
+    private TextView sobot_tv_transferBtn;
+    private TextView sobot_tv_likeBtn;//机器人评价 顶 的按钮
+    private TextView sobot_tv_dislikeBtn;//机器人评价 踩 的按钮
 
     public RichTextMessageHolder(Context context, View convertView){
         super(context,convertView);
+        this.mContext = context;
         sobot_rl_real_pic = (RelativeLayout) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_rl_real_pic"));
         isGif = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_pic_isgif"));
         sobot_real_ll_content = (LinearLayout) convertView.findViewById(ResourceUtils.getIdByName(context,"id","sobot_real_ll_content"));
@@ -87,10 +92,14 @@ public class RichTextMessageHolder extends MessageHolderBase {
                 .findViewById(ResourceUtils.getIdByName(context, "id",
                         "sobot_my_msg"));
 
+        sobot_tv_transferBtn = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_tv_transferBtn"));
+        sobot_tv_likeBtn = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_tv_likeBtn"));
+        sobot_tv_dislikeBtn = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_tv_dislikeBtn"));
     }
 
     @Override
     public void bindData(final Context context,final ZhiChiMessageBase message) {
+        this.message = message;
         isGif.setVisibility(View.GONE);
         sobot_rl_real_pic.setVisibility(View.GONE);
         sobot_msg_title.setVisibility(View.GONE);
@@ -139,7 +148,7 @@ public class RichTextMessageHolder extends MessageHolderBase {
                 if (!TextUtils.isEmpty(message.getAnswer().getMsg())) {
                     msg.setVisibility(View.VISIBLE);
                     HtmlTools.getInstance(context).setRichText(msg, message.getAnswer().getMsg(),
-                            R.color.sobot_color_link);
+                            ResourceUtils.getIdByName(context, "color","sobot_color_link"));
                 } else {
                     msg.setVisibility(View.GONE);
                 }
@@ -178,7 +187,7 @@ public class RichTextMessageHolder extends MessageHolderBase {
                     if (RobotAnaser.endsWith("<br/>")) {
                         RobotAnaser = RobotAnaser.substring(0, RobotAnaser.length() - 5);
                     }
-                    HtmlTools.getInstance(context).setRichText(msg,RobotAnaser,R.color.sobot_color_link);
+                    HtmlTools.getInstance(context).setRichText(msg,RobotAnaser, ResourceUtils.getIdByName(context, "color","sobot_color_link"));
                 } else {
                     msg.setVisibility(View.GONE);
                     message.getAnswer().setMsg(null);
@@ -190,7 +199,7 @@ public class RichTextMessageHolder extends MessageHolderBase {
                     ZhiChiReplyAnswer msgAnswer = GsonUtil.jsonToZhiChiReplyAnswer(message.getAnswer().getMsg());
                     if (msgAnswer != null && !TextUtils.isEmpty(msgAnswer.getMsg())) {
                         msg.setVisibility(View.VISIBLE);
-                        HtmlTools.getInstance(context).setRichText(msg,msgAnswer.getMsg(),R.color.sobot_color_link);
+                        HtmlTools.getInstance(context).setRichText(msg,msgAnswer.getMsg(), ResourceUtils.getIdByName(context, "color","sobot_color_link"));
                     } else {
                         msg.setVisibility(View.GONE);
                         msg.setText(null);
@@ -260,7 +269,7 @@ public class RichTextMessageHolder extends MessageHolderBase {
         if (stripeContent != null && stripeContent.length() > 0) {
             // 设置提醒的内容
             stripe.setVisibility(View.VISIBLE);
-            HtmlTools.getInstance(context).setRichText(stripe,stripeContent,R.color.sobot_color_link);
+            HtmlTools.getInstance(context).setRichText(stripe,stripeContent, ResourceUtils.getIdByName(context, "color","sobot_color_link"));
         } else {
             stripe.setText(null);
             stripe.setVisibility(View.GONE);
@@ -297,13 +306,16 @@ public class RichTextMessageHolder extends MessageHolderBase {
                     answer.setLineSpacing(2f, 1f);
                     int currentItem = i + 1;
                     answer.setTextColor(context.getResources().getColor(
-                            R.color.sobot_color_suggestion_history));
+                            ResourceUtils.getIdByName(context, "color","sobot_color_suggestion_history")));
                     String tempStr = currentItem + "、" + answerStringList[i];
                     answer.setText(tempStr);
                     answersList.addView(answer);
                 }
             }
         }
+
+        checkShowTransferBtn();
+        resetRevaluateBtn();
 
         msg.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -316,7 +328,124 @@ public class RichTextMessageHolder extends MessageHolderBase {
         });
     }
 
-    public void hideViewByType(RichTextMessageHolder textHolder, String type) {
+    private void checkShowTransferBtn(){
+        if(message.isShowTransferBtn()){
+            showTransferBtn();
+        }else {
+            hideTransferBtn();
+        }
+    }
+
+    /**
+     * 隐藏转人工按钮
+     */
+    public void hideTransferBtn(){
+        sobot_tv_transferBtn.setVisibility(View.GONE);
+        if(message != null){
+            message.setShowTransferBtn(false);
+        }
+    }
+
+    /**
+     * 显示转人工按钮
+     */
+    public void showTransferBtn(){
+        sobot_tv_transferBtn.setVisibility(View.VISIBLE);
+        if(message != null){
+            message.setShowTransferBtn(true);
+        }
+        sobot_tv_transferBtn.setOnClickListener(new NoDoubleClickListener() {
+
+            @Override
+            public void onNoDoubleClick(View v) {
+                if(mContext != null){
+                    ((SobotChatActivity) mContext).doClickTransferBtn();
+                }
+            }
+        });
+    }
+
+    public void resetRevaluateBtn(){
+        //顶 踩的状态 0 不显示顶踩按钮  1显示顶踩 按钮  2 显示顶之后的view  3显示踩之后view
+        switch (message.getRevaluateState()){
+            case 1:
+                showRevaluateBtn();
+                break;
+            case 2:
+                showLikeWordView();
+                break;
+            case 3:
+                showDislikeWordView();
+                break;
+            default:
+                hideRevaluateBtn();
+                break;
+        }
+    }
+
+    /**
+     * 显示 顶踩 按钮
+     */
+    public void showRevaluateBtn(){
+        sobot_tv_likeBtn.setVisibility(View.VISIBLE);
+        sobot_tv_dislikeBtn.setVisibility(View.VISIBLE);
+        sobot_tv_dislikeBtn.setText("");
+        if(mContext != null){
+            sobot_tv_dislikeBtn.setBackgroundResource(ResourceUtils.getIdByName(mContext, "drawable", "sobot_cai_selector"));
+        }
+        sobot_tv_likeBtn.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                doRevaluate(true);
+            }
+        });
+        sobot_tv_dislikeBtn.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                doRevaluate(false);
+            }
+        });
+    }
+
+    /**
+     * 顶踩 操作
+     * @param revaluateFlag true 顶  false 踩
+     */
+    private void doRevaluate(boolean revaluateFlag){
+        if(mContext != null){
+            ((SobotChatActivity) mContext).doRevaluate(revaluateFlag,message);
+        }
+    }
+
+    /**
+     * 隐藏 顶踩 按钮
+     */
+    public void hideRevaluateBtn(){
+        sobot_tv_likeBtn.setVisibility(View.GONE);
+        sobot_tv_dislikeBtn.setVisibility(View.GONE);
+    }
+
+    /**
+     * 显示顶之后的view
+     */
+    public void showLikeWordView(){
+        sobot_tv_likeBtn.setVisibility(View.GONE);
+        sobot_tv_dislikeBtn.setVisibility(View.VISIBLE);
+        VersionUtils.setBackground(null,sobot_tv_dislikeBtn);
+        sobot_tv_dislikeBtn.setText(getResStringId("sobot_robot_like"));
+    }
+
+    /**
+     * 显示踩之后的view
+     */
+    public void showDislikeWordView(){
+        sobot_tv_likeBtn.setVisibility(View.GONE);
+        sobot_tv_dislikeBtn.setVisibility(View.VISIBLE);
+        VersionUtils.setBackground(null,sobot_tv_dislikeBtn);
+        sobot_tv_dislikeBtn.setText(getResStringId("sobot_robot_dislike"));
+    }
+
+    private void hideViewByType(RichTextMessageHolder textHolder, String type) {
 
 		/*
 		 * Int 消息类型0文本 1图片 2音频 4 富文本中有图片 5 富文本中纯文字 6 富文本中有视频
@@ -346,6 +475,14 @@ public class RichTextMessageHolder extends MessageHolderBase {
             textHolder.simple_picture.setVisibility(View.GONE);
         } else if ("6".equals(type)) {// 富文本中有视频
 
+        }
+    }
+
+    public int getResStringId(String name) {
+        if (mContext != null){
+            return ResourceUtils.getIdByName(mContext, "string", name);
+        } else {
+            return 0;
         }
     }
 
@@ -410,4 +547,6 @@ public class RichTextMessageHolder extends MessageHolderBase {
             }
         }
     }
+
+
 }

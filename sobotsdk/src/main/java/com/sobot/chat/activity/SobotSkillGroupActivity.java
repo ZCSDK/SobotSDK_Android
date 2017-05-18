@@ -12,11 +12,12 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 
 import com.sobot.chat.adapter.base.SobotSikllAdapter;
-import com.sobot.chat.api.ZhiChiApiImpl;
+import com.sobot.chat.api.ZhiChiApi;
 import com.sobot.chat.api.apiUtils.ZhiChiConstants;
 import com.sobot.chat.api.model.ZhiChiGroup;
 import com.sobot.chat.api.model.ZhiChiGroupBase;
 import com.sobot.chat.application.MyApplication;
+import com.sobot.chat.core.channel.SobotMsgManager;
 import com.sobot.chat.core.http.callback.StringResultCallBack;
 import com.sobot.chat.utils.CommonUtils;
 import com.sobot.chat.utils.ResourceUtils;
@@ -39,7 +40,7 @@ public class SobotSkillGroupActivity extends Activity {
 	private String appkey = null;
 	private String msgTmp = null;
 	private String msgTxt = null;
-	private ZhiChiApiImpl zhiChiApi;
+	private ZhiChiApi zhiChiApi;
 	private int mType = -1;
 	private int msgFlag = 0;
 
@@ -114,7 +115,7 @@ public class SobotSkillGroupActivity extends Activity {
 			msgTxt = getIntent().getStringExtra("msgTxt");
 			msgFlag = getIntent().getIntExtra("msgFlag",0);
 		}
-		zhiChiApi = new ZhiChiApiImpl(getApplicationContext());
+		zhiChiApi = SobotMsgManager.getInstance(getApplicationContext()).getZhiChiApi();
 		zhiChiApi.getGroupList(appkey,uid, new StringResultCallBack<ZhiChiGroup>() {
 			@Override
 			public void onSuccess(ZhiChiGroup zhiChiGroup) {

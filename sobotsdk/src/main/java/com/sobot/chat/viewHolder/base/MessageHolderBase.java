@@ -12,12 +12,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.sobot.chat.R;
 import com.sobot.chat.activity.SobotPhotoActivity;
 import com.sobot.chat.adapter.base.SobotMsgAdapter;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.utils.BitmapUtil;
 import com.sobot.chat.utils.CommonUtils;
+import com.sobot.chat.utils.ResourceUtils;
 import com.sobot.chat.widget.ReSendDialog;
 
 /**
@@ -36,13 +36,13 @@ public abstract class MessageHolderBase {
     public ProgressBar msgProgressBar; // 重新发送的进度条的信信息；
 
     public MessageHolderBase(Context context, View convertView) {
-        reminde_time_Text = (TextView) convertView.findViewById(R.id.sobot_reminde_time_Text);
-        imgHead = (ImageView) convertView.findViewById(R.id.sobot_imgHead);
-        name = (TextView) convertView.findViewById(R.id.sobot_name);
-        frameLayout = (FrameLayout) convertView.findViewById(R.id.sobot_frame_layout);
-        msgProgressBar = (ProgressBar) convertView.findViewById(R.id.sobot_msgProgressBar);// 重新发送的进度条信息
+        reminde_time_Text = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id","sobot_reminde_time_Text"));
+        imgHead = (ImageView) convertView.findViewById(ResourceUtils.getIdByName(context, "id","sobot_imgHead"));
+        name = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id","sobot_name"));
+        frameLayout = (FrameLayout) convertView.findViewById(ResourceUtils.getIdByName(context, "id","sobot_frame_layout"));
+        msgProgressBar = (ProgressBar) convertView.findViewById(ResourceUtils.getIdByName(context, "id","sobot_msgProgressBar"));// 重新发送的进度条信息
         // 消息的状态
-        msgStatus = (ImageView) convertView.findViewById(R.id.sobot_msgStatus);
+        msgStatus = (ImageView) convertView.findViewById(ResourceUtils.getIdByName(context, "id","sobot_msgStatus"));
     }
 
     public abstract void bindData(Context context, final ZhiChiMessageBase message);
@@ -59,7 +59,7 @@ public abstract class MessageHolderBase {
             case SobotMsgAdapter.MSG_TYPE_TXT_R:
             case SobotMsgAdapter.MSG_TYPE_AUDIO_R:
                 this.isRight = true;
-                int defId = R.drawable.sobot_chatting_default_head;
+                int defId = ResourceUtils.getIdByName(context, "drawable", "sobot_chatting_default_head");
                 imgHead.setVisibility(View.VISIBLE);
                 if (TextUtils.isEmpty(senderface)) {
                     BitmapUtil.displayRound(context, defId, imgHead, defId);
@@ -78,7 +78,7 @@ public abstract class MessageHolderBase {
                 name.setVisibility(TextUtils.isEmpty(message.getSenderName()) ? View.GONE : View.VISIBLE);
                 name.setText(message.getSenderName());
                 BitmapUtil.displayRound(context, CommonUtils.encode(message.getSenderFace()),
-                        imgHead, R.drawable.sobot_avatar_robot);
+                        imgHead, ResourceUtils.getIdByName(context, "drawable", "sobot_avatar_robot"));
                 break;
             default:
                 break;

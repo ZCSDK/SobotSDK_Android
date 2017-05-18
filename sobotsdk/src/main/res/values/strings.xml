@@ -8,7 +8,7 @@
     <string name="sobot_button_send">发送</string>
     <string name="sobot_attach_take_pic">拍照</string>
     <string name="sobot_btn_submit_text">提交评价</string>
-    <string name="sobot_please">SOBOT SDK  2.1.0</string>
+    <string name="sobot_please">SOBOT SDK  2.2.0</string>
     <string name="sobot_move_up_to_cancel">手指上滑，取消发送</string>
     <string name="sobot_release_to_cancel">松开手指，取消发送</string>
     <string name="sobot_up_send_calcel">松开手指 取消发送</string>
@@ -48,6 +48,7 @@
     <string name="sobot_unable_transfer_to_customer_service">暂时无法转接人工客服</string>
     <string name="sobot_thank_dialog_hint">谢谢您的反馈＾―＾!</string>
     <string name="sobot_email_dialog_hint">您的邮箱格式错误</string>
+    <string name="sobot_phone_dialog_hint">您的手机号码格式错误</string>
     <string name="sobot_leavemsg_success_hint">留言成功!\n我们将尽快联系您</string>
     <string name="sobot_outline_openNewWindows">打开新窗口</string>
     <string name="sobot_voiceTooLong">录音时间过长</string>
@@ -78,9 +79,10 @@
     <string name="sobot_consulting_describe">[摘要]</string>
     <string name="sobot_consulting_lable">[标签]</string>
     <string name="sobot_consulting_fromurl">[链接]</string>
-    <string name="sobot_post_msg_hint_email">请输入邮箱地址（必填）</string>
+    <string name="sobot_post_msg_hint_email">请输入邮箱地址</string>
     <string name="sobot_post_msg_hint_nikename">请输入昵称</string>
     <string name="sobot_post_msg_hint_phone">请输入电话号码</string>
+    <string name="sobot_post_msg_hint_enclosure">上传问题图片能大大提高解决问题效率</string>
     <string name="sobot_temporarily_not_evaluation">暂不评价</string>
     <string name="sobot_color_custom_name">#888888</string>
     <string name="sobot_no_camera_permission">没有相机权限</string>
@@ -90,4 +92,10 @@
     <string name="sobot_conntype_connect_success">连接成功</string>
     <string name="sobot_required">（必填）</string>
     <string name="sobot_optional">（选填）</string>
+    <string name="sobot_evaluation_completed_exit">提醒：提交评价后会话将结束</string>
+    <string name="sobot_delete">删除</string>
+    <string name="sobot_choice_form_picture">从手机相册选择</string>
+    <string name="sobot_loading">请稍候</string>
+    <string name="sobot_robot_like">感谢您的反馈</string>
+    <string name="sobot_robot_dislike">很抱歉没能帮到您</string>
 </resources>

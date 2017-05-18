@@ -26,13 +26,17 @@ import com.sobot.chat.activity.DCRCActivity;
 import com.sobot.chat.activity.SobotChatActivity;
 import com.sobot.chat.adapter.base.SobotMsgAdapter;
 import com.sobot.chat.api.ResultCallBack;
+import com.sobot.chat.api.ZhiChiApi;
 import com.sobot.chat.api.enumtype.SobotChatTitleDisplayMode;
+import com.sobot.chat.api.model.CommonModel;
 import com.sobot.chat.api.model.Information;
 import com.sobot.chat.api.model.ZhiChiInitModeBase;
 import com.sobot.chat.api.model.ZhiChiMessage;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.api.model.ZhiChiReplyAnswer;
+import com.sobot.chat.core.channel.Const;
 import com.sobot.chat.core.channel.SobotMsgManager;
+import com.sobot.chat.core.http.callback.StringResultCallBack;
 import com.sobot.chat.viewHolder.ImageMessageHolder;
 import com.sobot.chat.widget.OtherDialog;
 import com.sobot.chat.widget.ThankDialog;
@@ -96,9 +100,11 @@ public class ChatUtils {
 		handler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				d.dismiss();
-				if(isFinish){
-					act.finish();
+				if(!act.isFinishing()){
+					d.dismiss();
+					if(isFinish){
+						act.finish();
+					}
 				}
 			}
 		},2000);
@@ -109,6 +115,9 @@ public class ChatUtils {
 	 * @param act
 	 */
 	public static void openSelectPic(Activity act) {
+		if(act == null){
+			return;
+		}
 		Intent intent;
 		if (Build.VERSION.SDK_INT < 19) {
 			intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -117,7 +126,11 @@ public class ChatUtils {
 			intent = new Intent(Intent.ACTION_PICK,
 					android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 		}
-		act.startActivityForResult(intent, ZhiChiConstant.REQUEST_CODE_picture);
+		try {
+			act.startActivityForResult(intent, ZhiChiConstant.REQUEST_CODE_picture);
+		}catch (Exception e){
+			ToastUtil.showToast(act.getApplicationContext(),"无法打开相册，请检查相册是否开启");
+		}
 	}
 
 	/**
@@ -170,6 +183,9 @@ public class ChatUtils {
 	public static void sendPicByUri(Context context, Handler handler,
 			Uri selectedImage, ZhiChiInitModeBase initModel,final ListView lv_message,
 									final SobotMsgAdapter messageAdapter) {
+		if(initModel == null){
+			return;
+		}
 		String picturePath = ImageUtils.getPath(context, selectedImage);
 		LogUtils.i("picturePath:" + picturePath);
 		if (!TextUtils.isEmpty(picturePath)) {
@@ -190,7 +206,7 @@ public class ChatUtils {
 	public static void sendPicLimitBySize(String filePath, String cid, String uid,
 										  Handler handler, Context context, final ListView lv_message,
 										  final SobotMsgAdapter messageAdapter) {
-		
+
 		Bitmap bitmap = BitmapUtil.compress(filePath,context);
 		if(bitmap!=null){
 			int degree = ImageUtils.readPictureDegree(filePath);
@@ -305,7 +321,8 @@ public class ChatUtils {
 		} else if (3 == type) { // 被加入黑名单
 			return resources.getString(ResourceUtils.getIdByName(context, "string", "sobot_outline_leverByManager"));
 		} else if (4 == type) { // 超时下线
-			return initModel.getUserOutWord();
+			return initModel != null?initModel.getUserOutWord():resources.getString(ResourceUtils
+                    .getIdByName(context, "string", "sobot_outline_leverByManager"));
 		} else if (6 == type) {
 			return resources.getString(ResourceUtils.getIdByName(context, "string", "sobot_outline_openNewWindows"));
 		}
@@ -338,27 +355,15 @@ public class ChatUtils {
 		SharedPreferencesUtil.saveStringData(context, "sobot_user_phone", TextUtils.isEmpty
 				(info.getTel())?"":info.getTel());
 		if (info.isShowNikeNameTv()){
-			SharedPreferencesUtil.saveBooleanData(context,"isShowNikeNameTv",info.isShowNikeNameTv());
+			SharedPreferencesUtil.saveBooleanData(context,"sobot_postMsg_nike_nameShowFlag",info.isShowNikeNameTv());
 		} else {
-			SharedPreferencesUtil.removeKey(context,"isShowNikeNameTv");
-		}
-
-		if (info.isShowPhoneTv()){
-			SharedPreferencesUtil.saveBooleanData(context,"isShowPhoneTv",info.isShowPhoneTv());
-		} else {
-			SharedPreferencesUtil.removeKey(context,"isShowPhoneTv");
+			SharedPreferencesUtil.removeKey(context,"sobot_postMsg_nike_nameShowFlag");
 		}
 
 		if (info.isShowNikeName()){
-			SharedPreferencesUtil.saveBooleanData(context,"isShowNikeName",info.isShowNikeName());
+			SharedPreferencesUtil.saveBooleanData(context,"sobot_postMsg_nike_nameFlag",info.isShowNikeName());
 		} else {
-			SharedPreferencesUtil.removeKey(context,"isShowNikeName");
-		}
-
-		if (info.isShowPhone()){
-			SharedPreferencesUtil.saveBooleanData(context,"isShowPhone",info.isShowPhone());
-		} else {
-			SharedPreferencesUtil.removeKey(context,"isShowPhone");
+			SharedPreferencesUtil.removeKey(context,"sobot_postMsg_nike_nameFlag");
 		}
 
 		if (!TextUtils.isEmpty(info.getColor())) {
@@ -397,9 +402,9 @@ public class ChatUtils {
 			String last_current_partnerId = SharedPreferencesUtil.getStringData
 					(context, ZhiChiConstant.sobot_last_current_partnerId,"");
 			String last_current_dreceptionistId = SharedPreferencesUtil.getStringData(
-					context,"receptionistId","");
+					context,ZhiChiConstant.SOBOT_RECEPTIONISTID,"");
 			String last_current_robot_code = SharedPreferencesUtil.getStringData(
-					context,"sobot_robot_code","");
+					context,ZhiChiConstant.SOBOT_ROBOT_CODE,"");
 			//判断上次uid是否跟此次传入的一样
 			if(!last_current_partnerId.equals(info.getUid())){
 				return true;
@@ -421,9 +426,10 @@ public class ChatUtils {
 	 * @param isFinish 评价完是否关闭
 	 * @param initModel 初始化信息
 	 * @param current_model 评价对象
+	 * @param commentType commentType 评价类型 主动评价1 邀请评价0
 	 */
 	public static void showEvaluateDialog(Context context , boolean isFinish, ZhiChiInitModeBase
-			initModel, int current_model){
+			initModel, int current_model,int commentType){
 		if(initModel == null){
 			return;
 		}
@@ -436,6 +442,7 @@ public class ChatUtils {
 		bundle.putString("manualCommentTitle", initModel.getManualCommentTitle());//客服评价语
 		bundle.putString("cid", initModel.getCid());//客服评价语
 		bundle.putString("uid", initModel.getUid());//客服评价语
+		bundle.putInt("commentType", commentType);
 		intent.putExtra("bundle", bundle);
 		context.startActivity(intent);
 	}
@@ -556,5 +563,107 @@ public class ChatUtils {
 		reply_paidui.setRemindType(ZhiChiConstant.sobot_remind_type_paidui_status);
 		paiduizhichiMessageBase.setAnswer(reply_paidui);
 		return paiduizhichiMessageBase;
+	}
+
+	/**
+	 * 判断是否评价完毕就释放会话
+	 * @param context
+	 * @param isComment
+	 * @param current_client_model
+	 * @return
+	 */
+	public static boolean isEvaluationCompletedExit(Context context,boolean isComment,int current_client_model){
+		boolean evaluationCompletedExit = SharedPreferencesUtil.getBooleanData
+				(context,ZhiChiConstant.SOBOT_CHAT_EVALUATION_COMPLETED_EXIT,false);
+		if(evaluationCompletedExit && isComment && current_client_model == ZhiChiConstant.client_model_customService){
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 退出登录
+	 * @param context
+	 */
+	public static void userLogout(Context context){
+		SobotApi.disSobotChannel(context);
+
+		String cid = SharedPreferencesUtil.getStringData(context, Const.SOBOT_CID,"");
+		String uid = SharedPreferencesUtil.getStringData(context,Const.SOBOT_UID,"");
+
+		if (!TextUtils.isEmpty(cid) && !TextUtils.isEmpty(uid)){
+			ZhiChiApi zhiChiApi = SobotMsgManager.getInstance(context).getZhiChiApi();
+			zhiChiApi.out(cid, uid,	new StringResultCallBack<CommonModel>() {
+				@Override
+				public void onSuccess(CommonModel result) { }
+
+				@Override
+				public void onFailure(Exception e, String des) {}
+			});
+		}
+	}
+
+    /**
+     * 判断机器人引导转人工是否勾选
+     * @param manualType 机器人引导转人工 勾选为1，默认为0 固定位置，比如1,1,1,1=直接回答勾选，理解回答勾选，引导回答勾选，未知回答勾选
+     * @param answerType
+     * @return true表示勾选上了
+     */
+	public static boolean checkManualType(String manualType,String answerType){
+        if(TextUtils.isEmpty(manualType) || TextUtils.isEmpty(answerType)){
+            return false;
+        }
+        try {
+            Integer type = Integer.valueOf(answerType);
+            String[] mulArr = manualType.split(",");
+            if((type == 1 && "1".equals(mulArr[0])) || (type == 2 && "1".equals(mulArr[1]))
+                    || (type == 4 && "1".equals(mulArr[2])) || (type == 3 && "1".equals(mulArr[3]))) {
+                return true;
+            }
+        }catch (Exception e){
+            return false;
+        }
+        return false;
+    }
+
+	public static void sendPicByFilePath(Context context,String filePath,SobotSendFileListener listener) {
+
+		Bitmap bitmap = BitmapUtil.compress(filePath,context);
+		if(bitmap!=null){
+			int degree = ImageUtils.readPictureDegree(filePath);
+			bitmap = ImageUtils.rotateBitmap(bitmap, degree);
+			if (!(filePath.endsWith(".gif") || filePath.endsWith(".GIF"))) {
+				FileOutputStream fos;
+				try {
+					fos = new FileOutputStream(filePath);
+					bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
+			listener.onSuccess(filePath);
+		}else{
+			ToastUtil.showToast(context,"图片格式错误");
+			listener.onError();
+		}
+	}
+
+	public static void sendPicByUriPost(Context context,Uri selectedImage,SobotSendFileListener listener){
+		String picturePath = ImageUtils.getPath(context, selectedImage);
+		if (!TextUtils.isEmpty(picturePath)) {
+			sendPicByFilePath(context,picturePath, listener);
+		} else {
+			File file = new File(selectedImage.getPath());
+			if (!file.exists()) {
+				ToastUtil.showToast(context,"找不到图片");
+				return;
+			}
+			sendPicByFilePath(context,picturePath, listener);
+		}
+	}
+
+	public interface SobotSendFileListener{
+		void onSuccess(String filePath);
+		void onError();
 	}
 }

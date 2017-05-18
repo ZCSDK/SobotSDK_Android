@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.sobot.chat.R;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.api.model.ZhiChiReplyAnswer;
 import com.sobot.chat.utils.DateUtil;
@@ -29,15 +28,15 @@ import java.util.List;
  */
 public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
 
-    private static final int[] layoutRes = {
-            R.layout.sobot_chat_msg_item_txt_l,//文本消息左边的布局文件
-            R.layout.sobot_chat_msg_item_txt_r,//文本消息右边的布局文件
-            R.layout.sobot_chat_msg_item_tip,//消息提醒的布局文件
-            R.layout.sobot_chat_msg_item_rich,//富文本消息布局文件
-            R.layout.sobot_chat_msg_item_imgt_l,//图片消息左边的布局文件
-            R.layout.sobot_chat_msg_item_imgt_r,//图片消息右边的布局文件
-            R.layout.sobot_chat_msg_item_audiot_r,//语音消息右边的布局文件
-            R.layout.sobot_chat_msg_item_consult,//商品咨询内容的布局文件
+    private static final String[] layoutRes = {
+            "sobot_chat_msg_item_txt_l",//文本消息左边的布局文件
+            "sobot_chat_msg_item_txt_r",//文本消息右边的布局文件
+            "sobot_chat_msg_item_tip",//消息提醒的布局文件
+            "sobot_chat_msg_item_rich",//富文本消息布局文件
+            "sobot_chat_msg_item_imgt_l",//图片消息左边的布局文件
+            "sobot_chat_msg_item_imgt_r",//图片消息右边的布局文件
+            "sobot_chat_msg_item_audiot_r",//语音消息右边的布局文件
+            "sobot_chat_msg_item_consult",//商品咨询内容的布局文件
     };
 
     /**
@@ -214,6 +213,13 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
         }
     }
 
+    public void cancelVoiceUiById(String id){
+        ZhiChiMessageBase info = getMsgInfo(id);
+        if(info!=null){
+            list.remove(info);
+        }
+    }
+
     public void updatePicStatusById(String id, int sendStatus) {
         ZhiChiMessageBase info = getMsgInfo(id);
         if (info != null) {
@@ -266,7 +272,7 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
 
     private View initView(View convertView, int itemType, int position, final ZhiChiMessageBase message) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(layoutRes[itemType], null);
+            convertView = LayoutInflater.from(context).inflate(ResourceUtils.getIdByName(context, "layout", layoutRes[itemType]), null);
             MessageHolderBase holder;
             switch (itemType) {
                 case MSG_TYPE_TXT_L:

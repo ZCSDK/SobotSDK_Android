@@ -26,8 +26,6 @@
 
     <application
         android:allowBackup="true">
-
-        <!-- 主界面 -->
         <activity
             android:name="com.sobot.chat.activity.SobotChatActivity"
             android:theme="@style/sobot_AppTheme"
@@ -59,6 +57,12 @@
             android:theme="@style/sobot_AppTheme"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.sobot.chat.activity.SobotPhotoListActivity"
+            android:theme="@style/sobot_AppTheme"
+            android:configChanges="orientation|keyboardHidden"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
         <service
             android:name="com.sobot.chat.core.channel.SobotTCPServer"
             android:label="SobotChatTCPServer"

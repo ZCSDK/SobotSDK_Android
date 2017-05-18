@@ -1,8 +1,11 @@
 package com.sobot.chat.activity.base;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sobot.chat.adapter.base.SobotMsgAdapter;
 import com.sobot.chat.api.ResultCallBack;
@@ -29,14 +33,18 @@ import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.api.model.ZhiChiReplyAnswer;
 import com.sobot.chat.application.MyApplication;
 import com.sobot.chat.core.channel.SobotMsgManager;
-import com.sobot.chat.listener.NoDoubleClickListener;
 import com.sobot.chat.core.http.callback.StringResultCallBack;
+import com.sobot.chat.listener.NoDoubleClickListener;
+import com.sobot.chat.utils.ChatUtils;
+import com.sobot.chat.utils.CommonUtils;
 import com.sobot.chat.utils.LogUtils;
 import com.sobot.chat.utils.ResourceUtils;
-import com.sobot.chat.utils.SharedPreferencesUtil;
+import com.sobot.chat.utils.ToastUtil;
 import com.sobot.chat.utils.ZhiChiConstant;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -44,6 +52,9 @@ public abstract class SobotBaseActivity extends Activity implements
 		OnClickListener {
 
 	public boolean isAboveZero = false;
+	public static final int SEND_VOICE = 0;
+	public static final int UPDATE_VOICE = 1;
+	public static final int CANCEL_VOICE = 2;
 	public TextView mTitleTextView;
 	public TextView sobot_title_conn_status;
 	public LinearLayout sobot_container_conn_status;
@@ -92,6 +103,10 @@ public abstract class SobotBaseActivity extends Activity implements
 	protected SobotMsgAdapter messageAdapter;
 
 	public ZhiChiApi zhiChiApi;
+
+	protected boolean has_camera_permission = false;
+	protected boolean has_write_external_storage_permission = false;
+	protected boolean has_record_audio_permission = false;
 
 	public void setAdminFace(String str) {
 		LogUtils.i("头像地址是" + str);
@@ -239,6 +254,37 @@ public abstract class SobotBaseActivity extends Activity implements
 	@Override
 	public abstract void onClick(View v);
 
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		switch(requestCode){
+			case ZhiChiConstant.SOBOT_CAMERA_REQUEST_CODE:
+				if(grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+					has_camera_permission = true;
+				} else {
+					has_camera_permission = false;
+					ToastUtil.showToast(getApplicationContext(), getResString("sobot_no_camera_permission"));
+				}
+				break;
+			case ZhiChiConstant.SOBOT_WRITE_EXTERNAL_STORAGE_REQUEST_CODE:
+				if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+					has_write_external_storage_permission = true;
+				}else{
+					has_write_external_storage_permission = false;
+					ToastUtil.showToast(getApplicationContext(), getResString("sobot_no_write_external_storage_permission"));
+				}
+				break;
+			case ZhiChiConstant.SOBOT_RECORD_AUDIO_REQUEST_CODE:
+				if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+					has_record_audio_permission = true;
+				}else{
+					has_record_audio_permission = false;
+					ToastUtil.showToast(getApplicationContext(), getResString("sobot_no_record_audio_permission"));
+				}
+				break;
+		}
+	}
+
 	// ##################### 更新界面的ui ###############################
 
 	/**
@@ -265,6 +311,12 @@ public abstract class SobotBaseActivity extends Activity implements
 		ZhiChiMessageBase myMessage = (ZhiChiMessageBase) msg.obj;
 		messageAdapter.updateVoiceStatusById(myMessage.getId(),
 				myMessage.getSendSuccessState(),myMessage.getAnswer().getDuration());
+		messageAdapter.notifyDataSetChanged();
+	}
+
+	public void cancelUiVoiceMessage(SobotMsgAdapter messageAdapter, Message msg){
+		ZhiChiMessageBase myMessage = (ZhiChiMessageBase) msg.obj;
+		messageAdapter.cancelVoiceUiById(myMessage.getId());
 		messageAdapter.notifyDataSetChanged();
 	}
 
@@ -353,11 +405,11 @@ public abstract class SobotBaseActivity extends Activity implements
 	 * @param voiceTimeLongStr
 	 *            语音的时长
 	 * @param isSendSuccess
-	 * @param isUpdate
+	 * @param  state 发送状态
 	 * @param handler
 	 */
 	public void sendVoiceMessageToHandler(String voiceMsgId, String voiceUrl,
-			String voiceTimeLongStr, int isSendSuccess, boolean isUpdate,
+			String voiceTimeLongStr, int isSendSuccess, int state,
 			final Handler handler) {
 
 		ZhiChiMessageBase zhichiMessage = new ZhiChiMessageBase();
@@ -371,9 +423,11 @@ public abstract class SobotBaseActivity extends Activity implements
 		// 设置语音的时长的操作
 
 		Message message = handler.obtainMessage();
-		if (isUpdate) {// 更新界面布局
+		if (state==UPDATE_VOICE) {// 更新界面布局
 			message.what = ZhiChiConstant.message_type_update_voice;
-		} else {
+		} else if(state==CANCEL_VOICE){
+			message.what = ZhiChiConstant.message_type_cancel_voice;
+		}else if(state==SEND_VOICE){
 			message.what = ZhiChiConstant.message_type_send_voice;
 		}
 
@@ -410,10 +464,9 @@ public abstract class SobotBaseActivity extends Activity implements
 
 			//获取机器人带引导与的欢迎语
 			if (1== initModel.getGuideFlag()){
-				String last_current_robot_code = SharedPreferencesUtil.getStringData(
-						getApplicationContext(),"sobot_robot_code","");
 
-				zhiChiApi.robotGuide(initModel.getUid(), last_current_robot_code, new StringResultCallBack<ZhiChiMessageBase>() {
+				zhiChiApi.robotGuide(initModel.getUid(), initModel.getCurrentRobotFlag(), new
+						StringResultCallBack<ZhiChiMessageBase>() {
 					@Override
 					public void onSuccess(ZhiChiMessageBase robot) {
 						if (current_client_model == ZhiChiConstant.client_model_robot){
@@ -457,8 +510,7 @@ public abstract class SobotBaseActivity extends Activity implements
 	// 人与机械人进行聊天
 	public void sendHttpRobotMessage(final String msgId, String requestText,
 			String uid, String cid, final Handler handler,int questionFlag,String question) {
-		String last_current_robot_code = SharedPreferencesUtil.getStringData(getApplicationContext(),"sobot_robot_code","");
-		zhiChiApi.chatSendMsgToRoot(last_current_robot_code,requestText, questionFlag,question, uid, cid,
+		zhiChiApi.chatSendMsgToRoot(initModel.getCurrentRobotFlag(),requestText, questionFlag,question, uid, cid,
 				new StringResultCallBack<ZhiChiMessageBase>() {
 					@Override
 					public void onSuccess(ZhiChiMessageBase simpleMessage) {
@@ -491,8 +543,8 @@ public abstract class SobotBaseActivity extends Activity implements
 				});
 	}
 
-	public void sendHttpCustomServiceMessage(String content, String uid,
-			String cid, final Handler handler, final String mid) {
+	public void sendHttpCustomServiceMessage(final String content, final String uid,
+											 String cid, final Handler handler, final String mid) {
 		zhiChiApi.sendMsgToCoutom(content, uid, cid, new StringResultCallBack<CommonModelBase>() {
 			@Override
 			public void onSuccess(CommonModelBase commonModelBase) {
@@ -513,7 +565,12 @@ public abstract class SobotBaseActivity extends Activity implements
 
 			@Override
 			public void onFailure(Exception e, String des) {
-				LogUtils.i("error:" + des);
+				LogUtils.i("error:" + e.toString());
+				Map<String,String> map = new HashMap<>();
+				map.put("content","消息发送失败：---content:"+content+"    err:" + e.toString());
+				map.put("title","sendMsg failure");
+				map.put("uid",uid);
+				LogUtils.i2Local(map);
 				sendTextMessageToHandler(mid, null, handler, 0, true);
 			}
 		});
@@ -539,13 +596,13 @@ public abstract class SobotBaseActivity extends Activity implements
 						// 语音发送成功
 						isAboveZero = true;
 						restartMyTimeTask(handler);
-						sendVoiceMessageToHandler(voiceMsgId, filePath, voiceTimeLongStr, 1, true, handler);
+						sendVoiceMessageToHandler(voiceMsgId, filePath, voiceTimeLongStr, 1, UPDATE_VOICE, handler);
 					}
 
 					@Override
 					public void onFailure(Exception e, String des) {
 						LogUtils.i("发送语音error:" + des + "exception:" + e);
-						sendVoiceMessageToHandler(voiceMsgId, filePath, voiceTimeLongStr, 0, true, handler);
+						sendVoiceMessageToHandler(voiceMsgId, filePath, voiceTimeLongStr, 0, UPDATE_VOICE, handler);
 					}
 
 					@Override
@@ -805,6 +862,37 @@ public abstract class SobotBaseActivity extends Activity implements
 
 	public String getResString(String name){
 		return getResources().getString(getResStringId(name));
+	}
+
+	/**
+	 * 通过照相上传图片
+	 */
+	public void selectPicFromCamera() {
+		if (!CommonUtils.isExitsSdcard()) {
+			Toast.makeText(getApplicationContext(), getResString("sobot_sdcard_does_not_exist"),
+					Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		has_camera_permission= CommonUtils.checkPermission(this, Manifest.permission.CAMERA,ZhiChiConstant.SOBOT_CAMERA_REQUEST_CODE);
+		has_write_external_storage_permission=CommonUtils.checkPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, ZhiChiConstant.SOBOT_WRITE_EXTERNAL_STORAGE_REQUEST_CODE);
+		if(!has_camera_permission || !has_write_external_storage_permission){
+			return;
+		}
+		cameraFile = ChatUtils.openCamera(this);
+	}
+
+	/**
+	 * 从图库获取图片
+	 */
+	public void selectPicFromLocal() {
+		if(Build.VERSION.SDK_INT  >= 23){
+			has_write_external_storage_permission=CommonUtils.checkPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, ZhiChiConstant.SOBOT_WRITE_EXTERNAL_STORAGE_REQUEST_CODE);
+			if(!has_write_external_storage_permission){
+				return;
+			}
+		}
+		ChatUtils.openSelectPic(this);
 	}
 
 	/**

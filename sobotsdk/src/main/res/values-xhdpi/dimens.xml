@@ -50,4 +50,5 @@
 
     <dimen name="sobot_btn_send_text_size">16sp</dimen>
     <dimen name="sobot_text_title">18sp</dimen>
+    <dimen name="sobot_pic_img_width">50dp</dimen>
 </resources>

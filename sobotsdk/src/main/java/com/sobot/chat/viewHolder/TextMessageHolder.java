@@ -6,11 +6,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.sobot.chat.R;
 import com.sobot.chat.activity.SobotChatActivity;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.utils.CommonUtils;
 import com.sobot.chat.utils.HtmlTools;
+import com.sobot.chat.utils.ResourceUtils;
 import com.sobot.chat.utils.ToastUtil;
 import com.sobot.chat.viewHolder.base.MessageHolderBase;
 
@@ -22,7 +22,7 @@ public class TextMessageHolder extends MessageHolderBase {
     TextView msg; // 聊天的消息内容
     public TextMessageHolder(Context context, View convertView){
         super(context,convertView);
-        msg = (TextView) convertView.findViewById(R.id.sobot_msg);
+        msg = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_msg"));
     }
 
     @Override
@@ -30,7 +30,7 @@ public class TextMessageHolder extends MessageHolderBase {
         if (message.getAnswer() != null && !TextUtils.isEmpty(message.getAnswer().getMsg())) {// 纯文本消息
             msg.setVisibility(View.VISIBLE);
             HtmlTools.getInstance(context).setRichText(msg, message.getAnswer().getMsg(),
-                    isRight ? R.color.sobot_color_rlink : R.color.sobot_color_link);
+                    isRight ? ResourceUtils.getIdByName(context, "color","sobot_color_rlink") : ResourceUtils.getIdByName(context, "color","sobot_color_link"));
             if(isRight){
                 try {
                     msgStatus.setClickable(true);
@@ -63,7 +63,7 @@ public class TextMessageHolder extends MessageHolderBase {
             }
 
         } else {
-            msg.setText(CommonUtils.getResString(context,R.string.sobot_data_wrong_hint));
+            msg.setText(CommonUtils.getResString(context,ResourceUtils.getIdByName(context, "string", "sobot_data_wrong_hint")));
         }
         msg.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

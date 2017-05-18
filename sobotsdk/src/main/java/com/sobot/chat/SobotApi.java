@@ -35,7 +35,7 @@ public class SobotApi {
 	 * @param information 接入参数
      */
 	public static void startSobotChat(Context context, Information information) {
-		if (information == null){
+		if (information == null || context == null){
 			Log.e(Tag, "Information is Null!");
 			return;
 		}
@@ -52,6 +52,9 @@ public class SobotApi {
 	 * @param context 上下文对象
 	 */
 	public static void initSobotChannel(Context context){
+		if (context == null){
+			return;
+		}
 		context = context.getApplicationContext();
 		SobotMsgManager.getInstance(context).getZhiChiApi().reconnectChannel();
 		context.startService(new Intent(context, SobotSessionServer.class));
@@ -63,7 +66,11 @@ public class SobotApi {
 	 * @return
      */
 	public static int getUnreadMsg(Context context){
-		return SharedPreferencesUtil.getIntData(context,"sobot_unread_count",0);
+		if (context == null){
+			return  0;
+		} else {
+			return SharedPreferencesUtil.getIntData(context,"sobot_unread_count",0);
+		}
 	}
 
 	/**
@@ -71,6 +78,9 @@ public class SobotApi {
 	 * @param context 上下文对象
 	 */
 	public static void disSobotChannel(Context context){
+		if (context == null){
+			return;
+		}
 		SobotMsgManager.getInstance(context).getZhiChiApi().disconnChannel();
 		SobotMsgManager.getInstance(context).getConfig().clearCache();
 	}
@@ -80,6 +90,9 @@ public class SobotApi {
 	 * @param context 上下文对象
      */
 	public static void exitSobotChat(final Context context){
+		if (context == null){
+			return;
+		}
 		disSobotChannel(context);
 		context.stopService(new Intent(context, SobotSessionServer.class));
 
@@ -114,6 +127,9 @@ public class SobotApi {
 	 * @param largeIcon 大图标的id
      */
 	public static void setNotificationFlag(Context context,boolean flag,int smallIcon,int largeIcon){
+		if (context == null){
+			return;
+		}
 		SharedPreferencesUtil.saveBooleanData(context,Const.SOBOT_NOTIFICATION_FLAG,flag);
 		SharedPreferencesUtil.saveIntData(context, ZhiChiConstant.SOBOT_NOTIFICATION_SMALL_ICON, smallIcon);
 		SharedPreferencesUtil.saveIntData(context, ZhiChiConstant.SOBOT_NOTIFICATION_LARGE_ICON, largeIcon);
@@ -124,6 +140,9 @@ public class SobotApi {
 	 * @param context
      */
 	public static void cancleAllNotification(Context context){
+		if (context == null){
+			return;
+		}
 		NotificationUtils.cancleAllNotification(context);
 	}
 
@@ -145,6 +164,9 @@ public class SobotApi {
 	 * @param content 如果需要显示固定文本，需要传入此参数，其他模式可以不传
      */
 	public static void setChatTitleDisplayMode(Context context, SobotChatTitleDisplayMode mode, String content){
+		if (context == null){
+			return;
+		}
 		SharedPreferencesUtil.saveIntData(context,ZhiChiConstant.SOBOT_CHAT_TITLE_DISPLAY_MODE,
 				mode.getValue());
 		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_CHAT_TITLE_DISPLAY_CONTENT,
@@ -156,7 +178,22 @@ public class SobotApi {
 	 * @param time  查询时间(例:100-表示从现在起前100分钟的会话)
      */
 	public static void hideHistoryMsg(Context context,long time){
+		if (context == null){
+			return;
+		}
 		SharedPreferencesUtil.saveLongData(context,ZhiChiConstant.SOBOT_CHAT_HIDE_HISTORYMSG_TIME,
 				time);
+	}
+
+	/**
+	 * 配置用户提交人工满意度评价后释放会话
+	 * @param context
+	 * @param flag
+	 */
+	public static void setEvaluationCompletedExit(Context context,boolean flag){
+		if (context == null){
+			return;
+		}
+		SharedPreferencesUtil.saveBooleanData(context,ZhiChiConstant.SOBOT_CHAT_EVALUATION_COMPLETED_EXIT, flag);
 	}
 }

@@ -93,13 +93,10 @@ public class KeyboardUtil {
     /**
      * @param context the keyboard height is stored by shared-preferences, so need context.
      * @return the valid panel height refer the keyboard height
-     * @see #getMaxPanelHeight(Resources)
-     * @see #getMinPanelHeight(Resources)
      * @see #getKeyboardHeight(Context)
      * @see #attach(Activity, IPanelHeightTarget)
      * <p/>
      * The keyboard height may be too short or too height. we intercept the keyboard height in
-     * [{@link #getMinPanelHeight(Resources)}, {@link #getMaxPanelHeight(Resources)}].
      */
     public static int getValidPanelHeight(final Context context) {
         final int maxPanelHeight = getMaxPanelHeight(context);
@@ -325,7 +322,7 @@ public class KeyboardUtil {
                         displayHeight, actionBarOverlayLayoutHeight, isKeyboardShowing));
                 this.panelHeightTarget.onKeyboardShowing(isKeyboardShowing);
                 if (keyboardShowingListener != null) {
-                    SharedPreferencesUtil.saveStringData(getContext(),"keyBoardShowing",isKeyboardShowing+"");
+                    SharedPreferencesUtil.saveBooleanData(getContext(),"keyBoardShowing",isKeyboardShowing);
                     keyboardShowingListener.onKeyboardShowing(isKeyboardShowing);
                 }
             }

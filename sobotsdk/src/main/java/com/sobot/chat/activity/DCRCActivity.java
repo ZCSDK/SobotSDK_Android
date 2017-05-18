@@ -54,24 +54,27 @@ public class DCRCActivity extends Activity implements OnClickListener {
 
     private EditText sobot_add_content;
     private TextView sobot_center_title;
+    private TextView sobot_center_title_tip;
 
 
     private String current_client_model;/* 当前模式 */
     private String robotCommentTitle;/* 机器人评价语 */
     private String manualCommentTitle;/* 客服评价语 */
     private String cid, uid;
+    private int  mCommentType;/*mCommentType 评价类型 主动评价1 邀请评价0*/
     private ZhiChiApi zhiChiApi;
     private List<String> listChecked = new ArrayList<String>();
     private Bundle intentBundle;
     private boolean isShowFinish;//是否显示暂不评价按钮
+    boolean mEvaluationCompletedExit = false;
+    //用户提交人工满意度评价后释放会话
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.setFinishOnTouchOutside(false);
-        setContentView(ResourceUtils
-                .getIdByName(this, "layout", "sobot_dialog"));
+        setContentView(ResourceUtils.getIdByName(getApplicationContext(), "layout", "sobot_dialog"));
 
         initBundleData(savedInstanceState);
         initView();
@@ -93,7 +96,11 @@ public class DCRCActivity extends Activity implements OnClickListener {
         manualCommentTitle = intentBundle.getString("manualCommentTitle");
         cid = intentBundle.getString("cid");
         uid = intentBundle.getString("uid");
+        mCommentType = intentBundle.getInt("commentType");
         isShowFinish = intentBundle.getBoolean("isShowFinish");
+
+        mEvaluationCompletedExit = SharedPreferencesUtil.getBooleanData
+                (getApplicationContext(),ZhiChiConstant.SOBOT_CHAT_EVALUATION_COMPLETED_EXIT,false);
     }
 
 
@@ -127,6 +134,7 @@ public class DCRCActivity extends Activity implements OnClickListener {
         sobot_add_content = (EditText) findViewById(getResId("sobot_add_content"));
         sobot_close_now = (Button) findViewById(getResId("sobot_close_now"));
         sobot_center_title = (TextView) findViewById(getResId("sobot_center_title"));
+        sobot_center_title_tip = (TextView) findViewById(getResId("sobot_center_title_tip"));
 
         sobot_button_style = (LinearLayout) findViewById(getResId("sobot_button_style"));
 
@@ -136,6 +144,8 @@ public class DCRCActivity extends Activity implements OnClickListener {
         } else if (Integer.parseInt(current_client_model) == ZhiChiConstant.client_model_customService) {
             sobot_center_title.setText(getResString("sobot_dcrc"));
             sobot_robot.setVisibility(View.GONE);
+            //显示提醒
+            sobot_center_title_tip.setVisibility(mEvaluationCompletedExit?View.VISIBLE:View.GONE);
         }
 
         if (isShowFinish) {
@@ -183,15 +193,13 @@ public class DCRCActivity extends Activity implements OnClickListener {
                 TextView text = (TextView) view.findViewById(getResId("sobot_every_case"));
                 Boolean isChecked = (Boolean) text.getTag();
                 if (!isChecked) {
-                    text.setTextColor(getResources().getColor(
-                            ResourceUtils.getIdByName(DCRCActivity.this,
-                                    "color", "sobot_color_evaluate_text_pressed")));
+                    text.setTextColor(getResources().getColor(ResourceUtils.getIdByName(getApplicationContext(),
+                            "color","sobot_color_evaluate_text_pressed")));
                     text.setBackgroundResource(getResDrawableId("sobot_login_edit_pressed"));
                     listChecked.add(text.getText().toString());
                 } else {
-                    text.setTextColor(getResources()
-                            .getColor(ResourceUtils.getIdByName(DCRCActivity.this, "color",
-                                    "sobot_color_evaluate_text_normal")));
+                    text.setTextColor(getResources().getColor(ResourceUtils.getIdByName(getApplicationContext(),
+                            "color","sobot_color_evaluate_text_normal")));
                     text.setBackgroundResource(getResDrawableId("sobot_login_edit_nomal"));
                     listChecked.remove(text.getText().toString());
                 }
@@ -202,9 +210,9 @@ public class DCRCActivity extends Activity implements OnClickListener {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        String keyBoardShowing = SharedPreferencesUtil.getStringData(getApplicationContext(), "keyBoardShowing", "false");
+        boolean keyBoardShowing = SharedPreferencesUtil.getBooleanData(getApplicationContext(), "keyBoardShowing", false);
         if (event.getAction() == MotionEvent.ACTION_DOWN && isOutOfBounds(this, event)) {
-            if ("true".equals(keyBoardShowing)) {
+            if (keyBoardShowing) {
                 KeyboardUtil.hideKeyboard(sobot_out_side_id);
             } else {
                 finish();
@@ -286,7 +294,7 @@ public class DCRCActivity extends Activity implements OnClickListener {
                          String suggest, int isresolve) {
 
         zhiChiApi = SobotMsgManager.getInstance(getApplicationContext()).getZhiChiApi();
-        zhiChiApi.comment(cid, uid, type, source, problem, suggest, isresolve,
+        zhiChiApi.comment(cid, uid, type, source, problem, suggest, isresolve,mCommentType,
                 new StringResultCallBack<CommonModel>() {
                     @Override
                     public void onSuccess(CommonModel result) {

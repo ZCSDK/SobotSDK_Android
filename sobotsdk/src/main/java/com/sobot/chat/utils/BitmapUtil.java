@@ -21,6 +21,15 @@ public class BitmapUtil {
                 .into(imageView);
     }
 
+    public static void display(Context context, String url,
+                               ImageView imageView, int defaultPic, int error) {
+        Picasso.with(context).load(url)
+                .placeholder(defaultPic) // 设置等待的图片
+                .error(error)// 加载错误显示的图片
+                .config(Bitmap.Config.RGB_565)
+                .into(imageView);
+    }
+
     @SuppressWarnings("deprecation")
     public static void display(Context context, String url, ImageView imageView) {
 
@@ -109,9 +118,38 @@ public class BitmapUtil {
 
         int width = wm.getDefaultDisplay().getWidth();
         int height = wm.getDefaultDisplay().getHeight();
-        options.inSampleSize = ImageUtils.computeSampleSize(options, width, width * height);
+        options.inSampleSize = calculateInSampleSize(options, width,height);
         options.inJustDecodeBounds = false;
 
         return BitmapFactory.decodeFile(filePath, options);
+    }
+
+    /**
+     * 计算采样大小
+     *
+     * @param options   选项
+     * @param reqWidth  最大宽度
+     * @param reqHeight 最大高度
+     * @return 采样大小
+     */
+    private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            // Calculate ratios of height and width to requested height and width
+            final int heightRatio = Math.round((float) height / (float) reqHeight);
+            final int widthRatio = Math.round((float) width / (float) reqWidth);
+
+            // Choose the smallest ratio as inSampleSize value, this will guarantee
+            // a final image with both dimensions larger than or equal to the
+            // requested height and width.
+            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+        }
+
+        return inSampleSize;
     }
 }

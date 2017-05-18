@@ -10,7 +10,6 @@ import android.view.animation.TranslateAnimation;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sobot.chat.R;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.utils.HtmlTools;
 import com.sobot.chat.utils.ResourceUtils;
@@ -30,11 +29,11 @@ public class RemindMessageHolder extends MessageHolderBase {
     public RemindMessageHolder(Context context, View convertView) {
         super(context, convertView);
         center_Remind_Info = (TextView) convertView
-                .findViewById(R.id.sobot_center_Remind_note);
+                .findViewById(ResourceUtils.getIdByName(context, "id","sobot_center_Remind_note"));
         center_Remind_Info1 = (TextView) convertView
-                .findViewById(R.id.sobot_center_Remind_note1);
+                .findViewById(ResourceUtils.getIdByName(context, "id","sobot_center_Remind_note1"));
         rl_not_read = (RelativeLayout) convertView
-                .findViewById(R.id.rl_not_read);
+                .findViewById(ResourceUtils.getIdByName(context, "id","rl_not_read"));
     }
 
     @Override
@@ -80,7 +79,7 @@ public class RemindMessageHolder extends MessageHolderBase {
                         .getAction()) || ZhiChiConstant.action_remind_past_time.equals(message.getAction())) {
                     //结束了本次会话  有事离开 超时下线 ....的提醒
                     HtmlTools.getInstance(context).setRichText(center_Remind_Info,message
-                            .getAnswer().getMsg(), R.color.sobot_color_link_remind);
+                            .getAnswer().getMsg(), ResourceUtils.getIdByName(context, "color","sobot_color_link_remind"));
                 } else if(remindType == ZhiChiConstant.sobot_remind_type_evaluate ||remindType == ZhiChiConstant.sobot_remind_type_accept_request){
                     center_Remind_Info.setText(message.getAnswer().getMsg());
                 }

@@ -8,7 +8,7 @@
     <string name="sobot_button_send">Send</string>
     <string name="sobot_attach_take_pic">Camera</string>
     <string name="sobot_btn_submit_text">Submit feedback</string>
-    <string name="sobot_please">SOBOT SDK  2.1.0</string>
+    <string name="sobot_please">SOBOT SDK  2.2.0</string>
     <string name="sobot_move_up_to_cancel">Slide up to cancel</string>
     <string name="sobot_release_to_cancel">Slide up to cancel</string>
     <string name="sobot_up_send_calcel">Slide up to cancel</string>
@@ -48,6 +48,7 @@
     <string name="sobot_unable_transfer_to_customer_service">Sorry, the team is not in service right now</string>
     <string name="sobot_thank_dialog_hint">Thank you</string>
     <string name="sobot_email_dialog_hint">That email doesn\'t look quite right</string>
+    <string name="sobot_phone_dialog_hint">That phone doesn\'t look quite right</string>
     <string name="sobot_leavemsg_success_hint">The email has been sent successfully</string>
     <string name="sobot_outline_openNewWindows">You have opened a new window</string>
     <string name="sobot_voiceTooLong">Message too long</string>
@@ -78,9 +79,10 @@
     <string name="sobot_consulting_describe">[Detail]</string>
     <string name="sobot_consulting_lable">[Tag]</string>
     <string name="sobot_consulting_fromurl">[URL]</string>
-    <string name="sobot_post_msg_hint_email">email@domain.com（required）</string>
+    <string name="sobot_post_msg_hint_email">email@domain.com</string>
     <string name="sobot_post_msg_hint_nikename">Nickname</string>
     <string name="sobot_post_msg_hint_phone">Tel</string>
+    <string name="sobot_post_msg_hint_enclosure">Please upload pictures</string>
     <string name="sobot_temporarily_not_evaluation">Temporarily not evaluation</string>
     <string name="sobot_no_camera_permission">no camera permission</string>
     <string name="sobot_sdcard_does_not_exist">sdcard does not exist</string>
@@ -90,4 +92,10 @@
     <string name="sobot_required">（required）</string>
     <string name="sobot_optional">（optional）</string>
     <string name="sobot_color_custom_name">#888888</string>
+    <string name="sobot_evaluation_completed_exit">Reminder: post evaluation session will end</string>
+    <string name="sobot_delete">Delete</string>
+    <string name="sobot_choice_form_picture">Choose from the phone album</string>
+    <string name="sobot_loading">loading</string>
+    <string name="sobot_robot_like">Thank you for your feedback</string>
+    <string name="sobot_robot_dislike">I am sorry I did not help you</string>
 </resources>

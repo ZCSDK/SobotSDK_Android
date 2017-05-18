@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.sobot.chat.R;
 import com.sobot.chat.activity.SobotChatActivity;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.api.model.ZhiChiReplyAnswer;
@@ -28,9 +27,10 @@ public class VoiceMessageHolder extends MessageHolderBase {
     ImageView voicePlay;
     LinearLayout ll_voice_layout;
     public ZhiChiMessageBase message;
-
+    private Context mContext;
     public VoiceMessageHolder(Context context, View convertView) {
         super(context, convertView);
+        mContext = context;
         voicePlay = (ImageView) convertView.findViewById(ResourceUtils
                 .getIdByName(context, "id", "sobot_iv_voice"));
         voiceTimeLong = (TextView) convertView
@@ -103,14 +103,14 @@ public class VoiceMessageHolder extends MessageHolderBase {
         if (message.isVoideIsPlaying()) {
             resetAnim();
         } else {
-            voicePlay.setImageResource(isRight ? R.drawable.sobot_pop_voice_send_anime_3 :
-                    R.drawable.sobot_pop_voice_receive_anime_3);
+            voicePlay.setImageResource(isRight ? ResourceUtils.getIdByName(mContext, "drawable", "sobot_pop_voice_send_anime_3") :
+                    ResourceUtils.getIdByName(mContext, "drawable", "sobot_pop_voice_receive_anime_3"));
         }
     }
 
     private void resetAnim() {
-        voicePlay.setImageResource(isRight ? R.drawable.sobot_voice_to_icon :
-                R.drawable.sobot_voice_from_icon);
+        voicePlay.setImageResource(isRight ? ResourceUtils.getIdByName(mContext, "drawable", "sobot_voice_to_icon") :
+                ResourceUtils.getIdByName(mContext, "drawable", "sobot_voice_from_icon"));
         Drawable playDrawable = voicePlay.getDrawable();
         if (playDrawable != null
                 && playDrawable instanceof AnimationDrawable) {
