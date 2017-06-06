@@ -173,6 +173,7 @@ public class SobotSessionServer extends Service {
                 createCustomerQueue(pushMessage.getCount());
             }
         } else if (ZhiChiConstant.push_message_outLine == pushMessage.getType()) {// 用户被下线
+            SobotMsgManager.getInstance(getApplicationContext()).setUserStatus(false);
             config.clearCache();
             showNotification("您好，本次会话已结束");
         }  else if (ZhiChiConstant.push_message_transfer == pushMessage.getType()) {
@@ -236,8 +237,16 @@ public class SobotSessionServer extends Service {
         config.currentUserName = TextUtils.isEmpty(name)?"":name;
         //显示被xx客服接入
         config.addMessage(ChatUtils.getServiceAcceptTip(getApplicationContext(),name));
+
+
         //显示人工欢迎语
-        config.addMessage(ChatUtils.getServiceHelloTip(name,face,initModel.getAdminHelloWord()));
+        String adminHolloWord = SharedPreferencesUtil.getStringData(getApplicationContext(),ZhiChiConstant.SOBOT_CUSTOMADMINHELLOWORD,"");
+        if (!TextUtils.isEmpty(adminHolloWord)){
+            config.addMessage(ChatUtils.getServiceHelloTip(name,face,adminHolloWord));
+        } else {
+            config.addMessage(ChatUtils.getServiceHelloTip(name,face,initModel.getAdminHelloWord()));
+        }
+
         //显示标题
         config.activityTitle = ChatUtils.getLogicTitle(getApplicationContext(),false, name,
                 initModel.getCompanyName());

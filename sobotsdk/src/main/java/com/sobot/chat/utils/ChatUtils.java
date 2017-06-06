@@ -18,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.Display;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ListView;
 
@@ -73,10 +74,12 @@ public class ChatUtils {
 			reSendDialog.show();
 			WindowManager windowManager = act.getWindowManager();
 			Display display = windowManager.getDefaultDisplay();
-			WindowManager.LayoutParams lp = reSendDialog.getWindow()
-					.getAttributes();
-			lp.width = (int) (display.getWidth() - widths); // 设置宽度
-			reSendDialog.getWindow().setAttributes(lp);
+			Window window = reSendDialog.getWindow();
+			if(window != null){
+				WindowManager.LayoutParams lp = window.getAttributes();
+				lp.width = (int) (display.getWidth() - widths); // 设置宽度
+				window.setAttributes(lp);
+			}
 		}
 	}
 
@@ -90,11 +93,13 @@ public class ChatUtils {
 		int width = ScreenUtils.getScreenWidth(act);
 		WindowManager windowManager = act.getWindowManager();
 		Display display = windowManager.getDefaultDisplay();
-		WindowManager.LayoutParams lp = d.getWindow().getAttributes();
-		if (width == 480) {
-			lp.width = display.getWidth() - 120; // 设置宽度
-		} else {
-			lp.width = display.getWidth() - 200; // 设置宽度
+		if(d.getWindow() != null){
+			WindowManager.LayoutParams lp = d.getWindow().getAttributes();
+			if (width == 480) {
+				lp.width = display.getWidth() - 120; // 设置宽度
+			} else {
+				lp.width = display.getWidth() - 200; // 设置宽度
+			}
 		}
 
 		handler.postDelayed(new Runnable() {
@@ -209,26 +214,32 @@ public class ChatUtils {
 
 		Bitmap bitmap = BitmapUtil.compress(filePath,context);
 		if(bitmap!=null){
+			String realFilePath = filePath;
 			int degree = ImageUtils.readPictureDegree(filePath);
 			bitmap = ImageUtils.rotateBitmap(bitmap, degree);
 			if (!(filePath.endsWith(".gif") || filePath.endsWith(".GIF"))) {
+				String fName = MD5Util.encode(filePath);
+				filePath = CommonUtils.getSDCardRootPath() + "/" +
+						CommonUtils.getApplicationName(context.getApplicationContext()) + "/" + fName + "_tmp.jpg";
 				FileOutputStream fos;
 				try {
 					fos = new FileOutputStream(filePath);
-					bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-				} catch (FileNotFoundException e) {
+					bitmap.compress(Bitmap.CompressFormat.JPEG, 80, fos);
+				} catch (Exception e) {
 					e.printStackTrace();
+					filePath = realFilePath;
 				}
 			}
 
 			long size = CommonUtils.getFileSize(filePath);
-			if (size < 3145728) {
+
+			if (size < 8388608) {
 				String id = System.currentTimeMillis() + "";
 				sendImageMessageToHandler(filePath, handler, id);
 				sendPicture(context,cid, uid, filePath, handler, id,lv_message,
 						messageAdapter);
 			} else {
-				ToastUtil.showToast(context,"图片大小需小于3M");
+				ToastUtil.showToast(context,"图片大小需小于8M");
 			}
 		}else{
 			ToastUtil.showToast(context,"图片格式错误");
@@ -321,8 +332,14 @@ public class ChatUtils {
 		} else if (3 == type) { // 被加入黑名单
 			return resources.getString(ResourceUtils.getIdByName(context, "string", "sobot_outline_leverByManager"));
 		} else if (4 == type) { // 超时下线
-			return initModel != null?initModel.getUserOutWord():resources.getString(ResourceUtils
-                    .getIdByName(context, "string", "sobot_outline_leverByManager"));
+			String userOutWord = SharedPreferencesUtil.getStringData(context,ZhiChiConstant.SOBOT_CUSTOMUSEROUTWORD,"");
+			if (!TextUtils.isEmpty(userOutWord)){
+				return userOutWord;
+			} else {
+				return initModel != null?initModel.getUserOutWord():resources.getString(ResourceUtils
+						.getIdByName(context, "string", "sobot_outline_leverByManager"));
+			}
+
 		} else if (6 == type) {
 			return resources.getString(ResourceUtils.getIdByName(context, "string", "sobot_outline_openNewWindows"));
 		}
@@ -585,8 +602,8 @@ public class ChatUtils {
 	 * 退出登录
 	 * @param context
 	 */
-	public static void userLogout(Context context){
-		SobotApi.disSobotChannel(context);
+	public static void userLogout(final Context context){
+
 
 		String cid = SharedPreferencesUtil.getStringData(context, Const.SOBOT_CID,"");
 		String uid = SharedPreferencesUtil.getStringData(context,Const.SOBOT_UID,"");

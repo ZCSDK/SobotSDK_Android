@@ -120,10 +120,11 @@ public abstract class MessageHolderBase {
         msgStatus.setClickable(true);
         WindowManager windowManager = ((Activity)context).getWindowManager();
         Display display = windowManager.getDefaultDisplay();
-        WindowManager.LayoutParams lp = reSendDialog.getWindow()
-                .getAttributes();
-        lp.width = (int) (display.getWidth() - widths); // 设置宽度
-        reSendDialog.getWindow().setAttributes(lp);
+        if(reSendDialog.getWindow()!= null){
+            WindowManager.LayoutParams lp = reSendDialog.getWindow().getAttributes();
+            lp.width = (int) (display.getWidth() - widths); // 设置宽度
+            reSendDialog.getWindow().setAttributes(lp);
+        }
     }
 
     public interface ReSendListener{

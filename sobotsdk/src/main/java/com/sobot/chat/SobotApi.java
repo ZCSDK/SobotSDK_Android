@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.sobot.chat.activity.SobotChatActivity;
 import com.sobot.chat.api.ZhiChiApi;
+import com.sobot.chat.api.apiUtils.GsonUtil;
 import com.sobot.chat.api.enumtype.SobotChatTitleDisplayMode;
 import com.sobot.chat.api.model.CommonModel;
 import com.sobot.chat.api.model.Information;
@@ -21,6 +22,8 @@ import com.sobot.chat.utils.NotificationUtils;
 import com.sobot.chat.utils.SharedPreferencesUtil;
 import com.sobot.chat.utils.SobotOption;
 import com.sobot.chat.utils.ZhiChiConstant;
+
+import java.util.Map;
 
 /**
  * SobotChatApi接口输出类
@@ -195,5 +198,94 @@ public class SobotApi {
 			return;
 		}
 		SharedPreferencesUtil.saveBooleanData(context,ZhiChiConstant.SOBOT_CHAT_EVALUATION_COMPLETED_EXIT, flag);
+	}
+
+	/**
+	 * @param context		Context 对象
+	 * @param isShowAnnouncement	是否显示通告
+	 * @param clickGone		点击通告之后是否隐藏
+	 * @param annTitle		通告标题
+	 * @param annLinkUrl	通告链接地址
+	 */
+	public static void setAnnouncement(Context context,boolean isShowAnnouncement, boolean clickGone, String annTitle, String annLinkUrl){
+		if (context == null){
+			return;
+		}
+		SharedPreferencesUtil.saveBooleanData(context,ZhiChiConstant.SOBOT_ISSHOWANNOUNCEMENT, isShowAnnouncement);
+		SharedPreferencesUtil.saveBooleanData(context,ZhiChiConstant.SOBOT_CLICKGONE, clickGone);
+		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_ANNTITLE, annTitle);
+		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_ANNLINKURL, annLinkUrl);
+	}
+
+	/**
+	 *
+	 * @param context		Context 对象
+	 * @param content	自定义客服欢迎语
+	 */
+	public static void setCustomAdminHelloWord(Context context, String content){
+		if (context == null){
+			return;
+		}
+		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_CUSTOMADMINHELLOWORD, content);
+	}
+
+	/**
+	 *
+	 * @param context		Context 对象
+	 * @param content	自定义机器人欢迎语
+	 */
+	public static void setCustomRobotHelloWord(Context context, String content){
+		if (context == null){
+			return;
+		}
+		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_CUSTOMROBOTHELLOWORD, content);
+	}
+
+	/**
+	 *
+	 * @param context		Context 对象
+	 * @param content	自定义用户超时提示语
+	 */
+	public static void setCustomUserTipWord(Context context, String content){
+		if (context == null){
+			return;
+		}
+		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_CUSTOMUSERTIPWORD, content);
+	}
+
+	/**
+	 *
+	 * @param context		Context 对象
+	 * @param content	自定义客服超时提示语
+	 */
+	public static void setCustomAdminTipWord(Context context, String content){
+		if (context == null){
+			return;
+		}
+		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_CUSTOMADMINTIPWORD, content);
+	}
+
+	/**
+	 *
+	 * @param context		Context 对象
+	 * @param content	自定义客服不在线的说辞
+	 */
+	public static void setCustomAdminNonelineTitle(Context context, String content){
+		if (context == null){
+			return;
+		}
+		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_CUSTOMADMINNONELINETITLE, content);
+	}
+
+	/**
+	 *
+	 * @param context		Context 对象
+	 * @param content	自定义用户超时下线提示语
+	 */
+	public static void setCustomUserOutWord(Context context, String content){
+		if (context == null){
+			return;
+		}
+		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_CUSTOMUSEROUTWORD, content);
 	}
 }

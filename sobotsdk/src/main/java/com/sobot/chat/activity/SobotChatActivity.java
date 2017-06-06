@@ -206,6 +206,11 @@ public class SobotChatActivity extends SobotBaseActivity implements
 	private boolean isInGethistory = false;//表示是否正在查询历史记录
 	private boolean isConnCustomerService = false;//控制同一时间 只能调一次转人工接口
 
+	//通告
+	private RelativeLayout sobot_announcement; // 通告view ;
+	private TextView sobot_announcement_right_icon;
+	private TextView sobot_announcement_title;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -305,6 +310,10 @@ public class SobotChatActivity extends SobotBaseActivity implements
 					}
 				});
 		showRightView(getResDrawableId("sobot_delete_hismsg_selector"),"",true);
+
+		sobot_announcement = (RelativeLayout) findViewById(getResId("sobot_announcement"));
+		sobot_announcement_right_icon = (TextView) findViewById(getResId("sobot_announcement_right_icon"));;
+		sobot_announcement_title = (TextView) findViewById(getResId("sobot_announcement_title"));;
 	}
 
 	private void initData() {
@@ -315,12 +324,15 @@ public class SobotChatActivity extends SobotBaseActivity implements
 		loadUnreadNum();
 		initSdk(false);
 		startService(new Intent(this, SobotSessionServer.class));
+		getAnnouncement();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		_sensorManager.registerListener(this, mProximiny, SensorManager.SENSOR_DELAY_NORMAL);
+		if (_sensorManager != null){
+			_sensorManager.registerListener(this, mProximiny, SensorManager.SENSOR_DELAY_NORMAL);
+		}
 	}
 
 	@Override
@@ -1334,8 +1346,9 @@ public class SobotChatActivity extends SobotBaseActivity implements
 			return;
 		}
 		//开启通道
+		SobotMsgManager.getInstance(getApplicationContext()).setUserStatus(true);
 		zhiChiApi.connChannel(base.getWslinkBak(), base.getWslinkDefault(),initModel.getUid(),
-				base.getPuid(),info.getAppkey());
+				base.getPuid(),info.getAppkey(),base.getWayHttp());
 		createCustomerService(base.getAname(),base.getAface());
 	}
 
@@ -1354,8 +1367,15 @@ public class SobotChatActivity extends SobotBaseActivity implements
 		currentUserName = TextUtils.isEmpty(name)?"":name;
 		//显示被xx客服接入
 		updateUiMessage(messageAdapter, ChatUtils.getServiceAcceptTip(getApplicationContext(),name));
+
+		String adminHelloWord = SharedPreferencesUtil.getStringData(getApplicationContext(),ZhiChiConstant.SOBOT_CUSTOMADMINHELLOWORD,"");
 		//显示人工欢迎语
-		updateUiMessage(messageAdapter, ChatUtils.getServiceHelloTip(name,face,initModel.getAdminHelloWord()));
+		if (!TextUtils.isEmpty(adminHelloWord)){
+			updateUiMessage(messageAdapter, ChatUtils.getServiceHelloTip(name,face,adminHelloWord));
+		} else {
+			updateUiMessage(messageAdapter, ChatUtils.getServiceHelloTip(name,face,initModel.getAdminHelloWord()));
+		}
+
 		//显示标题
 		showLogicTitle(name,false);
 		//创建咨询项目
@@ -1376,9 +1396,10 @@ public class SobotChatActivity extends SobotBaseActivity implements
 	/**
 	 * 连接客服时，需要排队
 	 * 显示排队的处理逻辑
-	 * @param num 当前排队的位置
-     */
-	private void createCustomerQueue(String num){
+	 * @param num		当前排队的位置
+	 * @param status	当前转人工的返回状态，如果是7，就说明排队已经达到最大值，可以直接留言。
+	 */
+	private void createCustomerQueue(String num, int status){
 		if (customerState == CustomerState.Queuing && !TextUtils.isEmpty(num)
 				&& Integer.parseInt(num) > 0) {
 			stopUserInfoTimeTask();
@@ -1387,7 +1408,9 @@ public class SobotChatActivity extends SobotBaseActivity implements
 
 			queueNum = Integer.parseInt(num);
 			//显示当前排队的位置
-			showInLineHint();
+			if (status != 7){
+				showInLineHint();
+			}
 
 			if (type == ZhiChiConstant.type_custom_only) {
 				showLogicTitle(getResString("sobot_in_line_title"),false);
@@ -1443,7 +1466,12 @@ public class SobotChatActivity extends SobotBaseActivity implements
 	private void showCustomerOfflineTip(){
 		ZhiChiReplyAnswer reply = new ZhiChiReplyAnswer();
 		reply.setMsgType(null);
-		reply.setMsg(initModel.getAdminNonelineTitle());
+		String adminNoneLineTitle = SharedPreferencesUtil.getStringData(getApplicationContext(),ZhiChiConstant.SOBOT_CUSTOMADMINNONELINETITLE,"");
+		if (!TextUtils.isEmpty(adminNoneLineTitle)){
+			reply.setMsg(adminNoneLineTitle);
+		} else {
+			reply.setMsg(initModel.getAdminNonelineTitle());
+		}
 		reply.setRemindType(ZhiChiConstant.sobot_remind_type_customer_offline);
 		ZhiChiMessageBase base = new ZhiChiMessageBase();
 		base.setSenderType(ZhiChiConstant.message_sender_type_remide_info + "");
@@ -1506,7 +1534,8 @@ public class SobotChatActivity extends SobotBaseActivity implements
 		if (view == btn_send) {// 发送消息按钮
 			//获取发送内容
 			final String message_result = et_sendmessage.getText().toString().trim();
-			if (!TextUtils.isEmpty(message_result)) {
+			if (!TextUtils.isEmpty(message_result) && !isConnCustomerService) {
+				//转人工接口没跑完的时候  屏蔽发送，防止统计出现混乱
 				resetEmoticonBtn();
 				try {
 					et_sendmessage.setText("");
@@ -1933,7 +1962,7 @@ public class SobotChatActivity extends SobotBaseActivity implements
 					}
 				} else if (ZhiChiConstant.push_message_paidui == pushMessage.getType()) {
 					// 排队的消息类型
-					createCustomerQueue(pushMessage.getCount());
+					createCustomerQueue(pushMessage.getCount(), 0);
 				} else if (ZhiChiConstant.push_message_receverNewMessage == pushMessage.getType()) {
 					// 接收到新的消息
 					if (customerState == CustomerState.Online) {
@@ -2085,9 +2114,11 @@ public class SobotChatActivity extends SobotBaseActivity implements
 
 		if (6 == outLineType) {
 			//打开新窗口
-			SobotApi.disSobotChannel(getApplicationContext());
+//			SobotApi.disSobotChannel(getApplicationContext());
 		}
 		isSessionOver = true;
+		// 设置离线
+		SobotMsgManager.getInstance(getApplicationContext()).setUserStatus(false);
 	}
 
 	/**
@@ -2096,6 +2127,7 @@ public class SobotChatActivity extends SobotBaseActivity implements
 	 **/
 	private void initSdk(boolean isReConnect) {
 		if(isReConnect){
+			resetUser();
 			current_client_model = ZhiChiConstant.client_model_robot;
 			showTimeVisiableCustomBtn = 0;
 			messageList.clear();
@@ -2282,6 +2314,7 @@ public class SobotChatActivity extends SobotBaseActivity implements
 					public void onSuccess(ZhiChiMessageBase zhichiMessageBase) {
 						isConnCustomerService = false;
 						int status = Integer.parseInt(zhichiMessageBase.getStatus());
+//						int status = 7;
 						setAdminFace(zhichiMessageBase.getAface());
 						LogUtils.i("status---:" + status);
 						if (status != 0) {
@@ -2303,15 +2336,27 @@ public class SobotChatActivity extends SobotBaseActivity implements
 									connCustomerServiceBlack();
 								} else if (ZhiChiConstant.transfer_customeServeive_already == status) {
 									connCustomerServiceSuccess(zhichiMessageBase);
+								} else if (ZhiChiConstant.transfer_robot_custom_max_status == status){
+									if (type == 2){
+										showLogicTitle("排队已满",true);
+										setBottomView(ZhiChiConstant.bottomViewtype_custom_only_msgclose);
+										SobotMsgManager.getInstance(getApplication()).getConfig().bottomViewtype = ZhiChiConstant.bottomViewtype_custom_only_msgclose;
+									}
+
+									if (initModel.getMsgFlag() == ZhiChiConstant.sobot_msg_flag_open){
+										ToastUtil.showLongToast(SobotChatActivity.this,"排队已满排队已满排队已满排队已满排队已满排队已满排队已满排队已满排队已满排队已满");
+										startToPostMsgActivty(false);
+									}
 								}
 							}
 						} else {
 							LogUtils.i("转人工--排队");
 							//开启通道
+							SobotMsgManager.getInstance(getApplicationContext()).setUserStatus(true);
 							zhiChiApi.connChannel(zhichiMessageBase.getWslinkBak(),
-									zhichiMessageBase.getWslinkDefault(),initModel.getUid(),zhichiMessageBase.getPuid(),info.getAppkey());
+									zhichiMessageBase.getWslinkDefault(),initModel.getUid(),zhichiMessageBase.getPuid(),info.getAppkey(),zhichiMessageBase.getWayHttp());
 							customerState = CustomerState.Queuing;
-							createCustomerQueue(zhichiMessageBase.getCount()+"");
+							createCustomerQueue(zhichiMessageBase.getCount()+"",status);
 						}
 					}
 
@@ -2699,6 +2744,7 @@ public class SobotChatActivity extends SobotBaseActivity implements
 		NotificationUtils.cancleAllNotification(getApplicationContext());
 		//重新恢复连接
 		if(customerState == CustomerState.Online || customerState == CustomerState.Queuing){
+			SobotMsgManager.getInstance(getApplicationContext()).setUserStatus(true);
 			zhiChiApi.reconnectChannel();
 		}
 	}
@@ -3038,5 +3084,42 @@ public class SobotChatActivity extends SobotBaseActivity implements
 				}
 			}
 		});
+	}
+
+	//通告设置
+	private void getAnnouncement(){
+		boolean isShowAnnouncement = SharedPreferencesUtil.getBooleanData(getApplicationContext(),ZhiChiConstant.SOBOT_ISSHOWANNOUNCEMENT,false);
+		final boolean clickGone	= SharedPreferencesUtil.getBooleanData(getApplicationContext(),ZhiChiConstant.SOBOT_CLICKGONE,false);
+		String annTitle	 = SharedPreferencesUtil.getStringData(getApplicationContext(),ZhiChiConstant.SOBOT_ANNTITLE,"");
+		final String annLinkUrl = SharedPreferencesUtil.getStringData(getApplicationContext(),ZhiChiConstant.SOBOT_ANNLINKURL,"");
+
+		if (!TextUtils.isEmpty(annLinkUrl) && annLinkUrl.length() > 10){
+			sobot_announcement_right_icon.setVisibility(View.VISIBLE);
+		} else {
+			sobot_announcement_right_icon.setVisibility(View.GONE);
+		}
+
+		if (isShowAnnouncement && !TextUtils.isEmpty(annTitle)){
+			sobot_announcement.setVisibility(View.VISIBLE);
+			sobot_announcement_title.setText(annTitle);
+			sobot_announcement.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// 内部浏览器
+					if (!TextUtils.isEmpty(annLinkUrl) && annLinkUrl.length() > 10){
+						Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
+						intent.putExtra("url", annLinkUrl);
+						startActivity(intent);
+					}
+
+					if (clickGone){
+						sobot_announcement.setVisibility(View.GONE);
+					}
+				}
+			});
+			SharedPreferencesUtil.saveBooleanData(getApplicationContext(),ZhiChiConstant.SOBOT_CLICKGONE, false);
+		} else {
+			sobot_announcement.setVisibility(View.GONE);
+		}
 	}
 }

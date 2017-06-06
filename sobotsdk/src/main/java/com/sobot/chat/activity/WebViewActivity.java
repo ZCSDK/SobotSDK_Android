@@ -1,8 +1,10 @@
 package com.sobot.chat.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -22,6 +24,7 @@ import com.sobot.chat.utils.CommonUtils;
 import com.sobot.chat.utils.LogUtils;
 import com.sobot.chat.utils.ResourceUtils;
 import com.sobot.chat.utils.SharedPreferencesUtil;
+import com.sobot.chat.utils.ToastUtil;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class WebViewActivity extends SobotBaseActivity {
@@ -37,6 +40,7 @@ public class WebViewActivity extends SobotBaseActivity {
     private ImageView sobot_webview_goback;
     private ImageView sobot_webview_forward;
     private ImageView sobot_webview_reload;
+    private ImageView sobot_webview_copy;
 
 
     @SuppressWarnings("deprecation")
@@ -68,9 +72,11 @@ public class WebViewActivity extends SobotBaseActivity {
         sobot_webview_goback = (ImageView) findViewById(getResId("sobot_webview_goback"));
         sobot_webview_forward = (ImageView) findViewById(getResId("sobot_webview_forward"));
         sobot_webview_reload = (ImageView) findViewById(getResId("sobot_webview_reload"));
+        sobot_webview_copy = (ImageView) findViewById(getResId("sobot_webview_copy"));
         sobot_webview_goback.setOnClickListener(this);
         sobot_webview_forward.setOnClickListener(this);
         sobot_webview_reload.setOnClickListener(this);
+        sobot_webview_copy.setOnClickListener(this);
         sobot_webview_goback.setEnabled(false);
         sobot_webview_forward.setEnabled(false);
         sobot_tv_left.setOnClickListener(this);
@@ -99,12 +105,7 @@ public class WebViewActivity extends SobotBaseActivity {
     @Override
     public void onClick(View view) {
         if (view == sobot_tv_left) {// 返回按钮
-            if (mWebView != null && mWebView.canGoBack()) {
-                mWebView.goBack();
-            } else {
-                super.onBackPressed();
-                finish();
-            }
+            finish();
         } else if (view == sobot_btn_reconnect) {
             if (!TextUtils.isEmpty(mUrl)) {
                 resetViewDisplay();
@@ -115,9 +116,30 @@ public class WebViewActivity extends SobotBaseActivity {
             mWebView.goBack();
         } else if(view == sobot_webview_reload){
             mWebView.reload();
+        } else if (view == sobot_webview_copy){
+            copyUrl(mUrl);
         }
     }
 
+    private void copyUrl(String url){
+        if (TextUtils.isEmpty(url)){
+            return;
+        }
+
+        if (Build.VERSION.SDK_INT >= 11){
+            LogUtils.i("API是大于11");
+            android.content.ClipboardManager cmb = (android.content.ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
+            cmb.setText(url);
+            cmb.getText();
+        } else {
+            LogUtils.i("API是小于11");
+            android.text.ClipboardManager cmb = (android.text.ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
+            cmb.setText(url);
+            cmb.getText();
+        }
+
+        ToastUtil.showCustomToast(WebViewActivity.this,CommonUtils.getResString(WebViewActivity.this, "sobot_ctrl_v_success"), CommonUtils.getResDrawableId(WebViewActivity.this,"sobot_iv_login_right"));
+    }
     /**
      * 根据有无网络显示不同的View
      */

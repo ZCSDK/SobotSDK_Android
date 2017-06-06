@@ -39,6 +39,7 @@ import com.sobot.chat.utils.ChatUtils;
 import com.sobot.chat.utils.CommonUtils;
 import com.sobot.chat.utils.LogUtils;
 import com.sobot.chat.utils.ResourceUtils;
+import com.sobot.chat.utils.SharedPreferencesUtil;
 import com.sobot.chat.utils.ToastUtil;
 import com.sobot.chat.utils.ZhiChiConstant;
 
@@ -442,26 +443,33 @@ public abstract class SobotBaseActivity extends Activity implements
 			/* 首次的欢迎语 */
 			ZhiChiMessageBase robot = new ZhiChiMessageBase();
 			ZhiChiReplyAnswer reply = new ZhiChiReplyAnswer();
-			String msgHint = initModel.getRobotHelloWord().replace("\n", "<br/>");
-			if (msgHint.startsWith("<br/>")) {
-				msgHint = msgHint.substring(5, msgHint.length());
-			}
 
-			if (msgHint.endsWith("<br/>")) {
-				msgHint = msgHint.substring(0, msgHint.length() - 5);
-			}
-			reply.setMsg(msgHint);
-			reply.setMsgType(ZhiChiConstant.message_type_text + "");
-			robot.setAnswer(reply);
-			robot.setSenderFace(initModel.getRobotLogo());
-			robot.setSender(initModel.getRobotName());
-			robot.setSenderType(ZhiChiConstant.message_sender_type_robot + "");
-			robot.setSenderName(initModel.getRobotName());
-			Message message = handler.obtainMessage();
-			message.what = ZhiChiConstant.hander_robot_message;
-			message.obj = robot;
-			handler.sendMessage(message);
+			String robotHolloWord = SharedPreferencesUtil.getStringData(getApplicationContext(),ZhiChiConstant.SOBOT_CUSTOMROBOTHELLOWORD,"");
+			if (!TextUtils.isEmpty(robotHolloWord) || !TextUtils.isEmpty(initModel.getRobotHelloWord())) {
+				if (!TextUtils.isEmpty(robotHolloWord)) {
+					reply.setMsg(robotHolloWord);
+				} else {
+					String msgHint = initModel.getRobotHelloWord().replace("\n", "<br/>");
+					if (msgHint.startsWith("<br/>")) {
+						msgHint = msgHint.substring(5, msgHint.length());
+					}
 
+					if (msgHint.endsWith("<br/>")) {
+						msgHint = msgHint.substring(0, msgHint.length() - 5);
+					}
+					reply.setMsg(msgHint);
+				}
+				reply.setMsgType(ZhiChiConstant.message_type_text + "");
+				robot.setAnswer(reply);
+				robot.setSenderFace(initModel.getRobotLogo());
+				robot.setSender(initModel.getRobotName());
+				robot.setSenderType(ZhiChiConstant.message_sender_type_robot + "");
+				robot.setSenderName(initModel.getRobotName());
+				Message message = handler.obtainMessage();
+				message.what = ZhiChiConstant.hander_robot_message;
+				message.obj = robot;
+				handler.sendMessage(message);
+			}
 			//获取机器人带引导与的欢迎语
 			if (1== initModel.getGuideFlag()){
 
@@ -553,7 +561,8 @@ public abstract class SobotBaseActivity extends Activity implements
 					customerServiceOffline(initModel,1);
 				} else if(ZhiChiConstant.client_sendmsg_to_custom_success.equals(commonModelBase.getStatus())){
 					if (!TextUtils.isEmpty(mid)) {
-						if(!SobotMsgManager.getInstance(getApplicationContext()).isConnect()){
+						if(!SobotMsgManager.getInstance(getApplicationContext()).isConnect() && !SobotMsgManager.getInstance(getApplicationContext()).isPollingStart()){
+							SobotMsgManager.getInstance(getApplicationContext()).setUserStatus(true);
 							zhiChiApi.reconnectChannel();
 						}
 						isAboveZero = true;
@@ -743,22 +752,28 @@ public abstract class SobotBaseActivity extends Activity implements
 				// 发送我的语音的消息
 				result.setSenderName(currentUserName); // 当前的用户
 				result.setSenderType(ZhiChiConstant.message_sender_type_service + "");
-				String msgHint = initModel.getAdminTipWord().replace("\n", "<br/>");
-				if (msgHint.startsWith("<br/>")) {
-					msgHint = msgHint.substring(5, msgHint.length());
+				String adminTipWord = SharedPreferencesUtil.getStringData(getApplicationContext(),ZhiChiConstant.SOBOT_CUSTOMADMINTIPWORD,"");
+				if (!TextUtils.isEmpty(adminTipWord)){
+					reply.setMsg(adminTipWord);
+				} else {
+					String msgHint = initModel.getAdminTipWord().replace("\n", "<br/>");
+					if (msgHint.startsWith("<br/>")) {
+						msgHint = msgHint.substring(5, msgHint.length());
+					}
+
+					if (msgHint.endsWith("<br/>")) {
+						msgHint = msgHint.substring(0, msgHint.length() - 5);
+					}
+					reply.setMsg(msgHint);
 				}
 
-				if (msgHint.endsWith("<br/>")) {
-					msgHint = msgHint.substring(0, msgHint.length() - 5);
-				}
-				reply.setMsg(msgHint);
 				result.setSenderFace(adminFace);
 				reply.setMsgType(ZhiChiConstant.message_type_text + "");
 				result.setAnswer(reply);
 				Message message = handler.obtainMessage();
 				message.what = ZhiChiConstant.hander_timeTask_custom_isBusying;
 				message.obj = result;
-				if (SobotMsgManager.getInstance(getApplicationContext()).isConnect()) {
+				if (SobotMsgManager.getInstance(getApplicationContext()).isConnect() || SobotMsgManager.getInstance(getApplicationContext()).isPollingStart()) {
 					// 当有通道连接的时候才提醒
 					handler.sendMessage(message);
 				}
@@ -789,18 +804,25 @@ public abstract class SobotBaseActivity extends Activity implements
 					reply.setMsgType(ZhiChiConstant.message_type_text + "");
 					// 根据当前的模式
 					base.setSenderName(currentUserName);
-					String msgHint = initModel.getUserTipWord().replace("\n", "<br/>");
-					if (msgHint.startsWith("<br/>")) {
-						msgHint = msgHint.substring(5, msgHint.length());
+
+					String userTipWord = SharedPreferencesUtil.getStringData(getApplicationContext(),ZhiChiConstant.SOBOT_CUSTOMUSERTIPWORD,"");
+					if (!TextUtils.isEmpty(userTipWord)){
+						reply.setMsg(userTipWord);
+					} else {
+						String msgHint = initModel.getUserTipWord().replace("\n", "<br/>");
+						if (msgHint.startsWith("<br/>")) {
+							msgHint = msgHint.substring(5, msgHint.length());
+						}
+
+						if (msgHint.endsWith("<br/>")) {
+							msgHint = msgHint.substring(0, msgHint.length() - 5);
+						}
+						reply.setMsg(msgHint);
 					}
 
-					if (msgHint.endsWith("<br/>")) {
-						msgHint = msgHint.substring(0, msgHint.length() - 5);
-					}
-					reply.setMsg(msgHint);
 					base.setAnswer(reply);
 					base.setSenderFace(adminFace);
-					if(SobotMsgManager.getInstance(getApplicationContext()).isConnect()){
+					if(SobotMsgManager.getInstance(getApplicationContext()).isConnect() || SobotMsgManager.getInstance(getApplicationContext()).isPollingStart()){
 						//通道连接中才发出自动回复
 						Message message = handler.obtainMessage();
 						message.what = ZhiChiConstant.hander_timeTask_userInfo;

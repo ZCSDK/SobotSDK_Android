@@ -28,12 +28,14 @@ public class ClearHistoryDialog extends Dialog implements View.OnClickListener {
         super(context, ResourceUtils.getIdByName(context, "style", "sobot_clearHistoryDialogStyle"));
 
         // 修改Dialog(Window)的弹出位置
-        Window window = getWindow();
         screenHeight = getScreenHeight(context);
-        WindowManager.LayoutParams layoutParams = window.getAttributes();
-        layoutParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
-        setParams(context, layoutParams);
-        window.setAttributes(layoutParams);
+        Window window = getWindow();
+        if(window != null){
+            WindowManager.LayoutParams layoutParams = window.getAttributes();
+            layoutParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+            setParams(context, layoutParams);
+            window.setAttributes(layoutParams);
+        }
     }
 
     private void setParams(Context context, WindowManager.LayoutParams lay) {
@@ -41,9 +43,11 @@ public class ClearHistoryDialog extends Dialog implements View.OnClickListener {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         wm.getDefaultDisplay().getMetrics(dm);
         Rect rect = new Rect();
-        View view = getWindow().getDecorView();
-        view.getWindowVisibleDisplayFrame(rect);
-        lay.width = dm.widthPixels;
+        if(getWindow() != null){
+            View view = getWindow().getDecorView();
+            view.getWindowVisibleDisplayFrame(rect);
+            lay.width = dm.widthPixels;
+        }
     }
 
     public boolean onTouchEvent(MotionEvent event) {

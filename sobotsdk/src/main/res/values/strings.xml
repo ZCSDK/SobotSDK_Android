@@ -8,7 +8,6 @@
     <string name="sobot_button_send">发送</string>
     <string name="sobot_attach_take_pic">拍照</string>
     <string name="sobot_btn_submit_text">提交评价</string>
-    <string name="sobot_please">SOBOT SDK  2.2.0</string>
     <string name="sobot_move_up_to_cancel">手指上滑，取消发送</string>
     <string name="sobot_release_to_cancel">松开手指，取消发送</string>
     <string name="sobot_up_send_calcel">松开手指 取消发送</string>

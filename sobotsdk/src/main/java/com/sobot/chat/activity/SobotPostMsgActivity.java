@@ -246,12 +246,13 @@ public class SobotPostMsgActivity extends SobotBaseActivity implements
 				return;
 			}
 		} else {
-			if (!TextUtils.isEmpty(sobot_leavemsg_phone.getText().toString().trim())
-					&& ScreenUtils.isMobileNO(sobot_leavemsg_phone.getText().toString().trim())){
-				userPhone = sobot_leavemsg_phone.getText().toString();
-			} else {
-				showHint(getResString("sobot_phone_dialog_hint"), false);
-				return;
+			if (!TextUtils.isEmpty(sobot_leavemsg_phone.getText().toString().trim())){
+				if (ScreenUtils.isMobileNO(sobot_leavemsg_phone.getText().toString().trim())){
+					userPhone = sobot_leavemsg_phone.getText().toString();
+				} else {
+					showHint(getResString("sobot_phone_dialog_hint"), false);
+					return;
+				}
 			}
 		}
 
