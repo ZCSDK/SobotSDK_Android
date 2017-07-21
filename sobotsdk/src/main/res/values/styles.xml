@@ -133,6 +133,30 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <style name="sobot_rb_style">
+        <item name="android:textColor">@drawable/sobot_btn_text_color_selector</item>
+        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:background">@drawable/sobot_evaluate_btn_selector</item>
+        <item name="android:button">@null</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">27dp</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="sobot_cb_style">
+        <item name="android:textColor">@drawable/sobot_btn_text_color_selector</item>
+        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:background">@drawable/sobot_evaluate_btn_selector</item>
+        <item name="android:button">@null</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">27dp</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <style name="sobot_dialog_Progress" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <!-- 边框 -->

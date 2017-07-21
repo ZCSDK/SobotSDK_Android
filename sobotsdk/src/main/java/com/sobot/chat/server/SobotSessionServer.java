@@ -68,8 +68,8 @@ public class SobotSessionServer extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (ZhiChiConstants.receiveMessageBrocast.equals(intent.getAction())) {
-                if (!CommonUtils.getRunningActivityName(getApplicationContext().getApplicationContext()).contains(
-                        "SobotChatActivity")) {
+                if (!CommonUtils.getRunningActivityName(getApplicationContext()).contains(
+                        "SobotChatActivity")|| !CommonUtils.isBackground(getApplicationContext()) || CommonUtils.isScreenLock(getApplicationContext())) {
                     // 接受下推的消息
                     ZhiChiPushMessage pushMessage = (ZhiChiPushMessage) intent.getExtras().getSerializable(ZhiChiConstants.ZHICHI_PUSH_MESSAGE);
                     receiveMessage(pushMessage);
@@ -129,8 +129,8 @@ public class SobotSessionServer extends Service {
                 }
             }
 
-            if (!CommonUtils.getRunningActivityName(getApplicationContext().getApplicationContext()).contains(
-                    "SobotChatActivity") || CommonUtils.isApplicationBroughtToBackground(getApplicationContext())|| CommonUtils.isScreenLock(getApplicationContext())) {
+            if (!CommonUtils.getRunningActivityName(getApplicationContext()).contains(
+                    "SobotChatActivity") || !CommonUtils.isBackground(getApplicationContext()) || CommonUtils.isScreenLock(getApplicationContext())) {
 
                 String content;
                 int msgType = -1;
@@ -152,7 +152,7 @@ public class SobotSessionServer extends Service {
                         content = "[图片]";
                         notificationContent = "[图片]";
                     }
-                    if (!CommonUtils.getRunningActivityName(getApplicationContext().getApplicationContext()).contains(
+                    if (!CommonUtils.getRunningActivityName(getApplicationContext()).contains(
                             "SobotChatActivity")){
                         int localUnreadNum = SharedPreferencesUtil.getIntData(getApplicationContext(),
                                 "sobot_unread_count", 0);
@@ -173,7 +173,8 @@ public class SobotSessionServer extends Service {
                 createCustomerQueue(pushMessage.getCount());
             }
         } else if (ZhiChiConstant.push_message_outLine == pushMessage.getType()) {// 用户被下线
-            SobotMsgManager.getInstance(getApplicationContext()).setUserStatus(false);
+            // 发送用户被下线的广播
+            CommonUtils.sendLocalBroadcast(getApplicationContext(),new Intent(Const.SOBOT_CHAT_USER_OUTLINE));
             config.clearCache();
             showNotification("您好，本次会话已结束");
         }  else if (ZhiChiConstant.push_message_transfer == pushMessage.getType()) {
@@ -260,8 +261,8 @@ public class SobotSessionServer extends Service {
         // 把机器人回答中的转人工按钮都隐藏掉
         config.hideItemTransferBtn();
 
-        if (!CommonUtils.getRunningActivityName(getApplicationContext().getApplicationContext()).contains(
-                "SobotChatActivity") || CommonUtils.isApplicationBroughtToBackground(getApplicationContext())|| CommonUtils.isScreenLock(getApplicationContext())) {
+        if (!CommonUtils.getRunningActivityName(getApplicationContext()).contains(
+                "SobotChatActivity") || !CommonUtils.isBackground(getApplicationContext()) || CommonUtils.isScreenLock(getApplicationContext())) {
             showNotification(String.format(getResString("sobot_service_accept"), config.currentUserName));
         }
     }

@@ -111,8 +111,9 @@
 
     <color name="sobot_transparent">#00000000</color>
 
-    <color name="sobot_text_btn_bg">#eeeeee</color>
-    <color name="sobot_text_btn_color">#2fb9c3</color>
-    <color name="sobot_text_btn_color_pressed">#802fb9c3</color>
+    <color name="sobot_text_btn_bg">#0daeaf</color>
+    <color name="sobot_text_btn_bg_press">#800daeaf</color>
+    <color name="sobot_text_btn_color">#ffffff</color>
+    <color name="sobot_text_btn_color_pressed">#80ffffff</color>
 
 </resources>

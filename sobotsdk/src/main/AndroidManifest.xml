@@ -45,11 +45,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="com.sobot.chat.activity.DCRCActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/sobot_dialog_dcrc"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
             android:name="com.sobot.chat.activity.SobotSkillGroupActivity"
             android:theme="@style/sobot_dialog_skill" />
         <activity

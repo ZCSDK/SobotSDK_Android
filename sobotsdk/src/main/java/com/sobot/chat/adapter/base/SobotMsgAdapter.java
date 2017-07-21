@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sobot.chat.api.model.SobotEvaluateModel;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.api.model.ZhiChiReplyAnswer;
 import com.sobot.chat.utils.DateUtil;
@@ -14,6 +15,7 @@ import com.sobot.chat.utils.SharedPreferencesUtil;
 import com.sobot.chat.utils.VersionUtils;
 import com.sobot.chat.utils.ZhiChiConstant;
 import com.sobot.chat.viewHolder.ConsultMessageHolder;
+import com.sobot.chat.viewHolder.CusEvaluateMessageHolder;
 import com.sobot.chat.viewHolder.ImageMessageHolder;
 import com.sobot.chat.viewHolder.RemindMessageHolder;
 import com.sobot.chat.viewHolder.RichTextMessageHolder;
@@ -37,6 +39,7 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
             "sobot_chat_msg_item_imgt_r",//图片消息右边的布局文件
             "sobot_chat_msg_item_audiot_r",//语音消息右边的布局文件
             "sobot_chat_msg_item_consult",//商品咨询内容的布局文件
+            "sobot_chat_msg_item_evaluate",//客服邀请评价的布局文件
     };
 
     /**
@@ -75,6 +78,10 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
      * 发送商品咨询
      */
     public static final int MSG_TYPE_CONSULT = 7;
+    /**
+     * 客服主动邀请客户评价
+     */
+    public static final int MSG_TYPE_CUSTOM_EVALUATE = 8;
 
     private String senderface;
     private String sendername;
@@ -120,6 +127,8 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
                 .action_consultingContent_info,false);
 
         removeByAction(message, ZhiChiConstant.sobot_outline_leverByManager, ZhiChiConstant.sobot_outline_leverByManager,true);
+
+        removeByAction(message, ZhiChiConstant.action_custom_evaluate, ZhiChiConstant.action_custom_evaluate,true);
 
         if(message.getAction() != null && message.getAction().equals(ZhiChiConstant.action_remind_past_time)
                 && message.getAnswer() != null && ZhiChiConstant.sobot_remind_type_outline == message.getAnswer().getRemindType()){
@@ -312,6 +321,10 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
                     holder = new ConsultMessageHolder(context, convertView);
                     break;
                 }
+                case MSG_TYPE_CUSTOM_EVALUATE:{
+                    holder = new CusEvaluateMessageHolder(context, convertView);
+                    break;
+                }
                 default:{
                     holder = new TextMessageHolder(context, convertView);
                     break;
@@ -443,6 +456,9 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
             } else if (ZhiChiConstant.message_sender_type_robot_guide == Integer
                     .parseInt(message.getSenderType())) {
                 return MSG_TYPE_RICH;
+            } else if (ZhiChiConstant.message_sender_type_custom_evaluate == Integer
+                    .parseInt(message.getSenderType())) {
+                return MSG_TYPE_CUSTOM_EVALUATE;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -511,6 +527,25 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
             if (list.get(i).getAction() != null) {
                 if (list.get(i).getAction().equals(ZhiChiConstant.action_consultingContent_info)) {
                     list.remove(i);
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * 将受邀请评价 model 修改为已评价
+     */
+    public void submitEvaluateData(int isResolved,int score){
+        String senderType = ZhiChiConstant.message_sender_type_custom_evaluate+"";
+        for (int i = list.size() - 1; i >= 0; i--) {
+            ZhiChiMessageBase msgInfo = list.get(i);
+            if(senderType.equals(msgInfo.getSenderType())){
+                SobotEvaluateModel sobotEvaluateModel = msgInfo.getSobotEvaluateModel();
+                if(sobotEvaluateModel != null){
+                    sobotEvaluateModel.setIsResolved(isResolved);
+                    sobotEvaluateModel.setScore(score);
+                    sobotEvaluateModel.setEvaluateStatus(1);
                     break;
                 }
             }

@@ -19,7 +19,7 @@ public class NotificationUtils {
 
         Intent detailIntent = context.getPackageManager().getLaunchIntentForPackage(CommonUtils
                 .getPackageName(context));
-        detailIntent.setPackage((String)null);
+//        detailIntent.setPackage((String)null);
         detailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         PendingIntent pendingIntent2 = PendingIntent.getActivity(context, 0,

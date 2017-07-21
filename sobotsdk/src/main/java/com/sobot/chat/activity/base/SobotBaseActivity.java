@@ -3,6 +3,7 @@ package com.sobot.chat.activity.base;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -32,6 +33,7 @@ import com.sobot.chat.api.model.ZhiChiMessage;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.api.model.ZhiChiReplyAnswer;
 import com.sobot.chat.application.MyApplication;
+import com.sobot.chat.core.channel.Const;
 import com.sobot.chat.core.channel.SobotMsgManager;
 import com.sobot.chat.core.http.callback.StringResultCallBack;
 import com.sobot.chat.listener.NoDoubleClickListener;
@@ -120,8 +122,8 @@ public abstract class SobotBaseActivity extends Activity implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		super.onCreate(savedInstanceState);
 		setupViews(); // 加载 activity_title 布局 ，并获取标题及两侧按钮
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
@@ -561,10 +563,7 @@ public abstract class SobotBaseActivity extends Activity implements
 					customerServiceOffline(initModel,1);
 				} else if(ZhiChiConstant.client_sendmsg_to_custom_success.equals(commonModelBase.getStatus())){
 					if (!TextUtils.isEmpty(mid)) {
-						if(!SobotMsgManager.getInstance(getApplicationContext()).isConnect() && !SobotMsgManager.getInstance(getApplicationContext()).isPollingStart()){
-							SobotMsgManager.getInstance(getApplicationContext()).setUserStatus(true);
-							zhiChiApi.reconnectChannel();
-						}
+                        CommonUtils.sendLocalBroadcast(getApplicationContext(),new Intent(Const.SOBOT_CHAT_CHECK_CONNCHANNEL));
 						isAboveZero = true;
 						// 当发送成功的时候更新ui界面
 						sendTextMessageToHandler(mid, null, handler, 1, true);
@@ -627,17 +626,19 @@ public abstract class SobotBaseActivity extends Activity implements
 	 */
 	public void startUserInfoTimeTask(final Handler handler) {
 		if (current_client_model == ZhiChiConstant.client_model_customService) {
-			stopUserInfoTimeTask();
-			userInfoTimeTask=true;
-			timerUserInfo = new Timer();
-			taskUserInfo = new TimerTask() {
-				@Override
-				public void run() {
-					// 需要做的事:发送消息
-					sendHandlerUserInfoTimeTaskMessage(handler);
-				}
-			};
-			timerUserInfo.schedule(taskUserInfo, 1000, 1000);
+			if (initModel.isCustomOutTimeFlag()){
+				stopUserInfoTimeTask();
+				userInfoTimeTask=true;
+				timerUserInfo = new Timer();
+				taskUserInfo = new TimerTask() {
+					@Override
+					public void run() {
+						// 需要做的事:发送消息
+						sendHandlerUserInfoTimeTaskMessage(handler);
+					}
+				};
+				timerUserInfo.schedule(taskUserInfo, 1000, 1000);
+			}
 		}
 	}
 
@@ -661,19 +662,21 @@ public abstract class SobotBaseActivity extends Activity implements
 	 */
 	public void startCustomTimeTask(final Handler handler) {
 		if (current_client_model == ZhiChiConstant.client_model_customService) {
-			if (!is_startCustomTimerTask) {
-				stopCustomTimeTask();
-				customTimeTask=true;
-				is_startCustomTimerTask = true;
-				timerCustom = new Timer();
-				taskCustom = new TimerTask() {
-					@Override
-					public void run() {
-						// 需要做的事:发送消息
-						sendHandlerCustomTimeTaskMessage(handler);
-					}
-				};
-				timerCustom.schedule(taskCustom, 1000, 1000);
+			if (initModel.isServiceOutTimeFlag()){
+				if (!is_startCustomTimerTask) {
+					stopCustomTimeTask();
+					customTimeTask=true;
+					is_startCustomTimerTask = true;
+					timerCustom = new Timer();
+					taskCustom = new TimerTask() {
+						@Override
+						public void run() {
+							// 需要做的事:发送消息
+							sendHandlerCustomTimeTaskMessage(handler);
+						}
+					};
+					timerCustom.schedule(taskCustom, 1000, 1000);
+				}
 			}
 		}
 	}
@@ -773,10 +776,8 @@ public abstract class SobotBaseActivity extends Activity implements
 				Message message = handler.obtainMessage();
 				message.what = ZhiChiConstant.hander_timeTask_custom_isBusying;
 				message.obj = result;
-				if (SobotMsgManager.getInstance(getApplicationContext()).isConnect() || SobotMsgManager.getInstance(getApplicationContext()).isPollingStart()) {
-					// 当有通道连接的时候才提醒
-					handler.sendMessage(message);
-				}
+				// 当有通道连接的时候才提醒
+				handler.sendMessage(message);
 				LogUtils.i("sobot---sendHandlerCustomTimeTaskMessage" + noReplyTimeCustoms);
 			}
 		}
@@ -822,13 +823,11 @@ public abstract class SobotBaseActivity extends Activity implements
 
 					base.setAnswer(reply);
 					base.setSenderFace(adminFace);
-					if(SobotMsgManager.getInstance(getApplicationContext()).isConnect() || SobotMsgManager.getInstance(getApplicationContext()).isPollingStart()){
-						//通道连接中才发出自动回复
-						Message message = handler.obtainMessage();
-						message.what = ZhiChiConstant.hander_timeTask_userInfo;
-						message.obj = base;
-						handler.sendMessage(message);
-					}
+					//通道连接中才发出自动回复
+					Message message = handler.obtainMessage();
+					message.what = ZhiChiConstant.hander_timeTask_userInfo;
+					message.obj = base;
+					handler.sendMessage(message);
 				}
 			}
 		}

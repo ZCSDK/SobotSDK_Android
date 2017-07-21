@@ -16,6 +16,7 @@ import com.sobot.chat.core.channel.Const;
 import com.sobot.chat.core.channel.SobotMsgManager;
 import com.sobot.chat.core.http.callback.StringResultCallBack;
 import com.sobot.chat.listener.HyperlinkListener;
+import com.sobot.chat.listener.SobotLeaveMsgListener;
 import com.sobot.chat.server.SobotSessionServer;
 import com.sobot.chat.utils.LogUtils;
 import com.sobot.chat.utils.NotificationUtils;
@@ -158,6 +159,14 @@ public class SobotApi {
 	}
 
 	/**
+	 *  设置跳转到留言页的监听
+	 * @param sobotLeaveMsgListener
+	 */
+	public static void setSobotLeaveMsgListener(SobotLeaveMsgListener sobotLeaveMsgListener){
+		SobotOption.sobotLeaveMsgListener = sobotLeaveMsgListener;
+	}
+
+	/**
 	 * 设置聊天界面标题显示模式
 	 * @param context 上下文对象
 	 * @param mode titile的显示模式
@@ -198,23 +207,6 @@ public class SobotApi {
 			return;
 		}
 		SharedPreferencesUtil.saveBooleanData(context,ZhiChiConstant.SOBOT_CHAT_EVALUATION_COMPLETED_EXIT, flag);
-	}
-
-	/**
-	 * @param context		Context 对象
-	 * @param isShowAnnouncement	是否显示通告
-	 * @param clickGone		点击通告之后是否隐藏
-	 * @param annTitle		通告标题
-	 * @param annLinkUrl	通告链接地址
-	 */
-	public static void setAnnouncement(Context context,boolean isShowAnnouncement, boolean clickGone, String annTitle, String annLinkUrl){
-		if (context == null){
-			return;
-		}
-		SharedPreferencesUtil.saveBooleanData(context,ZhiChiConstant.SOBOT_ISSHOWANNOUNCEMENT, isShowAnnouncement);
-		SharedPreferencesUtil.saveBooleanData(context,ZhiChiConstant.SOBOT_CLICKGONE, clickGone);
-		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_ANNTITLE, annTitle);
-		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_ANNLINKURL, annLinkUrl);
 	}
 
 	/**

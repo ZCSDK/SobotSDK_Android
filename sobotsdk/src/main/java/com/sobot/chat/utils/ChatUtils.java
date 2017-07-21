@@ -10,37 +10,32 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.view.Display;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ListView;
 
 import com.sobot.chat.SobotApi;
-import com.sobot.chat.activity.DCRCActivity;
-import com.sobot.chat.activity.SobotChatActivity;
 import com.sobot.chat.adapter.base.SobotMsgAdapter;
 import com.sobot.chat.api.ResultCallBack;
 import com.sobot.chat.api.ZhiChiApi;
 import com.sobot.chat.api.enumtype.SobotChatTitleDisplayMode;
 import com.sobot.chat.api.model.CommonModel;
 import com.sobot.chat.api.model.Information;
+import com.sobot.chat.api.model.SobotEvaluateModel;
 import com.sobot.chat.api.model.ZhiChiInitModeBase;
 import com.sobot.chat.api.model.ZhiChiMessage;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
+import com.sobot.chat.api.model.ZhiChiPushMessage;
 import com.sobot.chat.api.model.ZhiChiReplyAnswer;
 import com.sobot.chat.core.channel.Const;
 import com.sobot.chat.core.channel.SobotMsgManager;
 import com.sobot.chat.core.http.callback.StringResultCallBack;
 import com.sobot.chat.viewHolder.ImageMessageHolder;
-import com.sobot.chat.widget.OtherDialog;
-import com.sobot.chat.widget.ThankDialog;
+import com.sobot.chat.widget.dialog.SobotEvaluateDialog;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -49,42 +44,8 @@ import java.util.List;
 
 public class ChatUtils {
 
-	@SuppressWarnings("deprecation")
-	public static void showFinishDialog(final SobotChatActivity act,
-			View.OnClickListener listener) {
-		if(!act.isFinishing()){
-			int width = ScreenUtils.getScreenWidth(act);
-			int widths = 0;
-			if (width == 480) {
-				widths = 80;
-			} else {
-				widths = 120;
-			}
-
-			final OtherDialog reSendDialog = new OtherDialog(act,act);
-			reSendDialog.setOnClickListener(new OtherDialog.OnItemClick() {
-				@Override
-				public void OnClick(int type) {
-					if (type == 0) {// 0：确定 1：取消
-						act.finish();
-					}
-					reSendDialog.dismiss();
-				}
-			});
-			reSendDialog.show();
-			WindowManager windowManager = act.getWindowManager();
-			Display display = windowManager.getDefaultDisplay();
-			Window window = reSendDialog.getWindow();
-			if(window != null){
-				WindowManager.LayoutParams lp = window.getAttributes();
-				lp.width = (int) (display.getWidth() - widths); // 设置宽度
-				window.setAttributes(lp);
-			}
-		}
-	}
-
 	public static void showThankDialog(final Activity act,Handler handler, final boolean isFinish) {
-		ThankDialog.Builder customBuilder = new ThankDialog.Builder(act);
+/*		ThankDialog.Builder customBuilder = new ThankDialog.Builder(act);
 		customBuilder.setMessage(act.getResources().getString(ResourceUtils.getIdByName(act,
 				"string", "sobot_thank_dialog_hint")));
 		final ThankDialog d = customBuilder.create();
@@ -107,6 +68,19 @@ public class ChatUtils {
 			public void run() {
 				if(!act.isFinishing()){
 					d.dismiss();
+					if(isFinish){
+						act.finish();
+					}
+				}
+			}
+		},2000);*/
+
+		ToastUtil.showToast(act.getApplicationContext(),act.getResources().getString(
+				ResourceUtils.getIdByName(act, "string", "sobot_thank_dialog_hint")));
+		handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				if(!act.isFinishing()){
 					if(isFinish){
 						act.finish();
 					}
@@ -357,6 +331,25 @@ public class ChatUtils {
 	}
 
 	/**
+	 * 获取客服邀请的mode
+	 * @param pushMessage 推送的信息
+	 * @return
+	 */
+	public static ZhiChiMessageBase getCustomEvaluateMode(ZhiChiPushMessage pushMessage){
+		ZhiChiMessageBase base = new ZhiChiMessageBase();
+		base.setSenderName(TextUtils.isEmpty(pushMessage.getAname())?"客服":pushMessage.getAname());
+		SobotEvaluateModel sobotEvaluateModel = new SobotEvaluateModel();
+		sobotEvaluateModel.setIsQuestionFlag(pushMessage.getIsQuestionFlag());
+        sobotEvaluateModel.setIsResolved(-1);
+		base.setSobotEvaluateModel(sobotEvaluateModel);
+		ZhiChiReplyAnswer reply = new ZhiChiReplyAnswer();
+		base.setSenderType(ZhiChiConstant.message_sender_type_custom_evaluate + "");
+		base.setAction(ZhiChiConstant.action_custom_evaluate);
+		base.setAnswer(reply);
+		return base;
+	}
+
+	/**
 	 * 保存一些配置项
 	 * @param context
 	 * @param info
@@ -445,23 +438,15 @@ public class ChatUtils {
 	 * @param current_model 评价对象
 	 * @param commentType commentType 评价类型 主动评价1 邀请评价0
 	 */
-	public static void showEvaluateDialog(Context context , boolean isFinish, ZhiChiInitModeBase
-			initModel, int current_model,int commentType){
+	public static void showEvaluateDialog(Activity context , boolean isFinish, ZhiChiInitModeBase
+			initModel, int current_model, int commentType, String customName,int scroe){
 		if(initModel == null){
 			return;
 		}
-		Intent intent = new Intent(context, DCRCActivity.class);
-		Bundle bundle = new Bundle();
-		intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		bundle.putString("current_client_model", current_model+"");//当前模式
-		bundle.putBoolean("isShowFinish", isFinish);//是否是关闭界面
-		bundle.putString("robotCommentTitle", initModel.getRobotCommentTitle());//机器人评价语
-		bundle.putString("manualCommentTitle", initModel.getManualCommentTitle());//客服评价语
-		bundle.putString("cid", initModel.getCid());//客服评价语
-		bundle.putString("uid", initModel.getUid());//客服评价语
-		bundle.putInt("commentType", commentType);
-		intent.putExtra("bundle", bundle);
-		context.startActivity(intent);
+
+		SobotEvaluateDialog dialog = new SobotEvaluateDialog(context, isFinish,initModel,current_model,commentType, customName, scroe);
+		dialog.setCanceledOnTouchOutside(true);
+		dialog.show();
 	}
 
 	/**
@@ -682,5 +667,18 @@ public class ChatUtils {
 	public interface SobotSendFileListener{
 		void onSuccess(String filePath);
 		void onError();
+	}
+
+
+
+	/**
+	 * 检查是否开启   是否已解决配置
+	 * @return
+	 */
+	public static boolean isQuestionFlag(final SobotEvaluateModel evaluateModel){
+		if(evaluateModel != null){
+			return evaluateModel.getIsQuestionFlag();
+		}
+		return false;
 	}
 }

@@ -7,5 +7,7 @@
     <item
         android:id="@android:id/progress"
         android:drawable="@drawable/sobot_star_full"/>
-
+    <item
+        android:id="@android:id/secondaryProgress"
+        android:drawable="@drawable/sobot_star_full"/>
 </layer-list>

@@ -18,7 +18,7 @@
     <string name="sobot_close_session">End the conversation now?</string>
     <string name="sobot_welcome">loading\.\.\.</string>
     <string name="sobot_submit">Submit</string>
-    <string name="sobot_question">Are you satisfied with our service？</string>
+    <string name="sobot_question">Has your question been resolved?</string>
     <string name="sobot_edittext_hint">Tell us your suggestion</string>
     <string name="sobot_dcrc">Are you satisfied with our service?</string>
     <string name="sobot_str_bottom_message">Email</string>
@@ -82,7 +82,7 @@
     <string name="sobot_post_msg_hint_nikename">Nickname</string>
     <string name="sobot_post_msg_hint_phone">Tel</string>
     <string name="sobot_post_msg_hint_enclosure">Please upload pictures</string>
-    <string name="sobot_temporarily_not_evaluation">Temporarily not evaluation</string>
+    <string name="sobot_temporarily_not_evaluation">No evaluation</string>
     <string name="sobot_no_camera_permission">no camera permission</string>
     <string name="sobot_sdcard_does_not_exist">sdcard does not exist</string>
     <string name="sobot_conntype_unconnected">not connection</string>
@@ -90,11 +90,22 @@
     <string name="sobot_conntype_connect_success">connect success</string>
     <string name="sobot_required">（required）</string>
     <string name="sobot_optional">（optional）</string>
+    <string name="sobot_what_are_the_problems">Please select the problems that exist</string>
+    <string name="sobot_robot_customer_service_evaluation">Robot customer service evaluation</string>
     <string name="sobot_color_custom_name">#888888</string>
-    <string name="sobot_evaluation_completed_exit">Reminder: post evaluation session will end</string>
+    <string name="sobot_evaluation_completed_exit">The conversation\'ll end after submission</string>
     <string name="sobot_delete">Delete</string>
     <string name="sobot_choice_form_picture">Choose from the phone album</string>
     <string name="sobot_loading">loading</string>
     <string name="sobot_robot_like">Thank you for your feedback</string>
     <string name="sobot_robot_dislike">I am sorry I did not help you</string>
+    <string name="sobot_evaluate_yes">YES</string>
+    <string name="sobot_evaluate_no">NO</string>
+    <string name="sobot_please_evaluate">Please evaluate [%1$s]</string>
+    <string name="sobot_evaluation_decription">Your evaluation will make us do better</string>
+    <string name="sobot_evaluation_finished">Your rating has been successfully submitted</string>
+    <string name="sobot_please_evaluate_this_service">Please rate the service</string>
+    <string name="sobot_the_label_is_required">The label is required</string>
+    <string name="sobot_suggestions_are_required">Suggestions are required</string>
+    <string name="sobot_wait_full">The queue is full</string>
 </resources>
