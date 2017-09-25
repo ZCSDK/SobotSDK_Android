@@ -1,6 +1,7 @@
 package com.sobot.chat.viewHolder;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -79,7 +80,7 @@ public class ImageMessageHolder extends MessageHolderBase {
         }
 
         String picPath = message.getAnswer().getMsg();
-        if(picPath.endsWith("gif") || picPath.endsWith("GIF")){
+        if(!TextUtils.isEmpty(picPath) && (picPath.endsWith("gif") || picPath.endsWith("GIF"))){
             isGif.setVisibility(View.VISIBLE);
         }else{
             isGif.setVisibility(View.GONE);

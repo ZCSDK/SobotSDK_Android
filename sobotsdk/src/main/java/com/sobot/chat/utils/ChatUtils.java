@@ -14,18 +14,30 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
+import android.text.Html;
+import android.text.InputType;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.sobot.chat.SobotApi;
+import com.sobot.chat.activity.SobotPostMsgActivity;
 import com.sobot.chat.adapter.base.SobotMsgAdapter;
 import com.sobot.chat.api.ResultCallBack;
 import com.sobot.chat.api.ZhiChiApi;
 import com.sobot.chat.api.enumtype.SobotChatTitleDisplayMode;
 import com.sobot.chat.api.model.CommonModel;
 import com.sobot.chat.api.model.Information;
+import com.sobot.chat.api.model.SobotCusFieldConfig;
 import com.sobot.chat.api.model.SobotEvaluateModel;
+import com.sobot.chat.api.model.SobotFieldModel;
 import com.sobot.chat.api.model.ZhiChiInitModeBase;
 import com.sobot.chat.api.model.ZhiChiMessage;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
@@ -36,44 +48,18 @@ import com.sobot.chat.core.channel.SobotMsgManager;
 import com.sobot.chat.core.http.callback.StringResultCallBack;
 import com.sobot.chat.viewHolder.ImageMessageHolder;
 import com.sobot.chat.widget.dialog.SobotEvaluateDialog;
+import com.sobot.chat.widget.kpswitch.util.KeyboardUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ChatUtils {
 
 	public static void showThankDialog(final Activity act,Handler handler, final boolean isFinish) {
-/*		ThankDialog.Builder customBuilder = new ThankDialog.Builder(act);
-		customBuilder.setMessage(act.getResources().getString(ResourceUtils.getIdByName(act,
-				"string", "sobot_thank_dialog_hint")));
-		final ThankDialog d = customBuilder.create();
-		d.show();
-
-		int width = ScreenUtils.getScreenWidth(act);
-		WindowManager windowManager = act.getWindowManager();
-		Display display = windowManager.getDefaultDisplay();
-		if(d.getWindow() != null){
-			WindowManager.LayoutParams lp = d.getWindow().getAttributes();
-			if (width == 480) {
-				lp.width = display.getWidth() - 120; // 设置宽度
-			} else {
-				lp.width = display.getWidth() - 200; // 设置宽度
-			}
-		}
-
-		handler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				if(!act.isFinishing()){
-					d.dismiss();
-					if(isFinish){
-						act.finish();
-					}
-				}
-			}
-		},2000);*/
 
 		ToastUtil.showToast(act.getApplicationContext(),act.getResources().getString(
 				ResourceUtils.getIdByName(act, "string", "sobot_thank_dialog_hint")));
@@ -103,7 +89,7 @@ public class ChatUtils {
 			intent.setType("image/*");
 		} else {
 			intent = new Intent(Intent.ACTION_PICK,
-					android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+					MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 		}
 		try {
 			act.startActivityForResult(intent, ZhiChiConstant.REQUEST_CODE_picture);
@@ -160,8 +146,8 @@ public class ChatUtils {
 	}
 
 	public static void sendPicByUri(Context context, Handler handler,
-			Uri selectedImage, ZhiChiInitModeBase initModel,final ListView lv_message,
-									final SobotMsgAdapter messageAdapter) {
+                                    Uri selectedImage, ZhiChiInitModeBase initModel, final ListView lv_message,
+                                    final SobotMsgAdapter messageAdapter) {
 		if(initModel == null){
 			return;
 		}
@@ -306,7 +292,7 @@ public class ChatUtils {
 		} else if (3 == type) { // 被加入黑名单
 			return resources.getString(ResourceUtils.getIdByName(context, "string", "sobot_outline_leverByManager"));
 		} else if (4 == type) { // 超时下线
-			String userOutWord = SharedPreferencesUtil.getStringData(context,ZhiChiConstant.SOBOT_CUSTOMUSEROUTWORD,"");
+			String userOutWord = SharedPreferencesUtil.getStringData(context, ZhiChiConstant.SOBOT_CUSTOMUSEROUTWORD,"");
 			if (!TextUtils.isEmpty(userOutWord)){
 				return userOutWord;
 			} else {
@@ -360,21 +346,10 @@ public class ChatUtils {
 				(info.getFace())?"":info.getFace());
 		SharedPreferencesUtil.saveStringData(context, "sobot_current_sender_name", TextUtils.isEmpty
 				(info.getUname())?"":info.getUname());
-		SharedPreferencesUtil.saveStringData(context, "sobot_user_nikename", TextUtils.isEmpty
-				(info.getUname())?"":info.getUname());
 		SharedPreferencesUtil.saveStringData(context, "sobot_user_phone", TextUtils.isEmpty
 				(info.getTel())?"":info.getTel());
-		if (info.isShowNikeNameTv()){
-			SharedPreferencesUtil.saveBooleanData(context,"sobot_postMsg_nike_nameShowFlag",info.isShowNikeNameTv());
-		} else {
-			SharedPreferencesUtil.removeKey(context,"sobot_postMsg_nike_nameShowFlag");
-		}
-
-		if (info.isShowNikeName()){
-			SharedPreferencesUtil.saveBooleanData(context,"sobot_postMsg_nike_nameFlag",info.isShowNikeName());
-		} else {
-			SharedPreferencesUtil.removeKey(context,"sobot_postMsg_nike_nameFlag");
-		}
+		SharedPreferencesUtil.saveStringData(context, "sobot_user_email", TextUtils.isEmpty
+				(info.getEmail())?"":info.getEmail());
 
 		if (!TextUtils.isEmpty(info.getColor())) {
 			SharedPreferencesUtil.saveStringData(context, "robot_current_themeColor", info.getColor());
@@ -405,16 +380,16 @@ public class ChatUtils {
 	public static boolean checkConfigChange(Context context,final Information info) {
 		String last_current_appkey = SharedPreferencesUtil.getStringData(context, ZhiChiConstant.sobot_last_current_appkey,"");
 		if(!last_current_appkey.equals(info.getAppkey())){
-			SharedPreferencesUtil.removeKey(context,ZhiChiConstant.sobot_last_login_group_id);
+			SharedPreferencesUtil.removeKey(context, ZhiChiConstant.sobot_last_login_group_id);
 			SobotApi.exitSobotChat(context);
 			return true;
 		} else {
 			String last_current_partnerId = SharedPreferencesUtil.getStringData
 					(context, ZhiChiConstant.sobot_last_current_partnerId,"");
 			String last_current_dreceptionistId = SharedPreferencesUtil.getStringData(
-					context,ZhiChiConstant.SOBOT_RECEPTIONISTID,"");
+					context, ZhiChiConstant.SOBOT_RECEPTIONISTID,"");
 			String last_current_robot_code = SharedPreferencesUtil.getStringData(
-					context,ZhiChiConstant.SOBOT_ROBOT_CODE,"");
+					context, ZhiChiConstant.SOBOT_ROBOT_CODE,"");
 			//判断上次uid是否跟此次传入的一样
 			if(!last_current_partnerId.equals(info.getUid())){
 				return true;
@@ -517,14 +492,14 @@ public class ChatUtils {
 	 * @param aname
      * @return
      */
-	public static ZhiChiMessageBase getServiceAcceptTip(Context context,String aname){
+	public static ZhiChiMessageBase getServiceAcceptTip(Context context, String aname){
 		ZhiChiMessageBase base = new ZhiChiMessageBase();
 		base.setSenderType(ZhiChiConstant.message_sender_type_remide_info + "");
 		base.setAction(ZhiChiConstant.action_remind_connt_success);
 		ZhiChiReplyAnswer reply = new ZhiChiReplyAnswer();
 		reply.setMsgType(null);
 
-		String nameColor = "<font color='"+ChatUtils.getResString(context,"sobot_color_custom_name")
+		String nameColor = "<font color='"+ ChatUtils.getResString(context,"sobot_color_custom_name")
 				+"'>" + aname + "</font>";
 		reply.setMsg(String.format(ChatUtils.getResString(context,"sobot_service_accept"), nameColor));
 		reply.setRemindType(ZhiChiConstant.sobot_remind_type_accept_request);
@@ -539,7 +514,7 @@ public class ChatUtils {
 	 * @param content 欢迎语内容
 	 * @return
 	 */
-	public static ZhiChiMessageBase getServiceHelloTip(String aname, String aface,String content) {
+	public static ZhiChiMessageBase getServiceHelloTip(String aname, String aface, String content) {
 		ZhiChiMessageBase base = new ZhiChiMessageBase();
 		base.setSenderName(TextUtils.isEmpty(aname)?"":aname);
 		ZhiChiReplyAnswer reply = new ZhiChiReplyAnswer();
@@ -555,7 +530,7 @@ public class ChatUtils {
 	 *
 	 * @return
      */
-	public static ZhiChiMessageBase getInLineHint(Context context,int num){
+	public static ZhiChiMessageBase getInLineHint(Context context, int num){
 		ZhiChiMessageBase paiduizhichiMessageBase = new ZhiChiMessageBase();
 		paiduizhichiMessageBase.setSenderType(ZhiChiConstant.message_sender_type_remide_info + "");
 		paiduizhichiMessageBase.setAction(ZhiChiConstant.action_remind_info_paidui);
@@ -576,7 +551,7 @@ public class ChatUtils {
 	 */
 	public static boolean isEvaluationCompletedExit(Context context,boolean isComment,int current_client_model){
 		boolean evaluationCompletedExit = SharedPreferencesUtil.getBooleanData
-				(context,ZhiChiConstant.SOBOT_CHAT_EVALUATION_COMPLETED_EXIT,false);
+				(context, ZhiChiConstant.SOBOT_CHAT_EVALUATION_COMPLETED_EXIT,false);
 		if(evaluationCompletedExit && isComment && current_client_model == ZhiChiConstant.client_model_customService){
 			return true;
 		}
@@ -591,7 +566,7 @@ public class ChatUtils {
 
 
 		String cid = SharedPreferencesUtil.getStringData(context, Const.SOBOT_CID,"");
-		String uid = SharedPreferencesUtil.getStringData(context,Const.SOBOT_UID,"");
+		String uid = SharedPreferencesUtil.getStringData(context, Const.SOBOT_UID,"");
 
 		if (!TextUtils.isEmpty(cid) && !TextUtils.isEmpty(uid)){
 			ZhiChiApi zhiChiApi = SobotMsgManager.getInstance(context).getZhiChiApi();
@@ -669,8 +644,6 @@ public class ChatUtils {
 		void onError();
 	}
 
-
-
 	/**
 	 * 检查是否开启   是否已解决配置
 	 * @return
@@ -680,5 +653,240 @@ public class ChatUtils {
 			return evaluateModel.getIsQuestionFlag();
 		}
 		return false;
+	}
+
+	//创建工单自定义字段
+	public static void addWorkOrderCusFields(final Context context, final ArrayList<SobotFieldModel> cusFieldList, LinearLayout containerLayout) {
+		if (containerLayout != null) {
+			containerLayout.setVisibility(View.VISIBLE);
+			containerLayout.removeAllViews();
+			if (cusFieldList != null && cusFieldList.size() != 0) {
+				int size = cusFieldList.size();
+				for (int i = 0; i < cusFieldList.size(); i++) {
+					final SobotFieldModel model = cusFieldList.get(i);
+					final SobotCusFieldConfig cusFieldConfig = model.getCusFieldConfig();
+					if (cusFieldConfig == null){
+						continue;
+					}
+					View view = View.inflate(context, ResourceUtils.getIdByName(context, "layout", "sobot_post_msg_cusfield_list_item"), null);
+					view.setTag(cusFieldConfig.getFieldId());
+					View bottomLine = view.findViewById(ResourceUtils.getIdByName(context, "id", "work_order_customer_field_text_bootom_line"));
+					if (cusFieldList.size() == 1 ||  i == (size -1)) {
+						bottomLine.setVisibility(View.GONE);
+					} else {
+						bottomLine.setVisibility(View.VISIBLE);
+					}
+					LinearLayout ll_more_text_layout = (LinearLayout) view.findViewById(ResourceUtils.getIdByName(context, "id", "work_order_customer_field_more_relativelayout"));
+					TextView fieldMoreName = (TextView) view.findViewById(ResourceUtils.getIdByName(context, "id", "work_order_customer_field_more_text_lable"));
+					final EditText moreContent = (EditText) view.findViewById(ResourceUtils.getIdByName(context, "id", "work_order_customer_field_text_more_content"));
+
+					RelativeLayout ll_text_layout = (RelativeLayout) view.findViewById(ResourceUtils.getIdByName(context, "id", "work_order_customer_field_text"));
+					TextView fieldName = (TextView) view.findViewById(ResourceUtils.getIdByName(context, "id", "work_order_customer_field_text_lable"));
+					final TextView textClick = (TextView) view.findViewById(ResourceUtils.getIdByName(context, "id", "work_order_customer_date_text_click"));
+					EditText fieldValue = (EditText) view.findViewById(ResourceUtils.getIdByName(context, "id", "work_order_customer_field_text_content"));
+					EditText numberContent = (EditText) view.findViewById(ResourceUtils.getIdByName(context, "id", "work_order_customer_field_text_number"));
+					final EditText singleContent = (EditText) view.findViewById(ResourceUtils.getIdByName(context, "id", "work_order_customer_field_text_single"));
+					ImageView fieldImg = (ImageView) view.findViewById(ResourceUtils.getIdByName(context, "id", "work_order_customer_field_text_img"));
+
+					if (ZhiChiConstant.WORK_ORDER_CUSTOMER_FIELD_SINGLE_LINE_TYPE == cusFieldConfig.getFieldType()) {
+						ll_more_text_layout.setVisibility(View.GONE);
+						textClick.setVisibility(View.GONE);
+						fieldImg.setVisibility(View.GONE);
+						ll_text_layout.setVisibility(View.VISIBLE);
+						numberContent.setVisibility(View.GONE);
+						fieldValue.setVisibility(View.GONE);
+						singleContent.setVisibility(View.VISIBLE);
+						if (1 == cusFieldConfig.getFillFlag()) {
+							fieldName.setText(Html.fromHtml(cusFieldConfig.getFieldName() + "<font color='#f9676f'>&#8201*</font>"));
+						} else {
+							fieldName.setText(cusFieldConfig.getFieldName());
+						}
+						singleContent.setSingleLine(true);
+						singleContent.setMaxEms(11);
+						singleContent.setInputType(EditorInfo.TYPE_CLASS_TEXT);
+
+						if (cusFieldConfig.getOpenFlag() == 0) {
+							singleContent.setEnabled(false);
+						}
+
+					} else if (ZhiChiConstant.WORK_ORDER_CUSTOMER_FIELD_MORE_LINE_TYPE == cusFieldConfig.getFieldType()) {
+						ll_more_text_layout.setVisibility(View.VISIBLE);
+						ll_text_layout.setVisibility(View.GONE);
+						if (1 == cusFieldConfig.getFillFlag()) {
+							fieldMoreName.setText(Html.fromHtml(cusFieldConfig.getFieldName() + "<font color='#f9676f'>&#8201*</font>"));
+						} else {
+							fieldMoreName.setText(cusFieldConfig.getFieldName());
+						}
+						moreContent.setInputType(EditorInfo.TYPE_CLASS_TEXT);
+						//设置EditText的显示方式为多行文本输入
+						moreContent.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+						//文本显示的位置在EditText的最上方
+						moreContent.setGravity(Gravity.TOP);
+						//改变默认的单行模式
+						moreContent.setSingleLine(false);
+						//水平滚动设置为False
+						moreContent.setHorizontallyScrolling(false);
+
+						if (cusFieldConfig.getOpenFlag() == 0) {
+							moreContent.setEnabled(false);
+						}
+					} else if (ZhiChiConstant.WORK_ORDER_CUSTOMER_FIELD_DATE_TYPE == cusFieldConfig.getFieldType()) {
+						ll_more_text_layout.setVisibility(View.GONE);
+						textClick.setVisibility(View.VISIBLE);
+						ll_text_layout.setVisibility(View.VISIBLE);
+						fieldImg.setVisibility(View.VISIBLE);
+						singleContent.setVisibility(View.GONE);
+						fieldValue.setVisibility(View.GONE);
+						numberContent.setVisibility(View.GONE);
+						fieldName.setText(cusFieldConfig.getFieldName());
+						if (1 == cusFieldConfig.getFillFlag()) {
+							fieldName.setText(Html.fromHtml(cusFieldConfig.getFieldName() + "<font color='#f9676f'>&#8201*</font>"));
+						} else {
+							fieldName.setText(cusFieldConfig.getFieldName());
+						}
+
+						if (cusFieldConfig.getOpenFlag() == 1) {
+							view.setOnClickListener(new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									KeyboardUtil.hideKeyboard(textClick);
+									String str = textClick.getText().toString();
+									Date date = null;
+									if (!TextUtils.isEmpty(str)){
+										date = DateUtil.parse(str, DateUtil.DATE_FORMAT2);
+									}
+									DateUtil.openTimePickerView(context, textClick, date, 0);
+								}
+							});
+						}
+					} else if (ZhiChiConstant.WORK_ORDER_CUSTOMER_FIELD_TIME_TYPE == cusFieldConfig.getFieldType()) {
+						ll_more_text_layout.setVisibility(View.GONE);
+						textClick.setVisibility(View.VISIBLE);
+						ll_text_layout.setVisibility(View.VISIBLE);
+						fieldImg.setVisibility(View.VISIBLE);
+						fieldValue.setVisibility(View.GONE);
+						numberContent.setVisibility(View.GONE);
+						singleContent.setVisibility(View.GONE);
+						if (1 == cusFieldConfig.getFillFlag()) {
+							fieldName.setText(Html.fromHtml(cusFieldConfig.getFieldName() + "<font color='#f9676f'>&#8201*</font>"));
+						} else {
+							fieldName.setText(cusFieldConfig.getFieldName());
+						}
+
+						if (cusFieldConfig.getOpenFlag() == 1) {
+							view.setOnClickListener(new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									KeyboardUtil.hideKeyboard(textClick);
+									String str = textClick.getText().toString();
+									Date date = null;
+									if (!TextUtils.isEmpty(str)){
+										date = DateUtil.parse(str, DateUtil.DATE_FORMAT0);
+									}
+									DateUtil.openTimePickerView(context, textClick, date, 1);
+								}
+							});
+						}
+
+					} else if (ZhiChiConstant.WORK_ORDER_CUSTOMER_FIELD_NUMBER_TYPE == cusFieldConfig.getFieldType()) {
+						ll_more_text_layout.setVisibility(View.GONE);
+						textClick.setVisibility(View.GONE);
+						ll_text_layout.setVisibility(View.VISIBLE);
+						singleContent.setVisibility(View.GONE);
+						fieldImg.setVisibility(View.GONE);
+						fieldValue.setVisibility(View.GONE);
+						numberContent.setVisibility(View.VISIBLE);
+						numberContent.setSingleLine(true);
+						if (1 == cusFieldConfig.getFillFlag()) {
+							fieldName.setText(Html.fromHtml(cusFieldConfig.getFieldName() + "<font color='#f9676f'>&#8201*</font>"));
+						} else {
+							fieldName.setText(cusFieldConfig.getFieldName());
+						}
+
+						numberContent.setInputType(EditorInfo.TYPE_CLASS_NUMBER);
+
+						if (cusFieldConfig.getOpenFlag() == 0) {
+							numberContent.setEnabled(false);
+						}
+
+					} else if (ZhiChiConstant.WORK_ORDER_CUSTOMER_FIELD_SPINNER_TYPE == cusFieldConfig.getFieldType()) {
+						ll_more_text_layout.setVisibility(View.GONE);
+						textClick.setVisibility(View.VISIBLE);
+						ll_text_layout.setVisibility(View.VISIBLE);
+						numberContent.setVisibility(View.GONE);
+						singleContent.setVisibility(View.GONE);
+						fieldImg.setVisibility(View.VISIBLE);
+						fieldValue.setVisibility(View.GONE);
+						if (1 == cusFieldConfig.getFillFlag()) {
+							fieldName.setText(Html.fromHtml(cusFieldConfig.getFieldName() + "<font color='#f9676f'>&#8201*</font>"));
+						} else {
+							fieldName.setText(cusFieldConfig.getFieldName());
+						}
+
+						if (cusFieldConfig.getOpenFlag() == 1) {
+							view.setOnClickListener(new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									if (context != null) {
+										((SobotPostMsgActivity) context).startSobotCusFieldActivity(cusFieldConfig, model);
+									}
+								}
+							});
+						}
+
+					} else if (ZhiChiConstant.WORK_ORDER_CUSTOMER_FIELD_RADIO_TYPE == cusFieldConfig.getFieldType()) {
+						ll_more_text_layout.setVisibility(View.GONE);
+						textClick.setVisibility(View.VISIBLE);
+						ll_text_layout.setVisibility(View.VISIBLE);
+						fieldImg.setVisibility(View.VISIBLE);
+						numberContent.setVisibility(View.GONE);
+						fieldValue.setVisibility(View.GONE);
+						singleContent.setVisibility(View.GONE);
+						if (1 == cusFieldConfig.getFillFlag()) {
+							fieldName.setText(Html.fromHtml(cusFieldConfig.getFieldName() + "<font color='#f9676f'>&#8201*</font>"));
+						} else {
+							fieldName.setText(cusFieldConfig.getFieldName());
+						}
+
+						if (cusFieldConfig.getOpenFlag() == 1) {
+							view.setOnClickListener(new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									if (context != null) {
+										((SobotPostMsgActivity) context).startSobotCusFieldActivity(cusFieldConfig, model);
+									}
+								}
+							});
+						}
+
+					} else if (ZhiChiConstant.WORK_ORDER_CUSTOMER_FIELD_CHECKBOX_TYPE == cusFieldConfig.getFieldType()) {
+						ll_more_text_layout.setVisibility(View.GONE);
+						textClick.setVisibility(View.VISIBLE);
+						ll_text_layout.setVisibility(View.VISIBLE);
+						fieldImg.setVisibility(View.VISIBLE);
+						fieldValue.setVisibility(View.GONE);
+						singleContent.setVisibility(View.GONE);
+						numberContent.setVisibility(View.GONE);
+						if (1 == cusFieldConfig.getFillFlag()) {
+							fieldName.setText(Html.fromHtml(cusFieldConfig.getFieldName() + "<font color='#f9676f'>&#8201*</font>"));
+						} else {
+							fieldName.setText(cusFieldConfig.getFieldName());
+						}
+
+						if (cusFieldConfig.getOpenFlag() == 1) {
+							view.setOnClickListener(new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									if (context != null) {
+										((SobotPostMsgActivity) context).startSobotCusFieldActivity(cusFieldConfig, model);
+									}
+								}
+							});
+						}
+					}
+					containerLayout.addView(view);
+				}
+			}
+		}
 	}
 }

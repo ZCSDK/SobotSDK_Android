@@ -1,112 +1,94 @@
 package com.sobot.chat.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
-
-import java.io.FileInputStream;
+import com.sobot.chat.imageloader.SobotGlideImageLoader;
+import com.sobot.chat.imageloader.SobotImageLoader;
+import com.sobot.chat.imageloader.SobotPicassoImageLoader;
+import com.sobot.chat.imageloader.SobotUILImageLoader;
 
 public class BitmapUtil {
-    public static void display(Context context, String url,
-                               ImageView imageView, Drawable defaultPic, Drawable error) {
-        Picasso.with(context).load(url)
-                .placeholder(defaultPic) // 设置等待的图片
-                .error(error)// 加载错误显示的图片
-                .config(Bitmap.Config.RGB_565)
-                .into(imageView);
+
+    private static SobotImageLoader sImageLoader;
+
+    private static final SobotImageLoader getImageLoader() {
+        if (sImageLoader == null) {
+            synchronized (BitmapUtil.class) {
+                if (sImageLoader == null) {
+                    if (isClassExists("com.bumptech.glide.Glide")) {
+                        sImageLoader = new SobotGlideImageLoader();
+                    } else if (isClassExists("com.squareup.picasso.Picasso")) {
+                        sImageLoader = new SobotPicassoImageLoader();
+                    } else if (isClassExists("com.nostra13.universalimageloader.core.ImageLoader")) {
+                        sImageLoader = new SobotUILImageLoader();
+                    } else {
+                        throw new RuntimeException("必须在(Glide、Picasso、universal-image-loader)中选择一个图片加载库添加依赖,或者检查是否添加了相应的混淆配置");
+                    }
+                }
+            }
+        }
+        return sImageLoader;
+    }
+
+    private static final boolean isClassExists(String classFullName) {
+        try {
+            Class.forName(classFullName);
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 
     public static void display(Context context, String url,
                                ImageView imageView, int defaultPic, int error) {
-        Picasso.with(context).load(url)
-                .placeholder(defaultPic) // 设置等待的图片
-                .error(error)// 加载错误显示的图片
-                .config(Bitmap.Config.RGB_565)
-                .into(imageView);
+        getImageLoader().displayImage(context, imageView, url, defaultPic, error, imageView.getWidth(), imageView.getHeight(), null);
     }
 
     @SuppressWarnings("deprecation")
     public static void display(Context context, String url, ImageView imageView) {
 
-        if (!url.startsWith("http")) {
+        if (!TextUtils.isEmpty(url) && !url.startsWith("http")) {
             url = "file://" + url;
         }
-        Picasso.with(context).load(url)
-                .placeholder(ResourceUtils.getIdByName(context, "drawable",
-                        "sobot_default_pic")) // 设置等待的图片
-                .fit().centerCrop()
-                .config(Bitmap.Config.RGB_565)
-                .error(ResourceUtils.getIdByName(context, "drawable",
-                        "sobot_default_pic_err"))// 加载错误显示的图片
-                .into(imageView);
+
+        getImageLoader().displayImage(context, imageView, url, ResourceUtils.getIdByName(context, "drawable",
+                "sobot_default_pic"), ResourceUtils.getIdByName(context, "drawable",
+                "sobot_default_pic_err"), imageView.getWidth(), imageView.getHeight(), null);
     }
 
     public static void display(Context context, int resourceId, ImageView imageView) {
-        Picasso.with(context).load(resourceId)
-                .into(imageView);
+        getImageLoader().displayImage(context, imageView, resourceId, 0, 0, imageView.getWidth(), imageView.getHeight(), null);
     }
 
     /**
      * 加载头像的方法
+     *
      * @param context
-     * @param url 头像的路径
+     * @param url       头像的路径
      * @param imageView
-     * @param defId 默认图片的id
+     * @param defId     默认图片的id
      */
     public static void displayRound(Context context, String url, ImageView imageView, int defId) {
-        Picasso.with(context).load(url)
-//				.transform(new PicassoRoundTransform(8))
-                .placeholder(defId) // 设置等待的图片
-                .error(defId)// 加载错误显示的图片
-                .config(Bitmap.Config.RGB_565)
-                .into(imageView);
+        getImageLoader().displayImage(context, imageView, url, defId, defId, imageView.getWidth(), imageView.getHeight(), null);
     }
 
     /**
      * 加载头像的方法
+     *
      * @param context
-     * @param resId 头像的资源ID
+     * @param resId     头像的资源ID
      * @param imageView
-     * @param defId 默认图片的id
+     * @param defId     默认图片的id
      */
     public static void displayRound(Context context, int resId, ImageView imageView, int
             defId) {
-        Picasso.with(context).load(resId)
-//				.transform(new PicassoRoundTransform(8))
-                .placeholder(defId) // 设置等待的图片
-                .error(defId)// 加载错误显示的图片
-                .config(Bitmap.Config.RGB_565)
-                .into(imageView);
-    }
-
-    public static boolean isGif(String srcFileName) {
-        FileInputStream imgFile = null;
-        byte[] b = new byte[3];
-        int l = -1;
-        try {
-            imgFile = new FileInputStream(srcFileName);
-            l = imgFile.read(b);
-            imgFile.close();
-        } catch (Exception e) {
-            return false;
-        }
-        if (l == 3) {
-            byte b0 = b[0];
-            byte b1 = b[1];
-            byte b2 = b[2];
-            if (b0 == (byte) 'G' && b1 == (byte) 'I' && b2 == (byte) 'F') {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
+        getImageLoader().displayImage(context, imageView, resId, defId, defId, imageView.getWidth(), imageView.getHeight(), null);
     }
 
     @SuppressWarnings("deprecation")
@@ -118,7 +100,7 @@ public class BitmapUtil {
 
         int width = wm.getDefaultDisplay().getWidth();
         int height = wm.getDefaultDisplay().getHeight();
-        options.inSampleSize = calculateInSampleSize(options, width,height);
+        options.inSampleSize = calculateInSampleSize(options, width, height);
         options.inJustDecodeBounds = false;
 
         return BitmapFactory.decodeFile(filePath, options);

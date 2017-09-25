@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/send_voice_robot_hint"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#a1a6b3"
+        android:gravity="center"
+        android:text="@string/sobot_robot_voice_hint"
+        android:textColor="#ffffff"
+        android:textSize="14sp" />
 
     <LinearLayout
         android:id="@+id/sobot_ll_bottom"
@@ -18,19 +29,19 @@
         <ImageButton
             android:id="@+id/sobot_btn_set_mode_rengong"
             style="@style/sobot_chatting_keyboard_btn"
-            android:background="@drawable/sobot_manualwork_button_selector"/>
+            android:background="@drawable/sobot_manualwork_button_selector" />
 
         <!--从语音模式转到编辑模式-->
         <ImageButton
             android:id="@+id/sobot_btn_model_edit"
             style="@style/sobot_chatting_keyboard_btn"
-            android:background="@drawable/sobot_keyboard_button_selector"/>
+            android:background="@drawable/sobot_keyboard_button_selector" />
 
         <!--从编辑模式转到语音模式-->
         <ImageButton
             android:id="@+id/sobot_btn_model_voice"
             style="@style/sobot_chatting_keyboard_btn"
-            android:background="@drawable/sobot_vioce_button_selector"/>
+            android:background="@drawable/sobot_vioce_button_selector" />
         <!-- 按住说话  start -->
 
         <LinearLayout
@@ -53,7 +64,7 @@
                 android:layout_marginLeft="@dimen/sobot_DIMEN_15PX"
                 android:gravity="center_vertical"
                 android:textColor="@color/sobot_color_bottom_btn_voice"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
         </LinearLayout>
 
         <!-- 文本输入  start -->
@@ -85,17 +96,17 @@
                 android:minHeight="@dimen/sobot_DIMEN_96PX"
                 android:padding="5dp"
                 android:textSize="16sp"
-                android:visibility="visible"/>
+                android:visibility="visible" />
 
             <LinearLayout
                 android:id="@+id/sobot_btn_ll_emoticon_view"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:gravity="bottom"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/sobot_DIMEN_21PX"
                 android:layout_marginRight="10dp"
+                android:gravity="bottom"
                 android:orientation="vertical">
                 <!-- 表情按钮 -->
                 <ImageButton
@@ -105,31 +116,32 @@
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/sobot_emoticon_button_selector"
                     android:contentDescription="@null"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
             </LinearLayout>
         </RelativeLayout>
 
-        <LinearLayout android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_marginRight="10dp"
-                      android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal">
             <!-- 文本输入   end -->
             <Button
                 android:id="@+id/sobot_btn_send"
                 android:layout_width="40dp"
                 android:layout_height="28dp"
                 android:background="@drawable/sobot_btn_sendmsg_selector"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <!-- 加号按钮 -->
             <Button
                 android:id="@+id/sobot_btn_upload_view"
                 android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:layout_marginLeft="9dp"
                 android:layout_marginRight="3dp"
-                android:layout_height="28dp"
-                android:gravity="center"
-                android:background="@drawable/sobot_picture_button_selector"/>
+                android:background="@drawable/sobot_picture_button_selector"
+                android:gravity="center" />
         </LinearLayout>
     </LinearLayout>
 
@@ -141,9 +153,10 @@
         android:background="@drawable/sobot_linearlayout_border"
         android:orientation="vertical"
         android:visibility="gone">
+
         <com.sobot.chat.widget.kpswitch.CustomeChattingPanel
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
     </com.sobot.chat.widget.kpswitch.widget.KPSwitchPanelLinearLayout>
 
     <!-- 开始新会话布局 -->
@@ -158,6 +171,7 @@
         android:paddingRight="32dp"
         android:paddingTop="5dp"
         android:visibility="gone">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="70dp"
@@ -175,7 +189,7 @@
                 android:padding="5dp"
                 android:text="@string/sobot_str_bottom_satisfaction"
                 android:textColor="@color/sobot_color_bottom_message"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/sobot_txt_restart_talk"
@@ -189,7 +203,7 @@
                 android:padding="5dp"
                 android:text="@string/sobot_restart_talk"
                 android:textColor="@color/sobot_color_bottom_message"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/sobot_tv_message"
@@ -203,7 +217,7 @@
                 android:padding="5dp"
                 android:text="@string/sobot_str_bottom_message"
                 android:textColor="@color/sobot_color_bottom_message"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
         </LinearLayout>
 
         <ImageView
@@ -213,7 +227,7 @@
             android:layout_centerInParent="true"
             android:background="@drawable/sobot_reloading"
             android:gravity="center_vertical"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </RelativeLayout>
     <!-- 按住说话  end -->
 

@@ -222,6 +222,15 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
         }
     }
 
+    public void updateDataById(String id, ZhiChiMessageBase data) {
+        ZhiChiMessageBase info = getMsgInfo(id);
+        if (info != null) {
+            info.setAnswer(data.getAnswer());
+            info.setSenderType(data.getSenderType());
+            info.setSendSuccessState(data.getSendSuccessState());
+        }
+    }
+
     public void cancelVoiceUiById(String id){
         ZhiChiMessageBase info = getMsgInfo(id);
         if(info!=null){
@@ -401,7 +410,9 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
                             return MSG_TYPE_ILLEGAL;
                         } else if (ZhiChiConstant.message_sender_type_customer == Integer
                                 .parseInt(message.getSenderType())) {
-
+                            if (message.getAnswer() != null && !TextUtils.isEmpty(message.getAnswer().getMsgTransfer())) {
+                                return MSG_TYPE_TXT_R;
+                            }
                             return MSG_TYPE_AUDIO_R;
                         }
 

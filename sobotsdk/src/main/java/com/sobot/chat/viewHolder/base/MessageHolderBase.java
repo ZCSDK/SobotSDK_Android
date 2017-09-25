@@ -18,6 +18,7 @@ import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.utils.BitmapUtil;
 import com.sobot.chat.utils.CommonUtils;
 import com.sobot.chat.utils.ResourceUtils;
+import com.sobot.chat.utils.ToastUtil;
 import com.sobot.chat.widget.ReSendDialog;
 
 /**
@@ -151,6 +152,10 @@ public abstract class MessageHolderBase {
 
         @Override
         public void onClick(View arg0) {
+            if (TextUtils.isEmpty(imageUrl)){
+                ToastUtil.showToast(context,"图片格式错误");
+                return;
+            }
             Intent intent = new Intent(context, SobotPhotoActivity.class);
             intent.putExtra("imageUrL", imageUrl);
             if (isRight) {

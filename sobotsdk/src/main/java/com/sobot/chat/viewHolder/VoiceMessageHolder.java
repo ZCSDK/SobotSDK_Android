@@ -1,5 +1,6 @@
 package com.sobot.chat.viewHolder;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
@@ -16,6 +17,7 @@ import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.api.model.ZhiChiReplyAnswer;
 import com.sobot.chat.utils.DateUtil;
 import com.sobot.chat.utils.ResourceUtils;
+import com.sobot.chat.utils.ScreenUtils;
 import com.sobot.chat.viewHolder.base.MessageHolderBase;
 
 /**
@@ -71,6 +73,9 @@ public class VoiceMessageHolder extends MessageHolderBase {
                 ll_voice_layout.clearAnimation();
                 msgStatus.setVisibility(View.VISIBLE);
                 msgProgressBar.setVisibility(View.GONE);
+                voicePlay.setVisibility(View.VISIBLE);
+                voiceTimeLong.setVisibility(View.VISIBLE);
+                stopAnim();
                 // 语音的重新发送
                 msgStatus.setOnClickListener(new RetrySendVoiceLisenter(context, message.getId(),
                         message.getAnswer().getMsg(), message.getAnswer().getDuration(), msgStatus));
@@ -89,13 +94,13 @@ public class VoiceMessageHolder extends MessageHolderBase {
             }
 
             //根据语音长短设置长度
-                /*long duration = DateUtil.stringToLongMs(message.getAnswer().getDuration());
-                duration = duration == 0 ? 1 : duration;
-                int min = ScreenUtils.getScreenWidth((Activity) context) / 6;
-                int max = ScreenUtils.getScreenWidth((Activity) context) * 3 / 5;
-                int step = (int) ((duration < 10) ? duration : (duration / 10 + 9));
-                ll_voice_layout.getLayoutParams().width = (step == 0) ? min
-                        : (min + (max - min) / 15 * step);*/
+            long duration = DateUtil.stringToLongMs(message.getAnswer().getDuration());
+            duration = duration == 0 ? 1 : duration;
+            int min = ScreenUtils.getScreenWidth((Activity) context) / 6;
+            int max = ScreenUtils.getScreenWidth((Activity) context) * 3 / 5;
+            int step = (int) ((duration < 10) ? duration : (duration / 10 + 9));
+            ll_voice_layout.getLayoutParams().width = (step == 0) ? min
+                    : (min + (max - min) / 15 * step);
         }
     }
 

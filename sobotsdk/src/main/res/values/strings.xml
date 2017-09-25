@@ -5,9 +5,12 @@
     <string name="sobot_choice_test">选择咨询内容</string>
     <string name="sobot_clear_history_message">清空聊天记录</string>
     <string name="sobot_btn_cancle">取消</string>
+    <string name="sobot_btn_submit">确定</string>
     <string name="sobot_button_send">发送</string>
     <string name="sobot_attach_take_pic">拍照</string>
     <string name="sobot_btn_submit_text">提交评价</string>
+    <string name="sobot_please">SOBOT SDK  2.3.2</string>
+    <string name="sobot_appkey">07a5ff1050c047c4b9d3c57eeb7ced29</string>
     <string name="sobot_move_up_to_cancel">手指上滑，取消发送</string>
     <string name="sobot_release_to_cancel">松开手指，取消发送</string>
     <string name="sobot_up_send_calcel">松开手指 取消发送</string>
@@ -39,7 +42,7 @@
     <string name="sobot_in_line">排队中，请稍候</string>
     <string name="sobot_in_line_title">排队中...</string>
     <string name="sobot_in_line_position">排队中,您在队伍中的第%1$s个</string>
-    <string name="sobot_you_can">,您可以</string>
+    <string name="sobot_you_can">您可以</string>
     <string name="sobot_no_more_data">到顶了，没有更多</string>
     <string name="sobot_pic_size_should_be_less_than_three">图片大小需小于3M</string>
     <string name="sobot_service_accept">您好,客服  %1$s  接受了您的请求</string>
@@ -52,7 +55,7 @@
     <string name="sobot_outline_openNewWindows">打开新窗口</string>
     <string name="sobot_voiceTooLong">录音时间过长</string>
     <string name="sobot_str_bottom_offline">离线</string>
-    <string name="sobot_voice_can_not_be_less_than_one_second">语音不能少于一秒钟</string>
+    <string name="sobot_voice_can_not_be_less_than_one_second">说话时间过短</string>
     <string name="sobot_count_down">倒计时：</string>
     <string name="sobot_reunicon">点击重新连接</string>
     <string name="sobot_read_all">阅读全文>></string>
@@ -71,6 +74,7 @@
     <string name="sobot_did_not_get_picture_path">未获取图片的地址</string>
     <string name="sobot_pic_select_again">请重新选择或拍摄</string>
     <string name="sobot_init_data_is_null">初始化参数不能为空</string>
+    <string name="sobot__is_null">不能为空</string>
     <string name="sobot_appkey_is_null">您的AppKey为空</string>
     <string name="sobot_sysnum_is_null">您的Sysnum为空</string>
     <string name="sobot_already_transfer_to_customer_service">您已经转人工</string>
@@ -78,9 +82,6 @@
     <string name="sobot_consulting_describe">[摘要]</string>
     <string name="sobot_consulting_lable">[标签]</string>
     <string name="sobot_consulting_fromurl">[链接]</string>
-    <string name="sobot_post_msg_hint_email">请输入邮箱地址</string>
-    <string name="sobot_post_msg_hint_nikename">请输入昵称</string>
-    <string name="sobot_post_msg_hint_phone">请输入电话号码</string>
     <string name="sobot_post_msg_hint_enclosure">上传问题图片能大大提高解决问题效率</string>
     <string name="sobot_temporarily_not_evaluation">暂不评价</string>
     <string name="sobot_color_custom_name">#888888</string>
@@ -108,4 +109,12 @@
     <string name="sobot_the_label_is_required">标签为必选</string>
     <string name="sobot_suggestions_are_required">建议为必填</string>
     <string name="sobot_wait_full">排队已满</string>
+    <string name="sobot_robot_voice_hint">机器人咨询模式下，语音将自动转化为文字发送</string>
+    <string name="sobot_robot_voice_max_hint">语音转文字服务暂时中止，建议您用文字或转人工交流</string>
+    <string name="sobot_problem_description">问题描述</string>
+    <string name="sobot_problem_types">问题类型</string>
+    <string name="sobot_email">邮箱</string>
+    <string name="sobot_phone">手机</string>
+    <string name="sobot_try_again">网络错误，请检查网络后重试</string>
+    <string name="sobot_please_load">请上传附件</string>
 </resources>

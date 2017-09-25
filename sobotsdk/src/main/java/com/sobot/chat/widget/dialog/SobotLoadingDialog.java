@@ -33,7 +33,7 @@ public class SobotLoadingDialog extends Dialog {
             customProgressDialog.getWindow().getAttributes().gravity = Gravity.CENTER;
         }
         customProgressDialog.setCanceledOnTouchOutside(false);
-        customProgressDialog.setCancelable(false);
+        customProgressDialog.setCancelable(true);
     }
 
     public static SobotLoadingDialog createDialog(Context context,String str) {

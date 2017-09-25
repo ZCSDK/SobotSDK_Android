@@ -1,6 +1,12 @@
 package com.sobot.chat.utils;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.TextView;
+
+import com.sobot.chat.widget.timePicker.SobotTimePickerView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,6 +43,7 @@ public class DateUtil {
      */
     public final static SimpleDateFormat DATE_FORMAT4 = new SimpleDateFormat(
             "mm:ss", Locale.getDefault());
+
     /**
      * 将毫秒级整数转换为字符串格式时间
      *
@@ -71,7 +78,7 @@ public class DateUtil {
     public static long stringToLong(String date) {
         if (!TextUtils.isEmpty(date)) {
             try {
-                return DATE_FORMAT.parse(date).getTime()/1000;
+                return DATE_FORMAT.parse(date).getTime() / 1000;
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -96,7 +103,7 @@ public class DateUtil {
      * @return
      */
     public static String formatDateTime(String time, boolean showHours, String showToday) {
-        SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         if (time == null || "".equals(time) || time.length() < 19) {
             return "";
         }
@@ -128,7 +135,7 @@ public class DateUtil {
         yesterday.set(Calendar.MINUTE, 0);
         yesterday.set(Calendar.SECOND, 0);
 
-        if(date != null){
+        if (date != null) {
             current.setTime(date);
         }
 
@@ -172,10 +179,11 @@ public class DateUtil {
 
     /**
      * 获取当前时间
+     *
      * @return
      */
-    public static String getCurrentTime(){
-        return toDate(System.currentTimeMillis(),DATE_FORMAT);
+    public static String getCurrentTime() {
+        return toDate(System.currentTimeMillis(), DATE_FORMAT);
     }
 
     /**
@@ -229,4 +237,60 @@ public class DateUtil {
         }
         return sb.toString();
     }
+
+
+    public static Date parse(String str, SimpleDateFormat format) {
+        Date date = null;
+        try {
+            date = format.parse(str);
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+        }
+        return date;
+    }
+
+    /**
+     * 要回显的view 也就是textView
+     *
+     * @param context      应该为activity
+     * @param selectedTime 选中的日期  可以为null 如果为null那么取当前时间
+     * @param displayType  显示的类型 0 为 年月日  1为 时分
+     */
+    public static void openTimePickerView(Context context, View v, Date selectedTime, final int displayType) {
+        Calendar selectedDate = Calendar.getInstance();
+        if (selectedTime != null) {
+            selectedDate.setTime(selectedTime);
+        }
+        boolean[] typeArray = displayType == 0 ? new boolean[]{true, true, true, false, false, false} : new boolean[]{false, false, false, true, true, false};
+        //时间选择器
+        SobotTimePickerView pvTime = new SobotTimePickerView.Builder(context, new SobotTimePickerView.OnTimeSelectListener() {
+            @Override
+            public void onTimeSelect(Date date, View v) {//选中事件回调
+                // 这里回调过来的v,就是show()方法里面所添加的 View 参数，如果show的时候没有添加参数，v则为null
+                if (v != null && v instanceof TextView) {
+                    TextView tv = (TextView) v;
+                    tv.setText(displayType == 0 ? DATE_FORMAT2.format(date) : DATE_FORMAT0.format(date));
+                }
+            }
+        })
+                //年月日时分秒 的显示与否，不设置则默认全部显示
+                .setType(typeArray)
+                .setLabel("", "", "", "", "", "")
+                .isCenterLabel(false)
+                .setDividerColor(Color.parseColor("#dadada"))
+                .setContentSize(17)
+                .setSubCalSize(14)
+                .setTitleBgColor(Color.WHITE)
+                .setCancelColor(Color.parseColor("#0DAEAF"))
+                .setSubmitColor(Color.parseColor("#0DAEAF"))
+                .setDate(selectedDate)
+                .setBgColor(Color.WHITE)
+                .setBackgroundId(0x80000000) //设置外部遮罩颜色
+                .setDecorView(null)
+                .setLineSpacingMultiplier(2.0f)
+                .build();
+
+        pvTime.show(v);
+    }
+
 }

@@ -8,6 +8,8 @@
     <string name="sobot_button_send">Send</string>
     <string name="sobot_attach_take_pic">Camera</string>
     <string name="sobot_btn_submit_text">Submit feedback</string>
+    <string name="sobot_please">SOBOT SDK  2.3.2</string>
+    <string name="sobot_appkey">07a5ff1050c047c4b9d3c57eeb7ced29</string>
     <string name="sobot_move_up_to_cancel">Slide up to cancel</string>
     <string name="sobot_release_to_cancel">Slide up to cancel</string>
     <string name="sobot_up_send_calcel">Slide up to cancel</string>
@@ -23,6 +25,7 @@
     <string name="sobot_dcrc">Are you satisfied with our service?</string>
     <string name="sobot_str_bottom_message">Email</string>
     <string name="sobot_str_bottom_satisfaction">Feedback</string>
+    <string name="sobot__is_null">optional</string>
     <string name="sobot_yes">Yes</string>
     <string name="sobot_no">No</string>
     <string name="sobot_leavemsg">Email</string>
@@ -78,9 +81,6 @@
     <string name="sobot_consulting_describe">[Detail]</string>
     <string name="sobot_consulting_lable">[Tag]</string>
     <string name="sobot_consulting_fromurl">[URL]</string>
-    <string name="sobot_post_msg_hint_email">email@domain.com</string>
-    <string name="sobot_post_msg_hint_nikename">Nickname</string>
-    <string name="sobot_post_msg_hint_phone">Tel</string>
     <string name="sobot_post_msg_hint_enclosure">Please upload pictures</string>
     <string name="sobot_temporarily_not_evaluation">No evaluation</string>
     <string name="sobot_no_camera_permission">no camera permission</string>
@@ -108,4 +108,13 @@
     <string name="sobot_the_label_is_required">The label is required</string>
     <string name="sobot_suggestions_are_required">Suggestions are required</string>
     <string name="sobot_wait_full">The queue is full</string>
+    <string name="sobot_btn_submit">sure</string>
+    <string name="sobot_robot_voice_hint">The speech is automatically recognized and sent into text in robot customer service consulting.</string>
+    <string name="sobot_robot_voice_max_hint">Voice to text service has been disabled, you can enter text or consult artificial customer service.</string>
+    <string name="sobot_problem_description">Problem Description</string>
+    <string name="sobot_problem_types">Problem Types</string>
+    <string name="sobot_email">Email</string>
+    <string name="sobot_phone">Phone</string>
+    <string name="sobot_try_again">Network error. Please check the network and try again</string>
+    <string name="sobot_please_load">Please upload attachments</string>
 </resources>

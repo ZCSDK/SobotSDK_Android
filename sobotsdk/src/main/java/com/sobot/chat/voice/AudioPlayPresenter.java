@@ -55,7 +55,7 @@ public class AudioPlayPresenter {
         if (!TextUtils.isEmpty(path)) {
             if (message.getSugguestionsFontColor() == 1) {
                 //是历史记录  就创建文件夹进行下载
-                contentPath = path.substring(path.indexOf("msg") + 4, path.length());
+                contentPath = path.substring(path.lastIndexOf("/")+1, path.length());
                 File directory = new File(ZhiChiConstant.voicePositionPath + contentPath).getParentFile();
                 if (!directory.exists() && !directory.mkdirs()) {
                     try {

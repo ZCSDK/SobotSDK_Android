@@ -46,9 +46,9 @@ public class SobotSkillGroupActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		MyApplication.getInstance().addActivity(this);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(ResourceUtils.getIdByName(this, "layout",
 				"sobot_activity_skill_group"));
 		SobotSkillGroupActivity.this.setFinishOnTouchOutside(false);

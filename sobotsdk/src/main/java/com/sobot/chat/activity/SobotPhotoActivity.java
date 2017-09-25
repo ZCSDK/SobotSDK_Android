@@ -64,6 +64,10 @@ public class SobotPhotoActivity extends Activity implements View.OnLongClickList
 
 		LogUtils.i("SobotPhotoActivity-------" + imageUrL);
 
+		if (TextUtils.isEmpty(imageUrL)){
+			return;
+		}
+
 		if (imageUrL.startsWith("http")) {
 			File dirPath = this.getImageDir(this);
 			String encode = MD5Util.encode(imageUrL);

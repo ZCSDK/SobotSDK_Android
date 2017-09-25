@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/work_order_category_rl"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:gravity="center_vertical"
+        android:background="#ffffff">
+
+        <TextView
+            android:id="@+id/work_order_category_title"
+            style="?android:attr/textViewStyle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="25dp"
+            android:textColor="#3d4966"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/sobot_text_font_small" />
+
+        <ImageView
+            android:id="@+id/work_order_category_ishave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:contentDescription="@null"
+            android:background="@drawable/sobot_work_order_selected_mark"
+            android:visibility="visible" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/work_order_category_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="20dip"
+        android:background="#EFF3FA" />
+
+</LinearLayout>

@@ -8,7 +8,6 @@ import android.util.Log;
 
 import com.sobot.chat.activity.SobotChatActivity;
 import com.sobot.chat.api.ZhiChiApi;
-import com.sobot.chat.api.apiUtils.GsonUtil;
 import com.sobot.chat.api.enumtype.SobotChatTitleDisplayMode;
 import com.sobot.chat.api.model.CommonModel;
 import com.sobot.chat.api.model.Information;
@@ -23,8 +22,6 @@ import com.sobot.chat.utils.NotificationUtils;
 import com.sobot.chat.utils.SharedPreferencesUtil;
 import com.sobot.chat.utils.SobotOption;
 import com.sobot.chat.utils.ZhiChiConstant;
-
-import java.util.Map;
 
 /**
  * SobotChatApi接口输出类
@@ -100,14 +97,14 @@ public class SobotApi {
 		disSobotChannel(context);
 		context.stopService(new Intent(context, SobotSessionServer.class));
 
-		String cid = SharedPreferencesUtil.getStringData(context,Const.SOBOT_CID,"");
-		String uid = SharedPreferencesUtil.getStringData(context,Const.SOBOT_UID,"");
-		SharedPreferencesUtil.removeKey(context,Const.SOBOT_WSLINKBAK);
-		SharedPreferencesUtil.removeKey(context,Const.SOBOT_WSLINKDEFAULT);
-		SharedPreferencesUtil.removeKey(context,Const.SOBOT_UID);
-		SharedPreferencesUtil.removeKey(context,Const.SOBOT_CID);
-		SharedPreferencesUtil.removeKey(context,Const.SOBOT_PUID);
-		SharedPreferencesUtil.removeKey(context,Const.SOBOT_APPKEY);
+		String cid = SharedPreferencesUtil.getStringData(context, Const.SOBOT_CID,"");
+		String uid = SharedPreferencesUtil.getStringData(context, Const.SOBOT_UID,"");
+		SharedPreferencesUtil.removeKey(context, Const.SOBOT_WSLINKBAK);
+		SharedPreferencesUtil.removeKey(context, Const.SOBOT_WSLINKDEFAULT);
+		SharedPreferencesUtil.removeKey(context, Const.SOBOT_UID);
+		SharedPreferencesUtil.removeKey(context, Const.SOBOT_CID);
+		SharedPreferencesUtil.removeKey(context, Const.SOBOT_PUID);
+		SharedPreferencesUtil.removeKey(context, Const.SOBOT_APPKEY);
 
 		if (!TextUtils.isEmpty(cid) && !TextUtils.isEmpty(uid)){
 			ZhiChiApi zhiChiApi = SobotMsgManager.getInstance(context).getZhiChiApi();
@@ -134,7 +131,7 @@ public class SobotApi {
 		if (context == null){
 			return;
 		}
-		SharedPreferencesUtil.saveBooleanData(context,Const.SOBOT_NOTIFICATION_FLAG,flag);
+		SharedPreferencesUtil.saveBooleanData(context, Const.SOBOT_NOTIFICATION_FLAG,flag);
 		SharedPreferencesUtil.saveIntData(context, ZhiChiConstant.SOBOT_NOTIFICATION_SMALL_ICON, smallIcon);
 		SharedPreferencesUtil.saveIntData(context, ZhiChiConstant.SOBOT_NOTIFICATION_LARGE_ICON, largeIcon);
 	}
@@ -179,9 +176,9 @@ public class SobotApi {
 		if (context == null){
 			return;
 		}
-		SharedPreferencesUtil.saveIntData(context,ZhiChiConstant.SOBOT_CHAT_TITLE_DISPLAY_MODE,
+		SharedPreferencesUtil.saveIntData(context, ZhiChiConstant.SOBOT_CHAT_TITLE_DISPLAY_MODE,
 				mode.getValue());
-		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_CHAT_TITLE_DISPLAY_CONTENT,
+		SharedPreferencesUtil.saveStringData(context, ZhiChiConstant.SOBOT_CHAT_TITLE_DISPLAY_CONTENT,
 				content);
 	}
 
@@ -193,7 +190,7 @@ public class SobotApi {
 		if (context == null){
 			return;
 		}
-		SharedPreferencesUtil.saveLongData(context,ZhiChiConstant.SOBOT_CHAT_HIDE_HISTORYMSG_TIME,
+		SharedPreferencesUtil.saveLongData(context, ZhiChiConstant.SOBOT_CHAT_HIDE_HISTORYMSG_TIME,
 				time);
 	}
 
@@ -206,7 +203,7 @@ public class SobotApi {
 		if (context == null){
 			return;
 		}
-		SharedPreferencesUtil.saveBooleanData(context,ZhiChiConstant.SOBOT_CHAT_EVALUATION_COMPLETED_EXIT, flag);
+		SharedPreferencesUtil.saveBooleanData(context, ZhiChiConstant.SOBOT_CHAT_EVALUATION_COMPLETED_EXIT, flag);
 	}
 
 	/**
@@ -218,7 +215,7 @@ public class SobotApi {
 		if (context == null){
 			return;
 		}
-		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_CUSTOMADMINHELLOWORD, content);
+		SharedPreferencesUtil.saveStringData(context, ZhiChiConstant.SOBOT_CUSTOMADMINHELLOWORD, content);
 	}
 
 	/**
@@ -230,7 +227,7 @@ public class SobotApi {
 		if (context == null){
 			return;
 		}
-		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_CUSTOMROBOTHELLOWORD, content);
+		SharedPreferencesUtil.saveStringData(context, ZhiChiConstant.SOBOT_CUSTOMROBOTHELLOWORD, content);
 	}
 
 	/**
@@ -242,7 +239,7 @@ public class SobotApi {
 		if (context == null){
 			return;
 		}
-		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_CUSTOMUSERTIPWORD, content);
+		SharedPreferencesUtil.saveStringData(context, ZhiChiConstant.SOBOT_CUSTOMUSERTIPWORD, content);
 	}
 
 	/**
@@ -254,7 +251,7 @@ public class SobotApi {
 		if (context == null){
 			return;
 		}
-		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_CUSTOMADMINTIPWORD, content);
+		SharedPreferencesUtil.saveStringData(context, ZhiChiConstant.SOBOT_CUSTOMADMINTIPWORD, content);
 	}
 
 	/**
@@ -266,7 +263,7 @@ public class SobotApi {
 		if (context == null){
 			return;
 		}
-		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_CUSTOMADMINNONELINETITLE, content);
+		SharedPreferencesUtil.saveStringData(context, ZhiChiConstant.SOBOT_CUSTOMADMINNONELINETITLE, content);
 	}
 
 	/**
@@ -278,6 +275,6 @@ public class SobotApi {
 		if (context == null){
 			return;
 		}
-		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_CUSTOMUSEROUTWORD, content);
+		SharedPreferencesUtil.saveStringData(context, ZhiChiConstant.SOBOT_CUSTOMUSEROUTWORD, content);
 	}
 }

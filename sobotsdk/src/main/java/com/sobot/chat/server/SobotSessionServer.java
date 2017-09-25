@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
 import com.sobot.chat.api.apiUtils.GsonUtil;
@@ -34,7 +35,7 @@ import org.json.JSONObject;
  * Created by jinxl on 2016/9/13.
  */
 public class SobotSessionServer extends Service {
-
+    private LocalBroadcastManager localBroadcastManager;
     private MyMessageReceiver receiver;
     private int tmpNotificationId = 0;
 
@@ -59,8 +60,9 @@ public class SobotSessionServer extends Service {
         // 创建过滤器，并指定action，使之用于接收同action的广播
         IntentFilter filter = new IntentFilter();
         filter.addAction(ZhiChiConstants.receiveMessageBrocast);
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
         // 注册广播接收器
-        registerReceiver(receiver, filter);
+        localBroadcastManager.registerReceiver(receiver, filter);
     }
 
     public class MyMessageReceiver extends BroadcastReceiver {
@@ -91,6 +93,12 @@ public class SobotSessionServer extends Service {
                 config.adminFace = pushMessage.getAface();
                 int type = Integer.parseInt(config.getInitModel().getType());
                 if (type == 2 || type == 3 || type == 4) {
+                    ZhiChiInitModeBase initModel = config.getInitModel();
+                    if (initModel != null) {
+                        initModel.setAdminHelloWord(!TextUtils.isEmpty(pushMessage.getAdminHelloWord())?pushMessage.getAdminHelloWord():initModel.getAdminHelloWord());
+                        initModel.setAdminTipTime(!TextUtils.isEmpty(pushMessage.getServiceOutTime())?pushMessage.getServiceOutTime():initModel.getAdminTipTime());
+                        initModel.setAdminTipWord(!TextUtils.isEmpty(pushMessage.getServiceOutDoc())?pushMessage.getServiceOutDoc():initModel.getAdminTipWord());
+                    }
                     createCustomerService(pushMessage.getAname(),pushMessage.getAface());
                 }
             }
@@ -271,7 +279,9 @@ public class SobotSessionServer extends Service {
     public void onDestroy() {
         super.onDestroy();
         // 取消广播接受者
-        unregisterReceiver(receiver);
+        if (localBroadcastManager != null) {
+            localBroadcastManager.unregisterReceiver(receiver);
+        }
         LogUtils.i("SobotSessionServer  ---> onDestroy");
     }
 

@@ -107,7 +107,7 @@
     <color name="sobot_color_item_skill_offline">#b5b5b5</color>
     <color name="sobot_color_item_skill_offline_status">#cccccc</color>
     <!-- post_msg activity -->
-    <color name="sobot_color_post_msg_text_color">#cecece</color>
+    <color name="sobot_color_post_msg_text_color">#BDC3D1</color>
 
     <color name="sobot_transparent">#00000000</color>
 

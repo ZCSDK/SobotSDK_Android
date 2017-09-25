@@ -1,5 +1,6 @@
 package com.sobot.chat.viewHolder;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
@@ -51,8 +52,8 @@ public class ConsultMessageHolder extends MessageHolderBase {
         String describe = message.getReceiverFace();
         if (!TextUtils.isEmpty(picurl)) {
             iv_pic.setVisibility(View.VISIBLE);
-            Drawable drawable = context.getResources().getDrawable(ResourceUtils.getIdByName(context, "drawable",
-                    "sobot_icon_consulting_default_pic"));
+            int drawable = ResourceUtils.getIdByName(context, "drawable",
+                    "sobot_icon_consulting_default_pic");
             BitmapUtil.display(context, CommonUtils.encode(picurl), iv_pic, drawable, drawable);
         } else {
             iv_pic.setVisibility(View.GONE);

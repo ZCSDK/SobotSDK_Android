@@ -27,9 +27,10 @@ public class TextMessageHolder extends MessageHolderBase {
 
     @Override
     public void bindData(final Context context,final ZhiChiMessageBase message) {
-        if (message.getAnswer() != null && !TextUtils.isEmpty(message.getAnswer().getMsg())) {// 纯文本消息
+        if (message.getAnswer() != null && (!TextUtils.isEmpty(message.getAnswer().getMsg()) || !TextUtils.isEmpty(message.getAnswer().getMsgTransfer()))) {// 纯文本消息
+            String content = !TextUtils.isEmpty(message.getAnswer().getMsgTransfer())?message.getAnswer().getMsgTransfer():message.getAnswer().getMsg();
             msg.setVisibility(View.VISIBLE);
-            HtmlTools.getInstance(context).setRichText(msg, message.getAnswer().getMsg(),
+            HtmlTools.getInstance(context).setRichText(msg, content,
                     isRight ? ResourceUtils.getIdByName(context, "color","sobot_color_rlink") : ResourceUtils.getIdByName(context, "color","sobot_color_link"));
             if(isRight){
                 try {
@@ -45,13 +46,13 @@ public class TextMessageHolder extends MessageHolderBase {
                         msgStatus.setVisibility(View.VISIBLE);
                         msgProgressBar.setVisibility(View.GONE);
                         msgStatus.setOnClickListener(new ReSendTextLisenter(context,message
-                                .getId(), message.getAnswer().getMsg(), msgStatus));
+                                .getId(), content, msgStatus));
                     } else if (message.getSendSuccessState() == 0) {
                         frameLayout.setVisibility(View.VISIBLE);
                         msgStatus.setVisibility(View.VISIBLE);
                         msgProgressBar.setVisibility(View.GONE);
                         msgStatus.setOnClickListener(new ReSendTextLisenter(context,message
-                                .getId(), message.getAnswer().getMsg(),msgStatus));
+                                .getId(), content,msgStatus));
                     } else if (message.getSendSuccessState() == 2) {
                         frameLayout.setVisibility(View.VISIBLE);
                         msgProgressBar.setVisibility(View.VISIBLE);
@@ -68,8 +69,8 @@ public class TextMessageHolder extends MessageHolderBase {
         msg.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                if (!TextUtils.isEmpty(message.getAnswer().getMsg())){
-                    ToastUtil.showCopyPopWindows(context,view, message.getAnswer().getMsg().replace("&amp;","&"), 30,0);
+                if (!TextUtils.isEmpty(msg.getText().toString())){
+                    ToastUtil.showCopyPopWindows(context,view, msg.getText().toString().replace("&amp;","&"), 30,0);
                 }
                 return false;
             }
