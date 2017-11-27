@@ -1,6 +1,7 @@
 package com.sobot.chat.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -11,6 +12,7 @@ import com.sobot.chat.activity.base.SobotBaseActivity;
 import com.sobot.chat.adapter.base.SobotPostCategoryAdapter;
 import com.sobot.chat.api.model.SobotTypeModel;
 import com.sobot.chat.utils.ResourceUtils;
+import com.sobot.chat.utils.SharedPreferencesUtil;
 import com.sobot.chat.utils.ZhiChiConstant;
 
 import java.util.ArrayList;
@@ -54,6 +56,10 @@ public class SobotPostCategoryActivity extends SobotBaseActivity {
     }
 
     private void initView() {
+		String bg_color = SharedPreferencesUtil.getStringData(this, "robot_current_themeColor", "");
+        if (bg_color != null && bg_color.trim().length() != 0) {
+            relative.setBackgroundColor(Color.parseColor(bg_color));
+        }
         sobot_tv_left.setOnClickListener(this);
         listView = (ListView) findViewById(getResId("sobot_activity_post_category_listview"));
         if (types != null && types.size() != 0) {

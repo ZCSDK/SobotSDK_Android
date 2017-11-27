@@ -1,6 +1,5 @@
 package com.sobot.chat.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,6 +8,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.sobot.chat.imageloader.SobotGlideImageLoader;
+import com.sobot.chat.imageloader.SobotGlideV4ImageLoader;
 import com.sobot.chat.imageloader.SobotImageLoader;
 import com.sobot.chat.imageloader.SobotPicassoImageLoader;
 import com.sobot.chat.imageloader.SobotUILImageLoader;
@@ -21,7 +21,9 @@ public class BitmapUtil {
         if (sImageLoader == null) {
             synchronized (BitmapUtil.class) {
                 if (sImageLoader == null) {
-                    if (isClassExists("com.bumptech.glide.Glide")) {
+                    if (isClassExists("com.bumptech.glide.request.RequestOptions")){
+                        sImageLoader = new SobotGlideV4ImageLoader();
+                    } else if (isClassExists("com.bumptech.glide.Glide")) {
                         sImageLoader = new SobotGlideImageLoader();
                     } else if (isClassExists("com.squareup.picasso.Picasso")) {
                         sImageLoader = new SobotPicassoImageLoader();

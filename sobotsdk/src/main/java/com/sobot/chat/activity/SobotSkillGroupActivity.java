@@ -160,7 +160,7 @@ public class SobotSkillGroupActivity extends Activity {
 
 	private void finishPageOrSDK() {
 		int initType = SharedPreferencesUtil.getIntData(
-				getApplicationContext(), ZhiChiConstant.initType, -1);
+				getApplicationContext(), appkey+"_"+ZhiChiConstant.initType, -1);
 		if (initType == ZhiChiConstant.type_custom_only) {
 			finish();
 			sendCloseIntent(1);

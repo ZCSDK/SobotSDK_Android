@@ -38,7 +38,7 @@ public class SobotPostCategoryAdapter extends SobotBaseAdapter<SobotTypeModel> {
 
         myViewHolder.categoryTitle.setText(list.get(position).getTypeName());
         if (ZhiChiConstant.WORK_WORK_ORDER_CATEGORY_NODEFLAG_NO == list.get(position).getNodeFlag()){
-            myViewHolder.categoryIshave.setVisibility(View.INVISIBLE);
+            myViewHolder.categoryIshave.setVisibility(View.GONE);
         } else {
             myViewHolder.categoryIshave.setVisibility(View.VISIBLE);
             myViewHolder.categoryIshave.setBackgroundResource(ResourceUtils.getIdByName(mContext, "drawable", "sobot_right_arrow_icon"));

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="10dp">
+
+    <RelativeLayout
+        android:layout_width="50dp"
+        android:layout_height="50dp">
+
+        <ImageView
+            android:id="@+id/sobot_iv_face"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            tools:src="@drawable/sobot_avatar_robot" />
+
+        <TextView
+            android:id="@+id/sobot_tv_unread_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:visibility="gone"
+            tools:background="@drawable/sobot_message_bubble_1"
+            tools:text="3"
+            tools:visibility="visible" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/sobot_tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="标题" />
+
+        <TextView
+            android:id="@+id/sobot_tv_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:ellipsize="end"
+            android:lines="1"
+            android:maxLines="1"
+            tools:text="内容" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/sobot_tv_date"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginRight="10dp"
+        android:gravity="center"
+        tools:text="8月3日" />
+</LinearLayout>

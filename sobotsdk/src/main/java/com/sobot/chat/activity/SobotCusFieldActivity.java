@@ -1,6 +1,7 @@
 package com.sobot.chat.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -13,6 +14,7 @@ import com.sobot.chat.api.model.SobotCusFieldConfig;
 import com.sobot.chat.api.model.SobotCusFieldDataInfo;
 import com.sobot.chat.api.model.SobotFieldModel;
 import com.sobot.chat.utils.ResourceUtils;
+import com.sobot.chat.utils.SharedPreferencesUtil;
 import com.sobot.chat.utils.ZhiChiConstant;
 
 import java.util.ArrayList;
@@ -80,6 +82,11 @@ public class SobotCusFieldActivity extends SobotBaseActivity {
     }
 
     private void initView() {
+		String bg_color = SharedPreferencesUtil.getStringData(this, "robot_current_themeColor", "");
+        if (!TextUtils.isEmpty(bg_color)) {
+            relative.setBackgroundColor(Color.parseColor(bg_color));
+        }
+
         sobot_tv_left.setOnClickListener(this);
         mListView = (ListView) findViewById(getResId("sobot_activity_cusfield_listview"));
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

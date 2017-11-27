@@ -7,10 +7,13 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.sobot.chat.activity.SobotChatActivity;
+import com.sobot.chat.activity.SobotConsultationListActivity;
 import com.sobot.chat.api.ZhiChiApi;
+import com.sobot.chat.api.apiUtils.GsonUtil;
 import com.sobot.chat.api.enumtype.SobotChatTitleDisplayMode;
 import com.sobot.chat.api.model.CommonModel;
 import com.sobot.chat.api.model.Information;
+import com.sobot.chat.api.model.SobotMsgCenterModel;
 import com.sobot.chat.core.channel.Const;
 import com.sobot.chat.core.channel.SobotMsgManager;
 import com.sobot.chat.core.http.callback.StringResultCallBack;
@@ -20,8 +23,15 @@ import com.sobot.chat.server.SobotSessionServer;
 import com.sobot.chat.utils.LogUtils;
 import com.sobot.chat.utils.NotificationUtils;
 import com.sobot.chat.utils.SharedPreferencesUtil;
+import com.sobot.chat.utils.SobotCache;
 import com.sobot.chat.utils.SobotOption;
 import com.sobot.chat.utils.ZhiChiConstant;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * SobotChatApi接口输出类
@@ -29,6 +39,19 @@ import com.sobot.chat.utils.ZhiChiConstant;
 public class SobotApi {
 
 	private static String Tag = SobotApi.class.getSimpleName();
+
+	/**
+	 * 初始化平台
+	 *
+	 * @param context           Context 对象
+	 * @param platformUnionCode 平台标识
+	 */
+	public static void initPlatformUnion(Context context, String platformUnionCode) {
+		if (context == null) {
+			return;
+		}
+		SharedPreferencesUtil.saveStringData(context, ZhiChiConstant.SOBOT_PLATFORM_UNIONCODE, platformUnionCode);
+	}
 
 	/**
 	 * 打开客服界面
@@ -49,28 +72,53 @@ public class SobotApi {
 	}
 
 	/**
+	 * 打开资讯列表界面
+	 *
+	 * @param context 上下文对象
+	 * @param uid 用户唯一标识 与information中传的uid一致
+	 */
+	public static void startMsgCenter(Context context,String uid) {
+		Intent intent = new Intent(context, SobotConsultationListActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.putExtra(ZhiChiConstant.SOBOT_CURRENT_IM_PARTNERID,uid);
+		context.startActivity(intent);
+	}
+
+	/**
 	 * 初始化消息链接
+	 * @param uid 用户唯一标识 与information中传的uid一致
 	 * @param context 上下文对象
 	 */
-	public static void initSobotChannel(Context context){
-		if (context == null){
+	public static void initSobotChannel(Context context,String uid) {
+		if (context == null) {
 			return;
 		}
 		context = context.getApplicationContext();
+		SharedPreferencesUtil.removeKey(context, Const.SOBOT_WAYHTTP);
 		SobotMsgManager.getInstance(context).getZhiChiApi().reconnectChannel();
-		context.startService(new Intent(context, SobotSessionServer.class));
+		Intent intent = new Intent(context, SobotSessionServer.class);
+		intent.putExtra(ZhiChiConstant.SOBOT_CURRENT_IM_PARTNERID, uid);
+		context.startService(intent);
 	}
 
 	/**
 	 * 获取当前未读消息数
 	 * @param context
+	 * @param uid 用户唯一标识 与information中传的uid一致
 	 * @return
      */
-	public static int getUnreadMsg(Context context){
+	public static int getUnreadMsg(Context context,String uid){
 		if (context == null){
 			return  0;
 		} else {
-			return SharedPreferencesUtil.getIntData(context,"sobot_unread_count",0);
+			int count = 0;
+			List<SobotMsgCenterModel> msgCenterList = getMsgCenterList(context, uid);
+			if (msgCenterList != null) {
+				for (int i = 0; i < msgCenterList.size(); i++) {
+					count += msgCenterList.get(i).getUnreadCount();
+				}
+			}
+			return count;
 		}
 	}
 
@@ -83,7 +131,7 @@ public class SobotApi {
 			return;
 		}
 		SobotMsgManager.getInstance(context).getZhiChiApi().disconnChannel();
-		SobotMsgManager.getInstance(context).getConfig().clearCache();
+		SobotMsgManager.getInstance(context).clearAllConfig();
 	}
 
 	/**
@@ -97,14 +145,14 @@ public class SobotApi {
 		disSobotChannel(context);
 		context.stopService(new Intent(context, SobotSessionServer.class));
 
-		String cid = SharedPreferencesUtil.getStringData(context, Const.SOBOT_CID,"");
-		String uid = SharedPreferencesUtil.getStringData(context, Const.SOBOT_UID,"");
-		SharedPreferencesUtil.removeKey(context, Const.SOBOT_WSLINKBAK);
-		SharedPreferencesUtil.removeKey(context, Const.SOBOT_WSLINKDEFAULT);
-		SharedPreferencesUtil.removeKey(context, Const.SOBOT_UID);
-		SharedPreferencesUtil.removeKey(context, Const.SOBOT_CID);
-		SharedPreferencesUtil.removeKey(context, Const.SOBOT_PUID);
-		SharedPreferencesUtil.removeKey(context, Const.SOBOT_APPKEY);
+		String cid = SharedPreferencesUtil.getStringData(context,Const.SOBOT_CID,"");
+		String uid = SharedPreferencesUtil.getStringData(context,Const.SOBOT_UID,"");
+		SharedPreferencesUtil.removeKey(context,Const.SOBOT_WSLINKBAK);
+		SharedPreferencesUtil.removeKey(context,Const.SOBOT_WSLINKDEFAULT);
+		SharedPreferencesUtil.removeKey(context,Const.SOBOT_UID);
+		SharedPreferencesUtil.removeKey(context,Const.SOBOT_CID);
+		SharedPreferencesUtil.removeKey(context,Const.SOBOT_PUID);
+		SharedPreferencesUtil.removeKey(context,Const.SOBOT_APPKEY);
 
 		if (!TextUtils.isEmpty(cid) && !TextUtils.isEmpty(uid)){
 			ZhiChiApi zhiChiApi = SobotMsgManager.getInstance(context).getZhiChiApi();
@@ -131,7 +179,7 @@ public class SobotApi {
 		if (context == null){
 			return;
 		}
-		SharedPreferencesUtil.saveBooleanData(context, Const.SOBOT_NOTIFICATION_FLAG,flag);
+		SharedPreferencesUtil.saveBooleanData(context,Const.SOBOT_NOTIFICATION_FLAG,flag);
 		SharedPreferencesUtil.saveIntData(context, ZhiChiConstant.SOBOT_NOTIFICATION_SMALL_ICON, smallIcon);
 		SharedPreferencesUtil.saveIntData(context, ZhiChiConstant.SOBOT_NOTIFICATION_LARGE_ICON, largeIcon);
 	}
@@ -176,9 +224,9 @@ public class SobotApi {
 		if (context == null){
 			return;
 		}
-		SharedPreferencesUtil.saveIntData(context, ZhiChiConstant.SOBOT_CHAT_TITLE_DISPLAY_MODE,
+		SharedPreferencesUtil.saveIntData(context,ZhiChiConstant.SOBOT_CHAT_TITLE_DISPLAY_MODE,
 				mode.getValue());
-		SharedPreferencesUtil.saveStringData(context, ZhiChiConstant.SOBOT_CHAT_TITLE_DISPLAY_CONTENT,
+		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_CHAT_TITLE_DISPLAY_CONTENT,
 				content);
 	}
 
@@ -190,7 +238,7 @@ public class SobotApi {
 		if (context == null){
 			return;
 		}
-		SharedPreferencesUtil.saveLongData(context, ZhiChiConstant.SOBOT_CHAT_HIDE_HISTORYMSG_TIME,
+		SharedPreferencesUtil.saveLongData(context,ZhiChiConstant.SOBOT_CHAT_HIDE_HISTORYMSG_TIME,
 				time);
 	}
 
@@ -203,7 +251,7 @@ public class SobotApi {
 		if (context == null){
 			return;
 		}
-		SharedPreferencesUtil.saveBooleanData(context, ZhiChiConstant.SOBOT_CHAT_EVALUATION_COMPLETED_EXIT, flag);
+		SharedPreferencesUtil.saveBooleanData(context,ZhiChiConstant.SOBOT_CHAT_EVALUATION_COMPLETED_EXIT, flag);
 	}
 
 	/**
@@ -215,7 +263,7 @@ public class SobotApi {
 		if (context == null){
 			return;
 		}
-		SharedPreferencesUtil.saveStringData(context, ZhiChiConstant.SOBOT_CUSTOMADMINHELLOWORD, content);
+		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_CUSTOMADMINHELLOWORD, content);
 	}
 
 	/**
@@ -227,7 +275,7 @@ public class SobotApi {
 		if (context == null){
 			return;
 		}
-		SharedPreferencesUtil.saveStringData(context, ZhiChiConstant.SOBOT_CUSTOMROBOTHELLOWORD, content);
+		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_CUSTOMROBOTHELLOWORD, content);
 	}
 
 	/**
@@ -239,7 +287,7 @@ public class SobotApi {
 		if (context == null){
 			return;
 		}
-		SharedPreferencesUtil.saveStringData(context, ZhiChiConstant.SOBOT_CUSTOMUSERTIPWORD, content);
+		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_CUSTOMUSERTIPWORD, content);
 	}
 
 	/**
@@ -251,7 +299,7 @@ public class SobotApi {
 		if (context == null){
 			return;
 		}
-		SharedPreferencesUtil.saveStringData(context, ZhiChiConstant.SOBOT_CUSTOMADMINTIPWORD, content);
+		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_CUSTOMADMINTIPWORD, content);
 	}
 
 	/**
@@ -263,7 +311,7 @@ public class SobotApi {
 		if (context == null){
 			return;
 		}
-		SharedPreferencesUtil.saveStringData(context, ZhiChiConstant.SOBOT_CUSTOMADMINNONELINETITLE, content);
+		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_CUSTOMADMINNONELINETITLE, content);
 	}
 
 	/**
@@ -275,6 +323,65 @@ public class SobotApi {
 		if (context == null){
 			return;
 		}
-		SharedPreferencesUtil.saveStringData(context, ZhiChiConstant.SOBOT_CUSTOMUSEROUTWORD, content);
+		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_CUSTOMUSEROUTWORD, content);
+	}
+
+	/**
+	 * 获取消息中心数据
+	 *
+	 * @param context
+	 * @param uid 用户唯一标识 与information中传的uid一致
+	 * @return
+	 */
+	public static List<SobotMsgCenterModel> getMsgCenterList(Context context,String uid) {
+		if (context == null) {
+			return null;
+		}
+		uid = uid == null?"":uid;
+		SobotCache sobotCache = SobotCache.get(context);
+		HashMap<String, SobotMsgCenterModel> msg_center_list = (HashMap<String, SobotMsgCenterModel>) sobotCache.getAsObject(uid+"sobot_msg_center_list");
+		List<SobotMsgCenterModel> datas = new ArrayList<SobotMsgCenterModel>();
+		if (msg_center_list != null && msg_center_list.size() > 0) {
+			datas.clear();
+			Iterator iter = msg_center_list.entrySet().iterator();
+			while (iter.hasNext()) {
+				Map.Entry next = (Map.Entry) iter.next();
+				datas.add((SobotMsgCenterModel) next.getValue());
+			}
+		}
+		return datas;
+	}
+
+	/**
+	 * 清除所有消息中心消息
+	 * @param context
+	 * @param uid 用户唯一标识 与information中传的uid一致
+	 */
+	public static void clearMsgCenterList(Context context,String uid) {
+		if (context == null) {
+			return;
+		}
+		uid = uid == null?"":uid;
+		SobotCache sobotCache = SobotCache.get(context);
+		sobotCache.remove(uid+"sobot_msg_center_list");
+	}
+
+	/**
+	 * 清除消息中心单一消息
+	 * @param context
+	 * @param appId appkey
+	 * @param uid 用户唯一标识 与information中传的uid一致
+	 */
+	public static void clearMsgCenter(Context context, String appId,String uid) {
+		if (context == null || TextUtils.isEmpty(appId)) {
+			return;
+		}
+		uid = uid == null?"":uid;
+		SobotCache sobotCache = SobotCache.get(context);
+		HashMap<String, SobotMsgCenterModel> msg_center_list = (HashMap<String, SobotMsgCenterModel>) sobotCache.getAsObject(uid+"sobot_msg_center_list");
+		if (msg_center_list != null && msg_center_list.size() > 0) {
+			msg_center_list.remove(appId);
+			sobotCache.put(uid+"sobot_msg_center_list", msg_center_list);
+		}
 	}
 }
