@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SettingItemView">
+        <attr name="display_type" format="integer" />
+        <attr name="left_text" format="string" />
+        <attr name="left_text_color" format="color" />
+        <attr name="mid_text" format="string" />
+        <attr name="mid_text_aliginright" format="boolean" />
+        <attr name="mid_text_maxlines" format="integer" />
+        <attr name="mid_hint" format="string" />
+        <attr name="maxLength" format="integer" />
+        <attr name="default_str" format="string" />
+        <attr name="drawableLeft" format="reference" />
+        <attr name="isShowArrow" format="boolean" />
+        <attr name="hintColor" format="color" />
+        <attr name="value" format="string" />
+        <attr name="enable" format="boolean" />
+        <attr name="isInputInt" format="boolean" />
+        <attr name="left_text_width" format="dimension" />
+        <attr name="old_str" format="string" />
+    </declare-styleable>
+</resources>

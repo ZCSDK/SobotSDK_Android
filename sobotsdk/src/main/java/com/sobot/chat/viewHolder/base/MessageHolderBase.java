@@ -59,6 +59,7 @@ public abstract class MessageHolderBase {
             case SobotMsgAdapter.MSG_TYPE_IMG_R:
             case SobotMsgAdapter.MSG_TYPE_TXT_R:
             case SobotMsgAdapter.MSG_TYPE_AUDIO_R:
+            case SobotMsgAdapter.MSG_TYPE_MULTI_ROUND_R:
                 this.isRight = true;
                 int defId = ResourceUtils.getIdByName(context, "drawable", "sobot_chatting_default_head");
                 imgHead.setVisibility(View.VISIBLE);
@@ -74,6 +75,11 @@ public abstract class MessageHolderBase {
             case SobotMsgAdapter.MSG_TYPE_TXT_L:
             case SobotMsgAdapter.MSG_TYPE_RICH:
             case SobotMsgAdapter.MSG_TYPE_IMG_L:
+            case SobotMsgAdapter.MSG_TYPE_ROBOT_TEMPLATE1:
+            case SobotMsgAdapter.MSG_TYPE_ROBOT_TEMPLATE2:
+            case SobotMsgAdapter.MSG_TYPE_ROBOT_TEMPLATE3:
+            case SobotMsgAdapter.MSG_TYPE_ROBOT_TEMPLATE4:
+            case SobotMsgAdapter.MSG_TYPE_ROBOT_TEMPLATE5:
                 this.isRight = false;
                 //昵称、头像显示
                 name.setVisibility(TextUtils.isEmpty(message.getSenderName()) ? View.GONE : View.VISIBLE);

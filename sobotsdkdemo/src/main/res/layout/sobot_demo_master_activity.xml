@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/sobot_demo_layout_titlebar" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="35dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/sobot_btn_text_color"
+        android:gravity="center_vertical"
+        android:paddingLeft="16sp"
+        android:text="Appkey"
+        android:textColor="@color/sobot_edittext_text_color"
+        android:textColorHint="#888888" />
+
+    <EditText
+        android:id="@+id/sobot_demo_appkey"
+        android:layout_width="fill_parent"
+        android:layout_height="35dp"
+        android:background="@color/sobot_btn_text_color"
+        android:hint="请输入appkey(必须)"
+        android:inputType="text"
+        android:paddingLeft="16sp"
+        android:text=""
+        android:textColor="@color/sobot_edittext_text_color"
+        android:textColorHint="#888888" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="35dp"
+        android:background="@color/sobot_btn_text_color"
+        android:gravity="center_vertical"
+        android:paddingLeft="16sp"
+        android:text="partnerId"
+        android:textColor="@color/sobot_edittext_text_color"
+        android:textColorHint="#888888" />
+
+    <EditText
+        android:id="@+id/sobot_partnerId"
+        android:layout_width="fill_parent"
+        android:layout_height="35dp"
+        android:layout_below="@+id/sobot_appkey"
+        android:background="@color/sobot_btn_text_color"
+        android:hint="请输入partnerId(用户唯一标识，建议必填)"
+        android:inputType="text"
+        android:paddingLeft="16sp"
+        android:textColor="@color/sobot_edittext_text_color"
+        android:textColorHint="#888888"
+        android:visibility="visible" />
+
+    <RelativeLayout
+        android:id="@+id/rl_"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/sobot_demo_item_setting_selector"
+        android:paddingBottom="@dimen/sobot_list_item_padding_top"
+        android:paddingTop="@dimen/sobot_list_item_padding_top">
+
+        <TextView
+            style="@style/TxtTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/sobot_demo_item_setting_selector"
+            android:gravity="center"
+            android:text="用户资料设置" />
+
+        <ImageView
+            android:id="@+id/img_pc_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/sobot_arrow_icon"
+            android:contentDescription="@null" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.1dip"
+        android:layout_marginLeft="15dp"
+        android:background="@color/sobot_demo_line_1dp" />
+</LinearLayout>

@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/sobot_demo_layout_titlebar" />
+
+    <RelativeLayout
+        android:id="@+id/rl_1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/sobot_demo_item_setting_selector"
+        android:paddingBottom="@dimen/sobot_list_item_padding_top"
+        android:paddingTop="@dimen/sobot_list_item_padding_top">
+
+        <TextView
+            style="@style/TxtTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/sobot_demo_item_setting_selector"
+            android:gravity="center"
+            android:text="接入模式设置" />
+
+        <ImageView
+            android:id="@+id/img_pc_right1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/sobot_arrow_icon"
+            android:contentDescription="@null" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.1dip"
+        android:layout_marginLeft="15dp"
+        android:background="@color/sobot_demo_line_1dp" />
+
+    <RelativeLayout
+        android:id="@+id/rl_2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/sobot_demo_item_setting_selector"
+        android:paddingBottom="@dimen/sobot_list_item_padding_top"
+        android:paddingTop="@dimen/sobot_list_item_padding_top">
+
+        <TextView
+            style="@style/TxtTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:text="商品信息设置" />
+
+        <ImageView
+            android:id="@+id/img_pc_right2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/sobot_arrow_icon"
+            android:contentDescription="@null" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.1dip"
+        android:layout_marginLeft="15dp"
+        android:background="@color/sobot_demo_line_1dp" />
+
+    <RelativeLayout
+        android:id="@+id/rl_3"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/sobot_demo_item_setting_selector"
+        android:paddingBottom="@dimen/sobot_list_item_padding_top"
+        android:paddingTop="@dimen/sobot_list_item_padding_top">
+
+        <TextView
+            style="@style/TxtTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:text="自动应答语设置" />
+
+        <ImageView
+            android:id="@+id/img_pc_right3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/sobot_arrow_icon"
+            android:contentDescription="@null" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.1dip"
+        android:layout_marginLeft="15dp"
+        android:background="@color/sobot_demo_line_1dp" />
+
+    <RelativeLayout
+        android:id="@+id/rl_4"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/sobot_demo_item_setting_selector"
+        android:paddingBottom="@dimen/sobot_list_item_padding_top"
+        android:paddingTop="@dimen/sobot_list_item_padding_top">
+
+        <TextView
+            style="@style/TxtTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:text="转人工设置" />
+
+        <ImageView
+            android:id="@+id/img_pc_right4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/sobot_arrow_icon"
+            android:contentDescription="@null" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.1dip"
+        android:layout_marginLeft="15dp"
+        android:background="@color/sobot_demo_line_1dp" />
+
+    <RelativeLayout
+        android:id="@+id/rl_5"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/sobot_demo_item_setting_selector"
+        android:paddingBottom="@dimen/sobot_list_item_padding_top"
+        android:paddingTop="@dimen/sobot_list_item_padding_top">
+
+        <TextView
+            style="@style/TxtTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:text="历史记录的时间范围设置" />
+
+        <ImageView
+            android:id="@+id/img_pc_right5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/sobot_arrow_icon"
+            android:contentDescription="@null" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.1dip"
+        android:layout_marginLeft="15dp"
+        android:background="@color/sobot_demo_line_1dp" />
+
+    <RelativeLayout
+        android:id="@+id/rl_6"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/sobot_demo_item_setting_selector"
+        android:paddingBottom="@dimen/sobot_list_item_padding_top"
+        android:paddingTop="@dimen/sobot_list_item_padding_top">
+
+        <TextView
+            style="@style/TxtTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:text="是否开启语音功能设置" />
+
+        <ImageView
+            android:id="@+id/img_pc_right6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/sobot_arrow_icon"
+            android:contentDescription="@null" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.1dip"
+        android:layout_marginLeft="15dp"
+        android:background="@color/sobot_demo_line_1dp" />
+
+    <RelativeLayout
+        android:id="@+id/rl_7"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/sobot_demo_item_setting_selector"
+        android:paddingBottom="@dimen/sobot_list_item_padding_top"
+        android:paddingTop="@dimen/sobot_list_item_padding_top">
+
+        <TextView
+            style="@style/TxtTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:text="自定义标题设置" />
+
+        <ImageView
+            android:id="@+id/img_pc_right7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/sobot_arrow_icon"
+            android:contentDescription="@null" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.1dip"
+        android:layout_marginLeft="15dp"
+        android:background="@color/sobot_demo_line_1dp" />
+</LinearLayout>

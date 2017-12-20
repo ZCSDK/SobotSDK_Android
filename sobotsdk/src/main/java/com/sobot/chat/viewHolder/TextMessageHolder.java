@@ -119,7 +119,7 @@ public class TextMessageHolder extends MessageHolderBase {
             ZhiChiMessageBase msgObj = new ZhiChiMessageBase();
             msgObj.setContent(msgContent);
             msgObj.setId(id);
-            ((SobotChatActivity) context).sendMessageToRobot(msgObj,1, 3,"");
+            ((SobotChatActivity) context).sendMessageToRobot(msgObj,1, 0, "");
         }
     }
 }

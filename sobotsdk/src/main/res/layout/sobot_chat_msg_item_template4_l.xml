@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/sobot_list_divider_height">
+
+    <!-- 中间提醒内容 -->
+    <TextView
+        android:id="@+id/sobot_reminde_time_Text"
+        style="@style/sobot_center_remind_time" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left">
+
+        <!--头像-->
+        <ImageView
+            android:id="@+id/sobot_imgHead"
+            style="@style/sobot_chatting_imghead"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp" />
+
+        <!-- 昵称 -->
+        <TextView
+            android:id="@+id/sobot_name"
+            style="@style/sobot_chatting_nickname"
+            android:layout_toRightOf="@+id/sobot_imgHead" />
+
+        <RelativeLayout
+            android:id="@+id/sobot_msg_rl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sobot_name"
+            android:layout_toRightOf="@+id/sobot_imgHead">
+
+            <!-- 机械人的消息内容 -->
+            <LinearLayout
+                android:id="@+id/sobot_ll_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/sobot_chatfrom_bg_normal"
+                android:orientation="vertical"
+                android:paddingTop="2dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true">
+
+                <ImageView
+                    android:id="@+id/sobot_template4_thumbnail"
+                    android:layout_width="220dp"
+                    android:layout_height="110dp"
+                    android:background="@drawable/sobot_logo_icon"
+                    android:contentDescription="@null" />
+
+                <TextView
+                    android:id="@+id/sobot_template4_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="10dp"
+                    tools:text="title  标题名称" />
+
+                <TextView
+                    android:id="@+id/sobot_template4_summary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    tools:text="summary  要素内容summary " />
+
+                <View
+                    android:id="@+id/sobot_template3_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginTop="10dp"
+                    android:background="#d6dbe5"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/sobot_template4_anchor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="8dp"
+                    android:textColor="#4d9dfe"
+                    android:gravity="center"
+                    android:text="查看详情 >" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

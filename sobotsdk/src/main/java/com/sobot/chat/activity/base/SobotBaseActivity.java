@@ -441,7 +441,10 @@ public abstract class SobotBaseActivity extends Activity implements
         handler.sendMessage(message);
     }
 
-    public void remindRobotMessage(final Handler handler) {
+    public void remindRobotMessage(final Handler handler,final ZhiChiInitModeBase initModel) {
+        if (initModel == null || initModel.getUstatus() == ZhiChiConstant.ustatus_robot) {
+            return;
+        }
         // 修改提醒的信息
         remindRobotMessageTimes = remindRobotMessageTimes + 1;
         if (remindRobotMessageTimes == 1) {

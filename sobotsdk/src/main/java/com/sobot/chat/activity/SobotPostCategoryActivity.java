@@ -56,8 +56,8 @@ public class SobotPostCategoryActivity extends SobotBaseActivity {
     }
 
     private void initView() {
-		String bg_color = SharedPreferencesUtil.getStringData(this, "robot_current_themeColor", "");
-        if (bg_color != null && bg_color.trim().length() != 0) {
+        String bg_color = SharedPreferencesUtil.getStringData(this, "robot_current_themeColor", "");
+        if (!TextUtils.isEmpty(bg_color)) {
             relative.setBackgroundColor(Color.parseColor(bg_color));
         }
         sobot_tv_left.setOnClickListener(this);

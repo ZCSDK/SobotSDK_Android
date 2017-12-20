@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/sobot_demo_titlebar"
+        layout="@layout/sobot_demo_layout_titlebar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/sobot_demo_bottom_layout"
+        android:layout_below="@+id/sobot_demo_titlebar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#FFFFFF"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="15dp"
+                android:text="多重自定义字段+自由流转，满足企业个性化工单需求"
+                android:textColor="#3D4966"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:text="智齿客服工单系统，让企业内部沟通协作更顺畅"
+                android:textColor="#BDC3D1"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/sobot_demo_work_order_img1"
+                android:contentDescription="@null" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="15dp"
+                android:text="1.工单能满足那些需求？"
+                android:textColor="#3D4966"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="15dp"
+                android:text="客户-提供更好体验"
+                android:textColor="#001F2A"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="3dp"
+                android:lineSpacingExtra="3dp"
+                android:text="全渠道工单发起；
+实时提醒，随时获取工单进度反馈；
+邮件沟通，参与问题解决。"
+                android:textColor="#8B98AD"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="15dp"
+                android:text="一线客服-快速处理解决"
+                android:textColor="#001F2A"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="3dp"
+                android:lineSpacingExtra="3dp"
+                android:text="发起工单，问题升级协调处理；
+工单推进灵活流转，对接关键人；
+查看工单历史，随时提醒工单进度。"
+                android:textColor="#8B98AD"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="15dp"
+                android:text="业务部门-及时获取反馈，协助问题解决"
+                android:textColor="#001F2A"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="3dp"
+                android:lineSpacingExtra="3dp"
+                android:text="准确获取用户反馈，参与工单协作；
+及时与用户沟通，保证问题解决。"
+                android:textColor="#8B98AD"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="15dp"
+                android:text="客服管理-提升管理效率，优化服务体系"
+                android:textColor="#001F2A"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="3dp"
+                android:lineSpacingExtra="3dp"
+                android:text="多个自定义字段，满足企业个性化流程；
+自定义SLA协议，提供等级服务，保证服务质量；
+全面的统计报表，帮助管理者优化服务流程；
+客服问题处理流程标准化，各部门工作效率一目了然。"
+                android:textColor="#8B98AD"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/sobot_demo_work_order_img2"
+                android:contentDescription="@null" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="15dp"
+                android:text="2.智齿客服工单系统的优势"
+                android:textColor="#3D4966"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="15dp"
+                android:text="手机处理工单"
+                android:textColor="#001F2A"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="3dp"
+                android:lineSpacingExtra="3dp"
+                android:text="智齿客服App可以接收工单、查看工单、分配工单、处理工单，客户问题随时随地快速解决。"
+                android:textColor="#8B98AD"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="15dp"
+                android:text="连接云客服中心"
+                android:textColor="#001F2A"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="3dp"
+                android:lineSpacingExtra="3dp"
+                android:text="与云客户中心实时连接，客户以往的浏览轨迹、聊天信息、通话记录、工单历史一目了然。"
+                android:textColor="#8B98AD"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="15dp"
+                android:text="连接智齿客服其他产品模块"
+                android:textColor="#001F2A"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="3dp"
+                android:lineSpacingExtra="3dp"
+                android:text="配合智齿云呼叫中心/机器人客服/人工在线客服，售前售中售后问题一次性解决，保证留住每个客户。"
+                android:textColor="#8B98AD"
+                android:textSize="12sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
+        </LinearLayout>
+
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/sobot_demo_bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="#0DAEAF">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:drawableLeft="@drawable/sobot_demo_consult_img"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:text="咨询客服"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

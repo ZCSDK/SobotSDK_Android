@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@+id/rl_setting_item_container"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/sobot_demo_item_setting_selector">
+    <TextView
+        android:id="@+id/tv_setting_item_left_text"
+        style="?android:attr/textViewStyle"
+        android:layout_width="@dimen/settingItemView_left_text_width"
+        android:layout_marginRight="@dimen/settingItemView_left_text_margin_right"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:background="@null"
+        android:paddingBottom="@dimen/sobot_list_item_padding_top"
+        android:paddingTop="@dimen/sobot_list_item_padding_top"
+        android:textColor="@color/sobot_demo_line_up_user_text_color_second"
+        android:textSize="@dimen/sobot_text_font_small"
+        />
+
+    <TextView
+        android:id="@+id/tv_setting_item_mid_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/tv_setting_item_left_text"
+        tools:text="必填"
+        android:layout_toLeftOf="@+id/tv_setting_item_img"
+        android:layout_marginRight="20dp"
+        android:textColor="#3D4966"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:textSize="@dimen/sobot_text_font_small"/>
+
+    <ImageView
+        android:id="@+id/tv_setting_item_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/sobot_arrow_icon"
+        android:contentDescription="@null"/>
+</RelativeLayout>

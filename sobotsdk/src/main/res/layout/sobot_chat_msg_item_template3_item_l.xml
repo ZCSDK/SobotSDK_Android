@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sobot_template3_anchor"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/sobot_template3_bg_selector"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/sobot_template3_thumbrail"
+            style="@style/sobot_chatting_imghead"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:contentDescription="@null" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/sobot_template3_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/sobot_DIMEN_7PX"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="@dimen/sobot_DIMEN_7PX"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingTop="2dp"
+                    android:singleLine="true"
+                    android:textColor="#3D4966"
+                    android:textSize="@dimen/sobot_text_font_small"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/sobot_template3_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:layout_marginBottom="@dimen/sobot_DIMEN_7PX"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="@dimen/sobot_DIMEN_7PX"
+                    android:gravity="center_vertical"
+                    android:maxWidth="80dp"
+                    android:paddingTop="2dp"
+                    android:singleLine="true"
+                    android:textColor="#8B98AD"
+                    android:textSize="@dimen/sobot_listview_remind_text_size"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/sobot_template3_summary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="5dp"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:textColor="#8B98AD"
+                android:textSize="13sp"
+                android:visibility="visible" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/sobot_template3_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#D6DBE5"
+        android:visibility="visible" />
+</LinearLayout>

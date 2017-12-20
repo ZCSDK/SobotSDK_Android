@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/sobot_demo_layout_titlebar" />
+
+    <EditText
+        android:paddingLeft="20dp"
+        android:id="@+id/sobot_tv_chat_index_show_text"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:background="@color/sobot_btn_text_color"
+        android:hint="请输入固定文案"
+        android:textColor="@color/sobot_edittext_text_color"
+        android:textColorHint="#888888" />
+
+        <RadioGroup
+            android:id="@+id/sobot_rg_title_value_show"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/sobot_show_custom_nike"
+                style="@style/radiobutton_right_style"
+                android:text="显示客服昵称" />
+
+            <RadioButton
+                android:id="@+id/sobot_show_fixed_text"
+                style="@style/radiobutton_right_style"
+                android:text="显示固定文案" />
+
+            <RadioButton
+                android:id="@+id/sobot_show_company_name"
+                style="@style/radiobutton_right_style"
+                android:text="显示console设置的企业名称" />
+
+        </RadioGroup>
+
+</LinearLayout>

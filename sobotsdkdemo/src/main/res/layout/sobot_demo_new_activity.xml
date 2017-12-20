@@ -1,0 +1,49 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#888"/>
+
+    <com.lzy.widget.AlphaIndicator
+        android:id="@+id/alphaIndicator"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:orientation="horizontal">
+
+        <com.lzy.widget.AlphaView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="5dp"
+            app:av_tabIconNormal="@drawable/sobot_demo_jieshao_normal"
+            app:av_tabIconSelected="@drawable/sobot_demo_jieshao_pressed"
+            app:av_tabText="产品介绍"
+            app:av_tabTextSize="10sp"
+            app:av_textColorNormal="#8B98AD"
+            app:av_textColorSelected="#0DAEAF"/>
+
+        <com.lzy.widget.AlphaView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="5dp"
+            app:av_tabIconNormal="@drawable/sobot_demo_more_normal"
+            app:av_tabIconSelected="@drawable/sobot_demo_more_pressed"
+            app:av_tabText="更多"
+            app:av_tabTextSize="10sp"
+            app:av_textColorNormal="#8B98AD"
+            app:av_textColorSelected="#0DAEAF"/>
+
+    </com.lzy.widget.AlphaIndicator>
+</LinearLayout>

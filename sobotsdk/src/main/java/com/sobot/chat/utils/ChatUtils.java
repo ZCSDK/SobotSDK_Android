@@ -26,10 +26,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sobot.chat.SobotApi;
+import com.sobot.chat.activity.SobotChatActivity;
 import com.sobot.chat.activity.SobotPostMsgActivity;
 import com.sobot.chat.adapter.base.SobotMsgAdapter;
 import com.sobot.chat.api.ResultCallBack;
 import com.sobot.chat.api.ZhiChiApi;
+import com.sobot.chat.api.apiUtils.GsonUtil;
 import com.sobot.chat.api.apiUtils.SobotVerControl;
 import com.sobot.chat.api.enumtype.SobotChatTitleDisplayMode;
 import com.sobot.chat.api.model.CommonModel;
@@ -38,6 +40,7 @@ import com.sobot.chat.api.model.SobotCusFieldConfig;
 import com.sobot.chat.api.model.SobotEvaluateModel;
 import com.sobot.chat.api.model.SobotFieldModel;
 import com.sobot.chat.api.model.SobotMsgCenterModel;
+import com.sobot.chat.api.model.SobotMultiDiaRespInfo;
 import com.sobot.chat.api.model.ZhiChiInitModeBase;
 import com.sobot.chat.api.model.ZhiChiMessage;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
@@ -58,6 +61,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ChatUtils {
 
@@ -896,7 +900,7 @@ public class ChatUtils {
 		SobotCache sobotCache = SobotCache.get(context);
 		HashMap<String,SobotMsgCenterModel> msg_center_list = (HashMap<String, SobotMsgCenterModel>) sobotCache.getAsObject(info.getUid()+"sobot_msg_center_list");
 		if (msg_center_list == null) {
-			msg_center_list = new HashMap<String,SobotMsgCenterModel>();
+			msg_center_list = new HashMap<>();
 		}
 		SobotMsgCenterModel sobotMsgCenterModel = msg_center_list.get(appkey);
 		if (sobotMsgCenterModel==null) {
@@ -923,5 +927,45 @@ public class ChatUtils {
 		Intent lastMsgIntent = new Intent(ZhiChiConstant.SOBOT_ACTION_UPDATE_LAST_MSG);
 		lastMsgIntent.putExtra("lastMsg", sobotMsgCenterModel);
 		LocalBroadcastManager.getInstance(context).sendBroadcast(lastMsgIntent);
+	}
+
+	public static void sendMultiRoundQuestions(Context context, SobotMultiDiaRespInfo multiDiaRespInfo, Map<String, String> interfaceRet) {
+		if (context != null && multiDiaRespInfo != null && interfaceRet != null) {
+			ZhiChiMessageBase msgObj = new ZhiChiMessageBase();
+			String content = "{\"interfaceRetList\":[" + GsonUtil.map2Json(interfaceRet) + "]," + "\"template\":" + multiDiaRespInfo.getTemplate() + "}";
+
+			msgObj.setContent(formatQuestionStr(multiDiaRespInfo.getOutPutParamList(), interfaceRet, multiDiaRespInfo));
+			msgObj.setId(System.currentTimeMillis() + "");
+			((SobotChatActivity) context).sendMessageToRobot(msgObj, 4, 2, content, interfaceRet.get("title"));
+		}
+	}
+
+	private static String formatQuestionStr(String[] outPutParam, Map<String, String> interfaceRet, SobotMultiDiaRespInfo multiDiaRespInfo) {
+		if (multiDiaRespInfo != null && interfaceRet != null && interfaceRet.size() > 0) {
+			Map<String, String> map = new HashMap<>();
+			map.put("level", multiDiaRespInfo.getLevel());
+			map.put("conversationId", multiDiaRespInfo.getConversationId());
+			if (outPutParam != null && outPutParam.length > 0) {
+				for (int i = 0; i < outPutParam.length; i++) {
+					map.put(outPutParam[i], interfaceRet.get(outPutParam[i]));
+				}
+			}
+			return GsonUtil.map2Str(map);
+		}
+		return "";
+	}
+
+	public static String getMultiMsgTitle(SobotMultiDiaRespInfo multiDiaRespInfo){
+		if (multiDiaRespInfo == null) {
+			return "";
+		}
+		if ("000000".equals(multiDiaRespInfo.getRetCode())) {
+			if (multiDiaRespInfo.getEndFlag()) {
+				return multiDiaRespInfo.getAnswerStrip();
+			} else {
+				return multiDiaRespInfo.getRemindQuestion();
+			}
+		}
+		return multiDiaRespInfo.getRetErrorMsg();
 	}
 }

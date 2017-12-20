@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sobot_template1_item_"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingRight="5dp"
+    android:paddingLeft="5dp"
+    android:background="@drawable/sobot_template_bg_selector"
+    android:orientation="vertical"
+    android:paddingBottom="5dp">
+
+    <ImageView
+        android:background="@android:color/white"
+        android:layout_marginTop="5dp"
+        android:id="@+id/sobot_template1_item_thumbnail"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:contentDescription="@null" />
+
+    <TextView
+        android:id="@+id/sobot_template1_item_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="3dp"
+        android:textColor="#3D4966"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/sobot_template1_item_summary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="3dp"
+        android:singleLine="true"
+        android:textColor="#8B98AD"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/sobot_template1_item_lable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="3dp"
+        android:textColor="#f6a623"
+        android:textSize="15sp" />
+</LinearLayout>

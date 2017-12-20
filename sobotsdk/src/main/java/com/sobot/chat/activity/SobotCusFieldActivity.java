@@ -82,7 +82,7 @@ public class SobotCusFieldActivity extends SobotBaseActivity {
     }
 
     private void initView() {
-		String bg_color = SharedPreferencesUtil.getStringData(this, "robot_current_themeColor", "");
+        String bg_color = SharedPreferencesUtil.getStringData(this, "robot_current_themeColor", "");
         if (!TextUtils.isEmpty(bg_color)) {
             relative.setBackgroundColor(Color.parseColor(bg_color));
         }

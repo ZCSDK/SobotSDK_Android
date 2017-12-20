@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/sobot_demo_layout_titlebar" />
+
+    <RelativeLayout
+        android:id="@+id/sobot_isArtificialIntelligence"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/sobot_list_item_padding_top"
+        android:paddingTop="@dimen/sobot_list_item_padding_top"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/tv_newmsg_notify"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="25dp"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:text="是否智能转人工"
+            android:textSize="@dimen/sobot_text_font_smaller" />
+
+        <ImageView
+            android:id="@+id/img_open_notify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/sobot_demo_icon_close"
+            android:contentDescription="@null"
+            android:visibility="visible" />
+
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/sobot_isArtificialIntelligence_num"
+        android:layout_width="fill_parent"
+        android:layout_height="35dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/sobot_btn_text_color"
+        android:hint="智能转人工次数(默认一次)"
+        android:inputType="text"
+        android:paddingLeft="20dp"
+        android:text=""
+        android:textColor="@color/sobot_edittext_text_color"
+        android:textColorHint="#888888" />
+
+    <EditText
+        android:id="@+id/sobot_demo_transferKeyWord"
+        android:layout_width="fill_parent"
+        android:layout_height="35dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/sobot_btn_text_color"
+        android:hint="智能转人工关键字"
+        android:inputType="text"
+        android:paddingLeft="20dp"
+        android:text=""
+        android:textColor="@color/sobot_edittext_text_color"
+        android:textColorHint="#888888" />
+
+</LinearLayout>

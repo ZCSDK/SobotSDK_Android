@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/sobot_demo_layout_titlebar" />
+
+    <RadioGroup
+        android:id="@+id/sobot_rg_initModeType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/rg_initModeType_noSet"
+            style="@style/radiobutton_right_style"
+            android:checked="true"
+            android:text="不设置" />
+
+        <RadioButton
+            android:id="@+id/rg_initModeType_only_robot"
+            style="@style/radiobutton_right_style"
+            android:text="仅机器" />
+
+        <RadioButton
+            android:id="@+id/rg_initModeType_only_customer"
+            style="@style/radiobutton_right_style"
+            android:text="仅人工" />
+
+        <RadioButton
+            android:id="@+id/rg_initModeType_robot_first"
+            style="@style/radiobutton_right_style"
+            android:text="机器优先" />
+
+        <RadioButton
+            android:id="@+id/rg_initModeType_custom_first"
+            style="@style/radiobutton_right_style"
+            android:text="人工优先" />
+    </RadioGroup>
+
+</LinearLayout>

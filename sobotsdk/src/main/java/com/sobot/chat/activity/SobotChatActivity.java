@@ -803,19 +803,19 @@ public class SobotChatActivity extends SobotBaseActivity implements
 						initModel.setColor(info.getColor());
 
 						if (type == ZhiChiConstant.type_robot_only){
-							remindRobotMessage(handler);
+							remindRobotMessage(handler,initModel);
 						} else if (type == ZhiChiConstant.type_robot_first) {
 							//机器人优先
 							if(initModel.getUstatus() == ZhiChiConstant.ustatus_online || initModel.getUstatus() == ZhiChiConstant.ustatus_queue){
 								//机器人优先 时需要判断  是否需要保持会话
 								if(initModel.getUstatus() == ZhiChiConstant.ustatus_queue){
-									remindRobotMessage(handler);
+									remindRobotMessage(handler,initModel);
 								}
 								//机器人会话保持
 								connectCustomerService("","");
 							}else{
 								//仅机器人或者机器人优先，不需要保持会话
-								remindRobotMessage(handler);
+								remindRobotMessage(handler,initModel);
 							}
 						} else {
 							if (type == ZhiChiConstant.type_custom_only) {
@@ -1128,6 +1128,12 @@ public class SobotChatActivity extends SobotBaseActivity implements
 						//顶踩开关打开 显示顶踩按钮
 						zhiChiMessageBasebase.setRevaluateState(1);
 					}
+				}
+
+				if (zhiChiMessageBasebase.getAnswer() != null && zhiChiMessageBasebase.getAnswer().getMultiDiaRespInfo() != null
+						&& zhiChiMessageBasebase.getAnswer().getMultiDiaRespInfo().getEndFlag()) {
+					// 多轮会话结束时禁用所有多轮会话可点击选项
+					restMultiMsg();
 				}
 
                 updateUiMessage(messageAdapter,zhiChiMessageBasebase);
@@ -1450,7 +1456,7 @@ public class SobotChatActivity extends SobotBaseActivity implements
 			if (type == ZhiChiConstant.type_custom_first) {
 				if (queueTimes == 1) {
 					//如果当前为人工优先模式那么在第一次收到
-					remindRobotMessage(handler);
+					remindRobotMessage(handler,initModel);
 				}
 			}
 		}
@@ -1467,7 +1473,7 @@ public class SobotChatActivity extends SobotBaseActivity implements
 			showCustomerOfflineTip();
 			if (type == ZhiChiConstant.type_custom_first && current_client_model ==
 					ZhiChiConstant.client_model_robot) {
-				remindRobotMessage(handler);
+				remindRobotMessage(handler,initModel);
 			}
 		}
 		gotoLastItem();
@@ -1480,7 +1486,7 @@ public class SobotChatActivity extends SobotBaseActivity implements
 		showLogicTitle(initModel.getRobotName(),false);
 		showCustomerUanbleTip();
 		if (type == ZhiChiConstant.type_custom_first) {
-			remindRobotMessage(handler);
+			remindRobotMessage(handler,initModel);
 		}
 	}
 
@@ -2548,11 +2554,18 @@ public class SobotChatActivity extends SobotBaseActivity implements
 				ResourceUtils.getIdByName(getApplicationContext(), "anim", "push_left_out"));
 	}
 
-	/*发送0、机器人问答 1、文本  2、语音  3、图片*/
 	public void sendMessageToRobot(ZhiChiMessageBase base,int type, int questionFlag, String docId){
+		sendMessageToRobot(base,type, questionFlag, docId, null);
+	}
+
+	/*发送0、机器人问答 1、文本  2、语音  3、图片*/
+	public void sendMessageToRobot(ZhiChiMessageBase base,int type, int questionFlag, String docId, String multiRoundMsg){
+		if (type == 4){
+			sendMsgToRobot(base, SEND_TEXT, questionFlag, docId, multiRoundMsg);
+		}
 
 		/*图片消息*/
-		if(type == 3){
+		else if(type == 3){
 			// 根据图片的url 上传图片 更新上传图片的进度
 			messageAdapter.updatePicStatusById(base.getId(), base.getMysendMessageState());
 			messageAdapter.notifyDataSetChanged();
@@ -2572,13 +2585,7 @@ public class SobotChatActivity extends SobotBaseActivity implements
 		/*文本消息*/
 		else if (type == 1){
 			// 消息的转换
-			sendTextMessageToHandler(base.getId(), base.getContent(), handler, 2, UPDATE_TEXT);
-			ZhiChiReplyAnswer answer = new ZhiChiReplyAnswer();
-			answer.setMsgType(ZhiChiConstant.message_type_text + "");
-			answer.setMsg(base.getContent());
-			base.setAnswer(answer);
-			base.setSenderType(ZhiChiConstant.message_sender_type_customer + "");
-			sendMessageWithLogic(base.getId(), base.getContent(), initModel, handler, current_client_model, questionFlag, docId);
+			sendMsgToRobot(base, UPDATE_TEXT, questionFlag, docId);
 		}
 
 		/*机器人问答*/
@@ -3234,7 +3241,7 @@ public class SobotChatActivity extends SobotBaseActivity implements
 
 	//通告设置
 	private void getAnnouncement(){
-		if (!TextUtils.isEmpty(initModel.getAnnounceClickUrl()) && initModel.getAnnounceClickUrl().length() > 10){
+		if (!TextUtils.isEmpty(initModel.getAnnounceClickUrl())){
 			sobot_announcement_right_icon.setVisibility(View.VISIBLE);
 		} else {
 			sobot_announcement_right_icon.setVisibility(View.GONE);
@@ -3247,7 +3254,7 @@ public class SobotChatActivity extends SobotBaseActivity implements
 				@Override
 				public void onClick(View v) {
 					// 内部浏览器
-					if (!TextUtils.isEmpty(initModel.getAnnounceClickUrl()) && initModel.getAnnounceClickUrl().length() > 10 && initModel.getAnnounceClickFlag()){
+					if (!TextUtils.isEmpty(initModel.getAnnounceClickUrl()) && initModel.getAnnounceClickFlag()){
 						Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
 						intent.putExtra("url", initModel.getAnnounceClickUrl());
 						startActivity(intent);
@@ -3265,5 +3272,37 @@ public class SobotChatActivity extends SobotBaseActivity implements
 		} else {
 			btn_model_voice.setVisibility(info.isUseVoice()?View.VISIBLE : View.GONE);
 		}
+	}
+
+	private void sendMsgToRobot(ZhiChiMessageBase base, int sendType, int questionFlag, String docId){
+		sendMsgToRobot(base, sendType, questionFlag, docId, null);
+	}
+
+	private void sendMsgToRobot(ZhiChiMessageBase base, int sendType, int questionFlag, String docId, String multiRoundMsg){
+		if (!TextUtils.isEmpty(multiRoundMsg)){
+			sendTextMessageToHandler(base.getId(), multiRoundMsg, handler, 2, sendType);
+		} else {
+			sendTextMessageToHandler(base.getId(), base.getContent(), handler, 2, sendType);
+		}
+		ZhiChiReplyAnswer answer = new ZhiChiReplyAnswer();
+		answer.setMsgType(ZhiChiConstant.message_type_text + "");
+		answer.setMsg(base.getContent());
+		base.setAnswer(answer);
+		base.setSenderType(ZhiChiConstant.message_sender_type_customer + "");
+		sendMessageWithLogic(base.getId(), base.getContent(), initModel, handler, current_client_model, questionFlag, docId);
+	}
+
+	/**
+	 * 更新 多轮会话的状态
+	 */
+	private void restMultiMsg(){
+		for (int i = 0; i < messageList.size(); i++) {
+			ZhiChiMessageBase data = messageList.get(i);
+			if (data.getAnswer() != null && data.getAnswer().getMultiDiaRespInfo() != null
+					&& !data.getAnswer().getMultiDiaRespInfo().getEndFlag()){
+				data.setSugguestionsFontColor(1);
+			}
+		}
+		messageAdapter.notifyDataSetChanged();
 	}
 }

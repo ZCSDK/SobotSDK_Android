@@ -7,8 +7,6 @@ import android.util.AttributeSet;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
-import com.sobot.chat.R;
-
 /**
  * Created by jinxl on 2017/6/13
  * 可以设置最大高度的linearlayout

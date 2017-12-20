@@ -1,9 +1,10 @@
-package com.sobot.chat.widget;
+package com.sobot.chat.widget.lablesview;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
@@ -34,7 +35,7 @@ public class SobotLabelsView extends ViewGroup implements View.OnClickListener {
     private SelectType mSelectType;
     private int mMaxSelect;
 
-    private ArrayList<String> mLabels = new ArrayList<>();
+    private ArrayList<SobotLablesViewModel> mLabels = new ArrayList<>();
     //保存选中的label的位置
     private ArrayList<Integer> mSelectLabels = new ArrayList<>();
 
@@ -93,6 +94,7 @@ public class SobotLabelsView extends ViewGroup implements View.OnClickListener {
             mSelectType = SelectType.get(2);
 
             mMaxSelect = 0;
+            //mTextColor  获取的是点击的时候，字体的颜色
             mTextColor = getResources().getColorStateList(ResourceUtils.getIdByName(context, "drawable", "sobot_label_text_color"));
             mTextSize = TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_SP, 14, getResources().getDisplayMetrics());
@@ -108,6 +110,7 @@ public class SobotLabelsView extends ViewGroup implements View.OnClickListener {
                     TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
             mWordMargin = (int) TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
+            //mLabelBgResId  获取的是背景的颜色
             mLabelBgResId = ResourceUtils.getIdByName(context, "drawable", "sobot_label_bg");
         }
     }
@@ -252,7 +255,7 @@ public class SobotLabelsView extends ViewGroup implements View.OnClickListener {
         bundle.putInt(KEY_MAX_SELECT_STATE, mMaxSelect);
         //保存标签列表
         if (!mLabels.isEmpty()) {
-            bundle.putStringArrayList(KEY_LABELS_STATE, mLabels);
+            bundle.putSerializable(KEY_LABELS_STATE, mLabels);
         }
         //保存已选择的标签列表
         if (!mSelectLabels.isEmpty()) {
@@ -295,7 +298,7 @@ public class SobotLabelsView extends ViewGroup implements View.OnClickListener {
             //恢复标签的最大选择数量
             setMaxSelect(bundle.getInt(KEY_MAX_SELECT_STATE, mMaxSelect));
             //恢复标签列表
-            ArrayList<String> labels = bundle.getStringArrayList(KEY_LABELS_STATE);
+            ArrayList<SobotLablesViewModel> labels = (ArrayList<SobotLablesViewModel>) bundle.getSerializable(KEY_LABELS_STATE);
             if (labels != null && !labels.isEmpty()) {
                 setLabels(labels);
             }
@@ -319,7 +322,7 @@ public class SobotLabelsView extends ViewGroup implements View.OnClickListener {
      *
      * @param labels
      */
-    public void setLabels(ArrayList<String> labels) {
+    public void setLabels(ArrayList<SobotLablesViewModel> labels) {
         //清空原有的标签
         clearAllSelect();
         removeAllViews();
@@ -339,21 +342,24 @@ public class SobotLabelsView extends ViewGroup implements View.OnClickListener {
      *
      * @return
      */
-    public ArrayList<String> getLabels() {
+    public ArrayList<SobotLablesViewModel> getLabels() {
         return mLabels;
     }
 
-    private void addLabel(String text, int position) {
+    private void addLabel(SobotLablesViewModel data, int position) {
         final TextView label = new TextView(mContext);
         label.setPadding(mTextPaddingLeft, mTextPaddingTop, mTextPaddingRight, mTextPaddingBottom);
         label.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize);
         label.setTextColor(mTextColor != null ? mTextColor : ColorStateList.valueOf(0xFF000000));
-        label.setText(text);
+        label.setSingleLine(true);
+        label.setEllipsize(TextUtils.TruncateAt.END);
+        label.setText(data.getTitle());
         if (mLabelBgResId != 0) {
             label.setBackgroundResource(mLabelBgResId);
         }
         //label通过tag保存自己的位置(position)
         label.setTag(position);
+        label.setTag(ResourceUtils.getIdByName(getContext(),"id","sobot_template2_msg"),data);
         label.setOnClickListener(this);
         addView(label);
     }
@@ -375,7 +381,8 @@ public class SobotLabelsView extends ViewGroup implements View.OnClickListener {
             }
 
             if (mLabelClickListener != null) {
-                mLabelClickListener.onLabelClick(label, label.getText().toString(), (int) v.getTag());
+                int idByName = ResourceUtils.getIdByName(getContext(), "id", "sobot_template2_msg");
+                mLabelClickListener.onLabelClick(label, (SobotLablesViewModel) v.getTag(idByName), (int) v.getTag());
             }
         }
     }
@@ -436,6 +443,14 @@ public class SobotLabelsView extends ViewGroup implements View.OnClickListener {
                 }
             }
         }
+    }
+
+    public void setTabEnable(boolean enable) {
+            int count = getChildCount();
+            for (int i = 0; i < count; i++) {
+                TextView label = (TextView) getChildAt(i);
+                label.setEnabled(enable);
+            }
     }
 
     /**
@@ -640,7 +655,7 @@ public class SobotLabelsView extends ViewGroup implements View.OnClickListener {
     }
 
     public interface OnLabelClickListener {
-        void onLabelClick(View label, String labelText, int position);
+        void onLabelClick(View label, SobotLablesViewModel data, int position);
     }
 
     public interface OnLabelSelectChangeListener {
