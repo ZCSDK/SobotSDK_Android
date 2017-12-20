@@ -28,14 +28,14 @@
             android:textSize="@dimen/sobot_listview_remind_text_size" />
 
         <RelativeLayout
+            android:visibility="gone"
             android:id="@+id/sobot_post_question_rl"
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:layout_marginTop="10dp"
             android:background="#ffffff"
             android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:visibility="gone">
+            android:paddingRight="20dp">
 
             <TextView
                 android:id="@+id/sobot_post_question_lable"
@@ -49,11 +49,11 @@
                 android:id="@+id/sobot_post_question_type"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:textColor="#3D4966"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/sobot_post_question_lable"
                 android:gravity="center_vertical"
-                android:textColor="#3D4966"
                 android:textSize="@dimen/sobot_text_font_small" />
 
             <ImageView
@@ -77,9 +77,9 @@
             android:paddingLeft="20dp" />
 
         <LinearLayout
+            android:layout_marginBottom="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
             android:background="#ffffff"
             android:orientation="vertical">
@@ -114,9 +114,9 @@
                 android:background="@drawable/sobot_edittext_noborder_shape"
                 android:gravity="top"
                 android:inputType="textMultiLine"
-				android:maxLength="3000"
-                android:lineSpacingExtra="5dp"
+                android:maxLength="3000"
                 android:minHeight="150dp"
+                android:lineSpacingExtra="5dp"
                 android:padding="10dp"
                 android:textColor="#3d4966"
                 android:textColorHint="@color/sobot_color_post_msg_text_color"
@@ -213,6 +213,7 @@
                 android:textSize="@dimen/sobot_text_font_small" />
 
             <EditText
+                android:inputType="phone"
                 android:id="@+id/sobot_post_phone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -221,7 +222,6 @@
                 android:layout_toRightOf="@+id/sobot_post_phone_lable"
                 android:background="#ffffff"
                 android:gravity="center_vertical"
-                android:inputType="phone"
                 android:textSize="@dimen/sobot_text_font_small" />
 
             <ImageView

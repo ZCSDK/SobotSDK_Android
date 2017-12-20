@@ -24,9 +24,7 @@
         android:smallScreens="true"
         android:xlargeScreens="true" />
 
-    <application
-        android:allowBackup="true">
-
+    <application>
         <activity
             android:name="com.sobot.chat.activity.SobotChatActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -54,6 +52,11 @@
             android:theme="@style/sobot_AppTheme"
             android:windowSoftInputMode="adjustResize" />
         <activity
+            android:name="com.sobot.chat.activity.SobotConsultationListActivity"
+            android:theme="@style/sobot_AppTheme"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name="com.sobot.chat.activity.SobotPhotoListActivity"
             android:configChanges="orientation|keyboardHidden"
             android:hardwareAccelerated="false"
@@ -73,7 +76,7 @@
         <service
             android:name="com.sobot.chat.core.channel.SobotTCPServer"
             android:exported="false"
-            android:label="SobotChatTCPServer"></service>
+            android:label="SobotChatTCPServer"/>
         <service android:name="com.sobot.chat.server.SobotSessionServer" />
     </application>
 

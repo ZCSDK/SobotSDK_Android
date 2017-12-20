@@ -1,0 +1,27 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.2'
+        /* 第 1 步：添加必要的插件,
+          * 为了在 Android Studio 里与 Bintray 交互，你应该把 Bintray 插件引入到
+          * 项目的 build.gradle 文件的 dependencies 里,注意是项目的build.gradle
+          * 下面的第一句话是：Bintray 插件
+          * 第二句是：因为你要把库上传到 Maven 仓库，你还应该像下面这样添加 Maven 插件。
+          */
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.4'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        maven { url 'https://maven.google.com' }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

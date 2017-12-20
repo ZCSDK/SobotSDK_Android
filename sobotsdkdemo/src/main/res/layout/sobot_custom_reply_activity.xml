@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+    <include layout="@layout/sobot_demo_layout_titlebar" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:text="自定义客服欢迎语"
+        android:textColor="#000000" />
+
+    <EditText
+        android:id="@+id/sobot_customadminhelloword"
+        style="@style/sobot_product_se_edittext_style"
+        android:layout_marginLeft="20dp"
+        android:hint="请输入自定义客服欢迎语" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:text="自定义机器人欢迎语"
+        android:textColor="#000000" />
+
+    <EditText
+        android:id="@+id/sobot_customrobothelloword"
+        style="@style/sobot_product_se_edittext_style"
+        android:layout_marginLeft="20dp"
+        android:hint="请输入自定义机器人欢迎语" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:text="自定义用户超时提示语"
+        android:textColor="#000000" />
+
+    <EditText
+        android:id="@+id/sobot_customusertipword"
+        style="@style/sobot_product_se_edittext_style"
+        android:layout_marginLeft="20dp"
+        android:hint="请输入自定义用户超时提示语" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:text="自定义客服超时提示语"
+        android:textColor="#000000" />
+
+    <EditText
+        android:id="@+id/sobot_customadmintipword"
+        style="@style/sobot_product_se_edittext_style"
+        android:layout_marginLeft="20dp"
+        android:hint="请输入自定义客服超时提示语" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:text="自定义客服不在线的说辞"
+        android:textColor="#000000" />
+
+    <EditText
+        android:id="@+id/sobot_customadminnonelinetitle"
+        style="@style/sobot_product_se_edittext_style"
+        android:layout_marginLeft="25dp"
+        android:hint="请输入自定义客服不在线的说辞" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:text="自定义用户超时下线提示语"
+        android:textColor="#000000" />
+
+    <EditText
+        android:id="@+id/sobot_customuseroutword"
+        style="@style/sobot_product_se_edittext_style"
+        android:layout_marginLeft="20dp"
+        android:hint="请输入自定义用户超时下线提示语" />
+
+</LinearLayout>

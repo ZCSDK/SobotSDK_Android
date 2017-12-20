@@ -115,5 +115,7 @@
     <color name="sobot_text_btn_bg_press">#800daeaf</color>
     <color name="sobot_text_btn_color">#ffffff</color>
     <color name="sobot_text_btn_color_pressed">#80ffffff</color>
+    <color name="sobot_lable_view_history_bg">#f2f2f2</color>
+    <color name="sobot_lable_view_ing_bg">#ffffff</color>
 
 </resources>

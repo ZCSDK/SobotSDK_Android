@@ -1,0 +1,49 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.3"
+    // 签名配置
+    signingConfigs {
+
+        debug {
+            storeFile file("./keystore/debug.keystore")
+        }
+    }
+
+    defaultConfig {
+        minSdkVersion 11
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            signingConfig signingConfigs.debug
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    //以下两者必选一
+    compile project(':sobotsdk')
+    //compile 'com.sobot.chat:sobotsdk:2.4.1'
+
+	//必须有
+    compile 'com.squareup.okhttp3:okhttp:3.7.0'
+
+    //以下三项必选其一。目前支持常见的3种图片加载库，必须在下面的图片加载库中选择一个添加依赖
+    // compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    // compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+
+	//下面是demo所需要的
+    compile('com.lzy.widget:view-core:0.1.5') {
+        exclude group: 'com.android.support'
+    }
+    compile 'com.android.support:appcompat-v7:25.3.1'
+}

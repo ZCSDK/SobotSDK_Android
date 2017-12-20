@@ -157,6 +157,14 @@ public class WebViewActivity extends SobotBaseActivity {
 
     @SuppressLint("NewApi")
     private void initWebView() {
+        if (Build.VERSION.SDK_INT >= 11) {
+            try {
+                mWebView.removeJavascriptInterface("searchBoxJavaBridge_");
+            } catch (Exception e) {
+                //ignor
+            }
+        }
+        mWebView.removeJavascriptInterface("searchBoxJavaBridge_");
         mWebView.getSettings().setDefaultFontSize(16);
         mWebView.getSettings().setTextZoom(100);
         mWebView.getSettings().setJavaScriptEnabled(true);

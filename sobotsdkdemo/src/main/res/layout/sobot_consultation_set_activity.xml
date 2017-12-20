@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+    <include layout="@layout/sobot_demo_layout_titlebar" />
+
+    <RelativeLayout
+        android:id="@+id/sobot_goods_is_show_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/sobot_list_item_padding_top"
+        android:paddingTop="@dimen/sobot_list_item_padding_top"
+        android:visibility="visible" >
+
+        <TextView
+            android:id="@+id/tv_newmsg_notify"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="25dp"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:text="是否显示咨询信息"
+            android:textSize="@dimen/sobot_text_font_smaller" />
+
+        <ImageView
+            android:id="@+id/img_open_notify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/sobot_demo_icon_close"
+            android:contentDescription="@null"
+            android:visibility="visible" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="标题："
+            android:textColor="#000000"/>
+
+        <EditText
+            android:id="@+id/sobot_goods_title"
+            style="@style/sobot_product_se_edittext_style"
+            android:layout_marginLeft="42dp"
+            android:hint="请输入标题"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="摘要："
+            android:textColor="#000000"/>
+
+        <EditText
+            android:id="@+id/sobot_goods_describe"
+            style="@style/sobot_product_se_edittext_style"
+            android:layout_marginLeft="42dp"
+            android:hint="请输入摘要"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="标签："
+            android:textColor="#000000"/>
+
+        <EditText
+            android:id="@+id/sobot_goods_lable"
+            style="@style/sobot_product_se_edittext_style"
+            android:layout_marginLeft="42dp"
+            android:hint="请输入标签"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="图片Url："
+            android:textColor="#000000"/>
+
+        <EditText
+            android:id="@+id/sobot_goods_imgUrl"
+            style="@style/sobot_product_se_edittext_style"
+            android:layout_marginLeft="25dp"
+            android:hint="请输入图片地址"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="发送内容："
+            android:textColor="#000000"/>
+
+        <EditText
+            android:id="@+id/sobot_goods_fromUrl"
+            style="@style/sobot_product_se_edittext_style"
+            android:layout_marginLeft="15dp"
+            android:hint="请输入发送内容"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center_horizontal"
+        android:text="如果添加咨询信息，标题和发送内容必须添加，否则不显示"
+        android:textColor="#555555"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="60dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center_horizontal"
+        android:text="默认不设置咨询信息。这里是布局中的默认值"
+        android:textColor="#555555"/>
+</LinearLayout>

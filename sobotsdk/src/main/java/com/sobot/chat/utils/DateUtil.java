@@ -45,6 +45,12 @@ public class DateUtil {
             "mm:ss", Locale.getDefault());
 
     /**
+     * x月x日
+     */
+    public final static SimpleDateFormat DATE_FORMAT5 = new SimpleDateFormat(
+            "M月d日", Locale.getDefault());
+
+    /**
      * 将毫秒级整数转换为字符串格式时间
      *
      * @param millisecondDate 毫秒级时间整数
@@ -103,7 +109,7 @@ public class DateUtil {
      * @return
      */
     public static String formatDateTime(String time, boolean showHours, String showToday) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         if (time == null || "".equals(time) || time.length() < 19) {
             return "";
         }

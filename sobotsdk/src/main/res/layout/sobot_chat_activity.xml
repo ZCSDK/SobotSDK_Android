@@ -1,11 +1,7 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <RelativeLayout
             android:id="@+id/sobot_chat_main"
@@ -46,6 +42,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="10dp"
                     android:layout_toRightOf="@+id/sobot_announcement_icon"
+                    android:layout_toLeftOf="@+id/sobot_announcement_right_icon"
                     android:layout_centerInParent="true"
                     android:ellipsize="end"
                     android:maxLines="1"
@@ -166,7 +163,7 @@
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_gravity="right"
             android:layout_marginTop="50dp"
             android:background="@drawable/sobot_not_readinfo_btn">
 
@@ -184,10 +181,9 @@
                 android:textSize="12sp"
                 android:visibility="gone" />
         </FrameLayout>
-    </RelativeLayout>
 
     <!-- loading布局 -->
     <include
         android:id="@+id/sobot_welcome"
         layout="@layout/sobot_layout_chat_loading" />
-</RelativeLayout>
+</merge>

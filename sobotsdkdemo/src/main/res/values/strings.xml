@@ -1,0 +1,9 @@
+<resources>
+    <string name="sobot_demo_app_name">Demo_智齿sdk</string>
+    <string name="sobot_demo_please">SOBOT SDK  2.4.1</string>
+    <string name="sobot_demo_person_set_value">用户基本资料(选填)</string>
+    <string name="sobot_demo_start_set_value">启动参数设置(AppKey为必填)</string>
+    <string name="sobot_demo_product_set_value">咨询信息设置(选填)</string>
+    <string name="sobot_demo_custom_reply_set_value">自定义应答设置(选填)</string>
+    <string name="sobot_demo_starting_value">启动SDK</string>
+</resources>

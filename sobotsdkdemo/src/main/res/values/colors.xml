@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="sobot_btn_background_color">#09aeb0</color>
+    <color name="sobot_btn_text_color">#ffffff</color>
+    <color name="sobot_textview_text_color">#000000</color>
+    <color name="sobot_edittext_text_color">#000000</color>
+    <color name="sobot_checkbox_text_color">#000000</color>
+    <color name="sobot_demo_line_1dp">#d9d9d9</color>
+    <color name="sobot_demo_color_setting_item_pressed1">#e6e6e6</color>
+    <color name="sobot_demo_white">#ffffff</color>
+    <color name="sobot_demo_line_up_user_text_color_second">#333333</color>
+</resources>
