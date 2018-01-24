@@ -122,16 +122,6 @@ public class SobotConsultationListActivity extends SobotBaseActivity {
 
         setTitle(getResString("sobot_consultation_list"));
         setShowNetRemind(false);
-        String bg_color = SharedPreferencesUtil.getStringData(this,
-                "robot_current_themeColor", "");
-        if (bg_color != null && bg_color.trim().length() != 0) {
-            relative.setBackgroundColor(Color.parseColor(bg_color));
-        }
-
-        int robot_current_themeImg = SharedPreferencesUtil.getIntData(this, "robot_current_themeImg", 0);
-        if (robot_current_themeImg != 0) {
-            relative.setBackgroundResource(robot_current_themeImg);
-        }
 
         sobot_ll_msg_center = (ListView) findViewById(getResId("sobot_ll_msg_center"));
         sobot_ll_msg_center.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -93,7 +93,19 @@ public class RobotTemplateMessageHolder3 extends MessageHolderBase {
                                 });
                             }
                         } else {
-                            sobot_template3_anchor.setEnabled(false);
+                            if (multiDiaRespInfo.getEndFlag() && !TextUtils.isEmpty(interfaceRet.get("anchor"))) {
+                                sobot_template3_anchor.setEnabled(true);
+                                sobot_template3_anchor.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent intent = new Intent(context, WebViewActivity.class);
+                                        intent.putExtra("url", interfaceRet.get("anchor"));
+                                        context.startActivity(intent);
+                                    }
+                                });
+                            } else {
+                                sobot_template3_anchor.setEnabled(false);
+                            }
                         }
                         sobot_template3_layout.addView(view);
                     }

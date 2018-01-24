@@ -33,8 +33,6 @@ import com.sobot.chat.widget.kpswitch.handler.KPSwitchRootLayoutHandler;
  * <p/>
  * Resolve the layout-conflict from switching the keyboard and the Panel.
  *
- * @see KPSwitchRootRelativeLayout
- * @see KPSwitchRootFrameLayout
  * @see KPSwitchPanelLinearLayout
  */
 public class KPSwitchRootLinearLayout extends LinearLayout {
@@ -69,8 +67,12 @@ public class KPSwitchRootLinearLayout extends LinearLayout {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        conflictHandler.handleBeforeMeasure(MeasureSpec.getSize(widthMeasureSpec),
-                MeasureSpec.getSize(heightMeasureSpec));
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        try {
+            conflictHandler.handleBeforeMeasure(MeasureSpec.getSize(widthMeasureSpec),
+                    MeasureSpec.getSize(heightMeasureSpec));
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        } catch (Exception e) {
+//            e.printStackTrace();
+        }
     }
 }

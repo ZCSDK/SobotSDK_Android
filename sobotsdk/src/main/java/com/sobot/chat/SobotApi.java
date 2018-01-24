@@ -142,29 +142,33 @@ public class SobotApi {
 		if (context == null){
 			return;
 		}
-		disSobotChannel(context);
-		context.stopService(new Intent(context, SobotSessionServer.class));
+		try {
+			disSobotChannel(context);
+			context.stopService(new Intent(context, SobotSessionServer.class));
 
-		String cid = SharedPreferencesUtil.getStringData(context,Const.SOBOT_CID,"");
-		String uid = SharedPreferencesUtil.getStringData(context,Const.SOBOT_UID,"");
-		SharedPreferencesUtil.removeKey(context,Const.SOBOT_WSLINKBAK);
-		SharedPreferencesUtil.removeKey(context,Const.SOBOT_WSLINKDEFAULT);
-		SharedPreferencesUtil.removeKey(context,Const.SOBOT_UID);
-		SharedPreferencesUtil.removeKey(context,Const.SOBOT_CID);
-		SharedPreferencesUtil.removeKey(context,Const.SOBOT_PUID);
-		SharedPreferencesUtil.removeKey(context,Const.SOBOT_APPKEY);
+			String cid = SharedPreferencesUtil.getStringData(context,Const.SOBOT_CID,"");
+			String uid = SharedPreferencesUtil.getStringData(context,Const.SOBOT_UID,"");
+			SharedPreferencesUtil.removeKey(context,Const.SOBOT_WSLINKBAK);
+			SharedPreferencesUtil.removeKey(context,Const.SOBOT_WSLINKDEFAULT);
+			SharedPreferencesUtil.removeKey(context,Const.SOBOT_UID);
+			SharedPreferencesUtil.removeKey(context,Const.SOBOT_CID);
+			SharedPreferencesUtil.removeKey(context,Const.SOBOT_PUID);
+			SharedPreferencesUtil.removeKey(context,Const.SOBOT_APPKEY);
 
-		if (!TextUtils.isEmpty(cid) && !TextUtils.isEmpty(uid)){
-			ZhiChiApi zhiChiApi = SobotMsgManager.getInstance(context).getZhiChiApi();
-			zhiChiApi.out(cid, uid,	new StringResultCallBack<CommonModel>() {
-				@Override
-				public void onSuccess(CommonModel result) {
-					LogUtils.i("下线成功");
-				}
+			if (!TextUtils.isEmpty(cid) && !TextUtils.isEmpty(uid)){
+                ZhiChiApi zhiChiApi = SobotMsgManager.getInstance(context).getZhiChiApi();
+                zhiChiApi.out(cid, uid,	new StringResultCallBack<CommonModel>() {
+                    @Override
+                    public void onSuccess(CommonModel result) {
+                        LogUtils.i("下线成功");
+                    }
 
-				@Override
-				public void onFailure(Exception e, String des) {}
-			});
+                    @Override
+                    public void onFailure(Exception e, String des) {}
+                });
+            }
+		} catch (Exception e) {
+//			e.printStackTrace();
 		}
 	}
 

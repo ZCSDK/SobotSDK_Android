@@ -197,15 +197,17 @@ public class SobotSessionServer extends Service {
             }
         } else if (ZhiChiConstant.push_message_outLine == pushMessage.getType()) {// 用户被下线
             // 发送用户被下线的广播
+            SobotMsgManager.getInstance(getApplication()).clearAllConfig();
             CommonUtils.sendLocalBroadcast(getApplicationContext(),new Intent(Const.SOBOT_CHAT_USER_OUTLINE));
-            config.clearCache();
             showNotification("您好，本次会话已结束");
         }  else if (ZhiChiConstant.push_message_transfer == pushMessage.getType()) {
-            LogUtils.i("用户被转接--->"+pushMessage.getName());
-            //替换标题
-            config.activityTitle = pushMessage.getName(); // 设置后台推送消息的对象
-            config.adminFace = pushMessage.getFace();
-            config.currentUserName = pushMessage.getName();
+            if (config.getInitModel() != null) {
+                LogUtils.i("用户被转接--->"+pushMessage.getName());
+                //替换标题
+                config.activityTitle = pushMessage.getName(); // 设置后台推送消息的对象
+                config.adminFace = pushMessage.getFace();
+                config.currentUserName = pushMessage.getName();
+            }
         }
     }
 

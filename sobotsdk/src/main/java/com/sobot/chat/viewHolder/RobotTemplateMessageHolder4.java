@@ -49,17 +49,15 @@ public class RobotTemplateMessageHolder4 extends MessageHolderBase {
                         BitmapUtil.display(context, interfaceRet.get("thumbnail"), sobot_template4_thumbnail, ResourceUtils.getIdByName(context, "drawable", "sobot_logo_icon"), ResourceUtils.getIdByName(context, "drawable", "sobot_logo_icon"));
                         sobot_template4_summary.setText(interfaceRet.get("summary"));
 
-                        if (message.getSugguestionsFontColor() == 0) {
-                            if (multiDiaRespInfo.getEndFlag() && interfaceRet.get("anchor") != null) {
-                                sobot_template4_anchor.setOnClickListener(new OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Intent intent = new Intent(context, WebViewActivity.class);
-                                        intent.putExtra("url", interfaceRet.get("anchor"));
-                                        context.startActivity(intent);
-                                    }
-                                });
-                            }
+                        if (multiDiaRespInfo.getEndFlag() && interfaceRet.get("anchor") != null) {
+                            sobot_template4_anchor.setOnClickListener(new OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(context, WebViewActivity.class);
+                                    intent.putExtra("url", interfaceRet.get("anchor"));
+                                    context.startActivity(intent);
+                                }
+                            });
                         }
                     }
                 } else {

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,6 +29,8 @@ import com.sobot.chat.api.ResultCallBack;
 import com.sobot.chat.api.ZhiChiApi;
 import com.sobot.chat.api.enumtype.CustomerState;
 import com.sobot.chat.api.model.CommonModelBase;
+import com.sobot.chat.api.model.Information;
+import com.sobot.chat.api.model.SobotQuestionRecommend;
 import com.sobot.chat.api.model.ZhiChiInitModeBase;
 import com.sobot.chat.api.model.ZhiChiMessage;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
@@ -35,6 +38,7 @@ import com.sobot.chat.api.model.ZhiChiReplyAnswer;
 import com.sobot.chat.application.MyApplication;
 import com.sobot.chat.core.channel.Const;
 import com.sobot.chat.core.channel.SobotMsgManager;
+import com.sobot.chat.core.http.OkHttpUtils;
 import com.sobot.chat.core.http.callback.StringResultCallBack;
 import com.sobot.chat.listener.NoDoubleClickListener;
 import com.sobot.chat.utils.ChatUtils;
@@ -136,6 +140,8 @@ public abstract class SobotBaseActivity extends Activity implements
 
     @Override
     protected void onDestroy() {
+        OkHttpUtils.getInstance().cancelTag(SobotBaseActivity.this);
+        OkHttpUtils.getInstance().cancelTag(ZhiChiConstant.SOBOT_GLOBAL_REQUEST_CANCEL_TAG);
         MyApplication.getInstance().deleteActivity(this);
         super.onDestroy();
     }
@@ -160,6 +166,7 @@ public abstract class SobotBaseActivity extends Activity implements
                 forwordMethod();
             }
         });
+        setUpToolBar();
     }
 
     public void setShowNetRemind(boolean isShow) {
@@ -441,7 +448,7 @@ public abstract class SobotBaseActivity extends Activity implements
         handler.sendMessage(message);
     }
 
-    public void remindRobotMessage(final Handler handler,final ZhiChiInitModeBase initModel) {
+    public void remindRobotMessage(final Handler handler, final ZhiChiInitModeBase initModel,final Information info) {
         if (initModel == null || initModel.getUstatus() == ZhiChiConstant.ustatus_robot) {
             return;
         }
@@ -481,7 +488,7 @@ public abstract class SobotBaseActivity extends Activity implements
             //获取机器人带引导与的欢迎语
             if (1 == initModel.getGuideFlag()) {
 
-                zhiChiApi.robotGuide(initModel.getUid(), initModel.getCurrentRobotFlag(), new
+                zhiChiApi.robotGuide(SobotBaseActivity.this,initModel.getUid(), initModel.getCurrentRobotFlag(), new
                         StringResultCallBack<ZhiChiMessageBase>() {
                             @Override
                             public void onSuccess(ZhiChiMessageBase robot) {
@@ -492,6 +499,9 @@ public abstract class SobotBaseActivity extends Activity implements
                                     message.what = ZhiChiConstant.hander_robot_message;
                                     message.obj = robot;
                                     handler.sendMessage(message);
+
+                                    questionRecommend(handler, initModel,info);
+
                                 }
                             }
 
@@ -499,8 +509,29 @@ public abstract class SobotBaseActivity extends Activity implements
                             public void onFailure(Exception e, String des) {
                             }
                         });
+            } else {
+                questionRecommend(handler, initModel,info);
             }
         }
+    }
+
+    private void questionRecommend(final Handler handler,final ZhiChiInitModeBase initModel,final Information info){
+        zhiChiApi.questionRecommend(SobotBaseActivity.this,initModel.getUid(), info.getQuestionRecommendParams(), new StringResultCallBack<SobotQuestionRecommend>() {
+            @Override
+            public void onSuccess(SobotQuestionRecommend data) {
+                if (data != null && current_client_model == ZhiChiConstant.client_model_robot) {
+                    ZhiChiMessageBase robot = ChatUtils.getQuestionRecommendData(initModel,data);
+                    Message message = handler.obtainMessage();
+                    message.what = ZhiChiConstant.hander_robot_message;
+                    message.obj = robot;
+                    handler.sendMessage(message);
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e, String des) {
+            }
+        });
     }
 
     /**
@@ -978,6 +1009,18 @@ public abstract class SobotBaseActivity extends Activity implements
      * @param outLineType
      */
     public void customerServiceOffline(ZhiChiInitModeBase initModel, int outLineType) {
+    }
+
+    protected void setUpToolBar(){
+        String bg_color = SharedPreferencesUtil.getStringData(this, "robot_current_themeColor", "");
+        if (!TextUtils.isEmpty(bg_color)) {
+            relative.setBackgroundColor(Color.parseColor(bg_color));
+        }
+
+        int robot_current_themeImg = SharedPreferencesUtil.getIntData(this, "robot_current_themeImg", 0);
+        if (robot_current_themeImg != 0) {
+            relative.setBackgroundResource(robot_current_themeImg);
+        }
     }
 
 }

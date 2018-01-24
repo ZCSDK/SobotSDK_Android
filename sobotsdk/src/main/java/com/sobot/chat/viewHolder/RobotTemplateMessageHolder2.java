@@ -74,8 +74,13 @@ public class RobotTemplateMessageHolder2 extends MessageHolderBase implements So
                     slv_labels.setOnLabelClickListener(this);
                     slv_labels.setTabEnable(true);
                 } else {
-                    slv_labels.setOnLabelClickListener(null);
-                    slv_labels.setTabEnable(false);
+                    if (multiDiaRespInfo.getEndFlag()){
+                        slv_labels.setOnLabelClickListener(this);
+                        slv_labels.setTabEnable(true);
+                    } else {
+                        slv_labels.setOnLabelClickListener(null);
+                        slv_labels.setTabEnable(false);
+                    }
                 }
             } else {
                 slv_labels.setVisibility(View.GONE);
@@ -85,7 +90,7 @@ public class RobotTemplateMessageHolder2 extends MessageHolderBase implements So
 
     @Override
     public void onLabelClick(View label, SobotLablesViewModel data, int position) {
-        if (zhiChiMessageBase == null || zhiChiMessageBase.getSugguestionsFontColor() == 1 || zhiChiMessageBase.getAnswer() == null) {
+        if (zhiChiMessageBase == null || zhiChiMessageBase.getAnswer() == null) {
             return;
         }
         SobotMultiDiaRespInfo multiDiaRespInfo = zhiChiMessageBase.getAnswer().getMultiDiaRespInfo();

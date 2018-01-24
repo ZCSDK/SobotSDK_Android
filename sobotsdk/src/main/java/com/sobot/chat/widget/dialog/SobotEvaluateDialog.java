@@ -2,7 +2,6 @@ package com.sobot.chat.widget.dialog;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.annotation.IdRes;
 import android.text.TextUtils;
 import android.view.View;
@@ -24,10 +23,10 @@ import com.sobot.chat.api.model.SatisfactionSetBase;
 import com.sobot.chat.api.model.SobotCommentParam;
 import com.sobot.chat.api.model.ZhiChiInitModeBase;
 import com.sobot.chat.core.channel.SobotMsgManager;
+import com.sobot.chat.core.http.OkHttpUtils;
 import com.sobot.chat.core.http.callback.StringResultCallBack;
 import com.sobot.chat.utils.ChatUtils;
 import com.sobot.chat.utils.CommonUtils;
-import com.sobot.chat.utils.HtmlTools;
 import com.sobot.chat.utils.LogUtils;
 import com.sobot.chat.utils.SharedPreferencesUtil;
 import com.sobot.chat.utils.ToastUtil;
@@ -43,7 +42,7 @@ import java.util.List;
  * Created by jinxl on 2017/6/12.
  */
 public class SobotEvaluateDialog extends SobotActionSheet {
-
+    private final String CANCEL_TAG = SobotEvaluateDialog.class.getSimpleName();
     private Activity context;
     private int score;
     private boolean isFinish;
@@ -169,7 +168,7 @@ public class SobotEvaluateDialog extends SobotActionSheet {
     protected void initData() {
         if (current_model == ZhiChiConstant.client_model_customService){
             ZhiChiApi zhiChiApi = SobotMsgManager.getInstance(context).getZhiChiApi();
-            zhiChiApi.satisfactionMessage(initModel.getUid(), new ResultCallBack<SatisfactionSet>() {
+            zhiChiApi.satisfactionMessage(CANCEL_TAG,initModel.getUid(), new ResultCallBack<SatisfactionSet>() {
                 @Override
                 public void onSuccess(SatisfactionSet satisfactionSet) {
                     if (satisfactionSet != null && "1".equals(satisfactionSet.getCode())  && satisfactionSet.getData() != null && satisfactionSet.getData().size() != 0){
@@ -251,6 +250,17 @@ public class SobotEvaluateDialog extends SobotActionSheet {
                 CommonUtils.sendLocalBroadcast(context.getApplicationContext(), intent);
             }
         });
+    }
+
+    @Override
+    public void dismiss() {
+        try {
+            if (isShowing()) {
+                super.dismiss();
+            }
+        } catch (Exception e) {
+//            e.printStackTrace();
+        }
     }
 
     private void setViewGone(){
@@ -535,7 +545,7 @@ public class SobotEvaluateDialog extends SobotActionSheet {
 
         ZhiChiApi zhiChiApi = SobotMsgManager.getInstance(context).getZhiChiApi();
         final SobotCommentParam commentParam = getCommentParam();
-        zhiChiApi.comment(initModel.getCid(), initModel.getUid(), commentParam,
+        zhiChiApi.comment(CANCEL_TAG,initModel.getCid(), initModel.getUid(), commentParam,
                 new StringResultCallBack<CommonModel>() {
                     @Override
                     public void onSuccess(CommonModel result) {
@@ -570,5 +580,11 @@ public class SobotEvaluateDialog extends SobotActionSheet {
             }
         }
         return str + "";
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+        OkHttpUtils.getInstance().cancelTag(CANCEL_TAG);
+        super.onDetachedFromWindow();
     }
 }

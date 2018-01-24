@@ -39,13 +39,15 @@ public class SobotCusFieldActivity extends SobotBaseActivity {
         setContentView(ResourceUtils.getIdByName(this, "layout", "sobot_activity_cusfield"));
         Intent intent = getIntent();
         bundle = intent.getBundleExtra("bundle");
-        fieldType = bundle.getInt("fieldType");
-        if (bundle.getSerializable("cusFieldConfig") != null) {
-            cusFieldConfig = (SobotCusFieldConfig) bundle.getSerializable("cusFieldConfig");
-        }
+        if (bundle != null) {
+            fieldType = bundle.getInt("fieldType");
+            if (bundle.getSerializable("cusFieldConfig") != null) {
+                cusFieldConfig = (SobotCusFieldConfig) bundle.getSerializable("cusFieldConfig");
+            }
 
-        if (bundle.getSerializable("cusFieldList") != null) {
-            model = (SobotFieldModel) bundle.getSerializable("cusFieldList");
+            if (bundle.getSerializable("cusFieldList") != null) {
+                model = (SobotFieldModel) bundle.getSerializable("cusFieldList");
+            }
         }
 
         if (cusFieldConfig != null && !TextUtils.isEmpty(cusFieldConfig.getFieldName())) {
@@ -82,10 +84,6 @@ public class SobotCusFieldActivity extends SobotBaseActivity {
     }
 
     private void initView() {
-        String bg_color = SharedPreferencesUtil.getStringData(this, "robot_current_themeColor", "");
-        if (!TextUtils.isEmpty(bg_color)) {
-            relative.setBackgroundColor(Color.parseColor(bg_color));
-        }
 
         sobot_tv_left.setOnClickListener(this);
         mListView = (ListView) findViewById(getResId("sobot_activity_cusfield_listview"));
@@ -146,15 +144,9 @@ public class SobotCusFieldActivity extends SobotBaseActivity {
                     if (!TextUtils.isEmpty(cusFieldConfig.getId())) {
                         tmpData = convertStrToArray(cusFieldConfig.getValue());
                         if (tmpData != null && tmpData.length != 0) {
-                            if (tmpData.length == 1) {
-                                if (tmpData[0].equals(infoLists.get(i).getDataValue())) {
+                            for (int j = 0; j < tmpData.length; j++) {
+                                if (tmpData[j].equals(infoLists.get(i).getDataValue())) {
                                     infoLists.get(i).setChecked(true);
-                                }
-                            } else {
-                                for (int j = 0; j < tmpData.length; j++) {
-                                    if (tmpData[j].equals(infoLists.get(i).getDataValue())) {
-                                        infoLists.get(i).setChecked(true);
-                                    }
                                 }
                             }
                         }

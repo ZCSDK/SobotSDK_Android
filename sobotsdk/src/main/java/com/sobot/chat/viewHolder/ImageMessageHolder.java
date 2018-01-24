@@ -54,7 +54,7 @@ public class ImageMessageHolder extends MessageHolderBase {
         if(isRight){
             sobot_pic_progress_round.setVisibility(View.VISIBLE);
             sobot_pic_progress_rl.setVisibility(View.VISIBLE);
-            if (ZhiChiConstant.result_fail_code == message.getMysendMessageState()) {
+            if (ZhiChiConstant.MSG_SEND_STATUS_ERROR == message.getSendSuccessState()) {
                 pic_send_status.setVisibility(View.VISIBLE);
                 pic_progress.setVisibility(View.GONE);
                 sobot_pic_progress_round.setVisibility(View.GONE);
@@ -62,13 +62,12 @@ public class ImageMessageHolder extends MessageHolderBase {
                 // 点击重新发送按钮
                 pic_send_status.setOnClickListener(new RetrySendImageLisenter(context,message
                         .getId(), message.getAnswer().getMsg(), pic_send_status));
-            } else if (ZhiChiConstant.result_success_code == message.getMysendMessageState()) {
+            } else if (ZhiChiConstant.MSG_SEND_STATUS_SUCCESS == message.getSendSuccessState()) {
                 pic_send_status.setVisibility(View.GONE);
                 pic_progress.setVisibility(View.GONE);
                 sobot_pic_progress_round.setVisibility(View.GONE);
                 sobot_pic_progress_rl.setVisibility(View.GONE);
-            } else if (ZhiChiConstant.hander_sendPicIsLoading == message
-                    .getMysendMessageState()) {
+            } else if (ZhiChiConstant.MSG_SEND_STATUS_LOADING == message.getSendSuccessState()) {
                 pic_progress.setVisibility(View.GONE);
                 pic_send_status.setVisibility(View.GONE);
             } else {
@@ -130,7 +129,7 @@ public class ImageMessageHolder extends MessageHolderBase {
                     ZhiChiMessageBase msgObj = new ZhiChiMessageBase();
                     msgObj.setContent(mimageUrl);
                     msgObj.setId(mid);
-                    msgObj.setMysendMessageState(ZhiChiConstant.hander_sendPicIsLoading);
+                    msgObj.setSendSuccessState(ZhiChiConstant.MSG_SEND_STATUS_LOADING);
                     ((SobotChatActivity) context).sendMessageToRobot(msgObj, 3, 3, "");
                 }
             }

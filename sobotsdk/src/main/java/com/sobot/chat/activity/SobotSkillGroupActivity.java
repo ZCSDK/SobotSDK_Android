@@ -18,6 +18,7 @@ import com.sobot.chat.api.model.ZhiChiGroup;
 import com.sobot.chat.api.model.ZhiChiGroupBase;
 import com.sobot.chat.application.MyApplication;
 import com.sobot.chat.core.channel.SobotMsgManager;
+import com.sobot.chat.core.http.OkHttpUtils;
 import com.sobot.chat.core.http.callback.StringResultCallBack;
 import com.sobot.chat.utils.CommonUtils;
 import com.sobot.chat.utils.ResourceUtils;
@@ -70,7 +71,7 @@ public class SobotSkillGroupActivity extends Activity {
 								if (list_skill.get(i).isOnline().endsWith("true")) {
 									Intent intent = new Intent();
 									intent.putExtra("groupIndex", i);
-									setResult(ZhiChiConstant.RESOULT_COCE_TO_GRROUP, intent);
+									setResult(ZhiChiConstant.REQUEST_COCE_TO_GRROUP, intent);
 									finish();
 								} else {
 									if(msgFlag == ZhiChiConstant.sobot_msg_flag_open){
@@ -99,6 +100,7 @@ public class SobotSkillGroupActivity extends Activity {
 
 	@Override
 	protected void onDestroy() {
+		OkHttpUtils.getInstance().cancelTag(SobotSkillGroupActivity.this);
 		MyApplication.getInstance().deleteActivity(this);
 		super.onDestroy();
 	}
@@ -116,7 +118,7 @@ public class SobotSkillGroupActivity extends Activity {
 			msgFlag = getIntent().getIntExtra("msgFlag",0);
 		}
 		zhiChiApi = SobotMsgManager.getInstance(getApplicationContext()).getZhiChiApi();
-		zhiChiApi.getGroupList(appkey,uid, new StringResultCallBack<ZhiChiGroup>() {
+		zhiChiApi.getGroupList(SobotSkillGroupActivity.this,appkey,uid, new StringResultCallBack<ZhiChiGroup>() {
 			@Override
 			public void onSuccess(ZhiChiGroup zhiChiGroup) {
 

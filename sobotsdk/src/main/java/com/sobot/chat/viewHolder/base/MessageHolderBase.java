@@ -80,6 +80,7 @@ public abstract class MessageHolderBase {
             case SobotMsgAdapter.MSG_TYPE_ROBOT_TEMPLATE3:
             case SobotMsgAdapter.MSG_TYPE_ROBOT_TEMPLATE4:
             case SobotMsgAdapter.MSG_TYPE_ROBOT_TEMPLATE5:
+            case SobotMsgAdapter.MSG_TYPE_ROBOT_QUESTION_RECOMMEND:
                 this.isRight = false;
                 //昵称、头像显示
                 name.setVisibility(TextUtils.isEmpty(message.getSenderName()) ? View.GONE : View.VISIBLE);

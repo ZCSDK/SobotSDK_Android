@@ -16,40 +16,39 @@ import com.sobot.chat.utils.ResourceUtils;
 
 public class SobotLoadingDialog extends Dialog {
 
-    private static SobotLoadingDialog customProgressDialog = null;
     public SobotLoadingDialog(Context context, int theme) {
         super(context, theme);
     }
 
     public static SobotLoadingDialog createDialog(Context context) {
-        initView(context);
-        return customProgressDialog;
+        return initView(context);
     }
 
-    private static void initView(Context context){
-        customProgressDialog = new SobotLoadingDialog(context, ResourceUtils.getIdByName(context, "style", "sobot_dialog_Progress"));
+    private static SobotLoadingDialog initView(Context context) {
+        SobotLoadingDialog customProgressDialog = new SobotLoadingDialog(context, ResourceUtils.getIdByName(context, "style", "sobot_dialog_Progress"));
         customProgressDialog.setContentView(ResourceUtils.getIdByName(context, "layout", "sobot_progress_dialog"));
-        if(customProgressDialog.getWindow()!= null){
+        if (customProgressDialog.getWindow() != null) {
             customProgressDialog.getWindow().getAttributes().gravity = Gravity.CENTER;
         }
         customProgressDialog.setCanceledOnTouchOutside(false);
         customProgressDialog.setCancelable(true);
+        return customProgressDialog;
     }
 
-    public static SobotLoadingDialog createDialog(Context context,String str) {
-        initView(context);
-        if(!TextUtils.isEmpty(str)){
-            TextView textView = (TextView) customProgressDialog.findViewById(ResourceUtils.getIdByName(context, "id","id_tv_loadingmsg"));
+    public static SobotLoadingDialog createDialog(Context context, String str) {
+        SobotLoadingDialog customProgressDialog = initView(context);
+        if (!TextUtils.isEmpty(str)) {
+            TextView textView = (TextView) customProgressDialog.findViewById(ResourceUtils.getIdByName(context, "id", "id_tv_loadingmsg"));
             textView.setText(str);
         }
         return customProgressDialog;
     }
 
-    public static void setText(Context context,String str){
-        TextView textView = (TextView) customProgressDialog.findViewById(ResourceUtils.getIdByName(context, "id","id_tv_loadingmsg"));
-        if(!TextUtils.isEmpty(str)){
+    public static void setText(Context context, SobotLoadingDialog customProgressDialog, String str) {
+        TextView textView = (TextView) customProgressDialog.findViewById(ResourceUtils.getIdByName(context, "id", "id_tv_loadingmsg"));
+        if (!TextUtils.isEmpty(str)) {
             textView.setText(str);
-        }else{
+        } else {
             textView.setText("请稍候");
         }
     }

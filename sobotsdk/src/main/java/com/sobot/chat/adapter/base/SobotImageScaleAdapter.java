@@ -23,7 +23,7 @@ public class SobotImageScaleAdapter extends SobotBasePagerAdapter<ZhiChiUploadAp
     public Object instantiateItem(ViewGroup container, int position) {
         PhotoView imageView = new PhotoView(context);
 
-        BitmapUtil.display(context, list.get(position).getFileUrl(), imageView);
+        BitmapUtil.display(context, list.get(position).getFileLocalPath(), imageView);
 
         //将ImageView加入到ViewPager中
         container.addView(imageView);

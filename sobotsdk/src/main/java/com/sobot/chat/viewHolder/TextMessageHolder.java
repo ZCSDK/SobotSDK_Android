@@ -12,6 +12,7 @@ import com.sobot.chat.utils.CommonUtils;
 import com.sobot.chat.utils.HtmlTools;
 import com.sobot.chat.utils.ResourceUtils;
 import com.sobot.chat.utils.ToastUtil;
+import com.sobot.chat.utils.ZhiChiConstant;
 import com.sobot.chat.viewHolder.base.MessageHolderBase;
 
 /**
@@ -35,25 +36,17 @@ public class TextMessageHolder extends MessageHolderBase {
             if(isRight){
                 try {
                     msgStatus.setClickable(true);
-                    if (message.getSendSuccessState() == 1) {// 成功的状态
+                    if (message.getSendSuccessState() == ZhiChiConstant.MSG_SEND_STATUS_SUCCESS) {// 成功的状态
                         msgStatus.setVisibility(View.GONE);
                         frameLayout.setVisibility(View.GONE);
                         msgProgressBar.setVisibility(View.GONE);
-                    }
-
-                    if (message.getSendSuccessState() == 0) {
-                        frameLayout.setVisibility(View.VISIBLE);
-                        msgStatus.setVisibility(View.VISIBLE);
-                        msgProgressBar.setVisibility(View.GONE);
-                        msgStatus.setOnClickListener(new ReSendTextLisenter(context,message
-                                .getId(), content, msgStatus));
-                    } else if (message.getSendSuccessState() == 0) {
+                    } else if (message.getSendSuccessState() == ZhiChiConstant.MSG_SEND_STATUS_ERROR) {
                         frameLayout.setVisibility(View.VISIBLE);
                         msgStatus.setVisibility(View.VISIBLE);
                         msgProgressBar.setVisibility(View.GONE);
                         msgStatus.setOnClickListener(new ReSendTextLisenter(context,message
                                 .getId(), content,msgStatus));
-                    } else if (message.getSendSuccessState() == 2) {
+                    } else if (message.getSendSuccessState() == ZhiChiConstant.MSG_SEND_STATUS_LOADING) {
                         frameLayout.setVisibility(View.VISIBLE);
                         msgProgressBar.setVisibility(View.VISIBLE);
                         msgStatus.setVisibility(View.GONE);

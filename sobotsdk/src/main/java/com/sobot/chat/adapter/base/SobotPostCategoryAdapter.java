@@ -19,7 +19,7 @@ import java.util.List;
 public class SobotPostCategoryAdapter extends SobotBaseAdapter<SobotTypeModel> {
 
     private Context mContext;
-    private MyViewHolder myViewHolder;
+    private ViewHolder myViewHolder;
 
     public SobotPostCategoryAdapter(Context context, List list) {
         super(context, list);
@@ -30,10 +30,10 @@ public class SobotPostCategoryAdapter extends SobotBaseAdapter<SobotTypeModel> {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null){
             convertView = View.inflate(mContext, ResourceUtils.getIdByName(mContext, "layout", "sobot_activity_post_category_items"),null);
-            myViewHolder = new MyViewHolder(convertView);
+            myViewHolder = new ViewHolder(mContext,convertView);
             convertView.setTag(myViewHolder);
         } else {
-            myViewHolder = (MyViewHolder) convertView.getTag();
+            myViewHolder = (ViewHolder) convertView.getTag();
         }
 
         myViewHolder.categoryTitle.setText(list.get(position).getTypeName());
@@ -62,12 +62,12 @@ public class SobotPostCategoryAdapter extends SobotBaseAdapter<SobotTypeModel> {
         return convertView;
     }
 
-    class MyViewHolder{
+    static class ViewHolder{
         private TextView categoryTitle;
         private ImageView categoryIshave;
         private View work_order_category_line;
 
-        MyViewHolder(View view){
+        ViewHolder(Context context,View view){
             categoryTitle = (TextView)view.findViewById(ResourceUtils.getIdByName(context, "id", "work_order_category_title"));
             categoryIshave = (ImageView) view.findViewById(ResourceUtils.getIdByName(context, "id", "work_order_category_ishave"));
             work_order_category_line = view.findViewById(ResourceUtils.getIdByName(context, "id", "work_order_category_line"));

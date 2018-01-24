@@ -99,7 +99,12 @@ public class RobotTemplateMessageHolder1 extends MessageHolderBase {
                     sobotLayout.setEnabled(true);
                     sobotLayout.setOnClickListener(this);
                 } else {
-                    sobotLayout.setEnabled(false);
+                    if (mMultiDiaRespInfo.getEndFlag()){
+						sobotLayout.setEnabled(true);
+                        sobotLayout.setOnClickListener(this);
+                    } else {
+                        sobotLayout.setEnabled(false);
+                    }
                 }
             }
 

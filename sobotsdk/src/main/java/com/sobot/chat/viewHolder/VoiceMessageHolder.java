@@ -18,6 +18,7 @@ import com.sobot.chat.api.model.ZhiChiReplyAnswer;
 import com.sobot.chat.utils.DateUtil;
 import com.sobot.chat.utils.ResourceUtils;
 import com.sobot.chat.utils.ScreenUtils;
+import com.sobot.chat.utils.ZhiChiConstant;
 import com.sobot.chat.viewHolder.base.MessageHolderBase;
 
 /**
@@ -63,13 +64,13 @@ public class VoiceMessageHolder extends MessageHolderBase {
         });
 
         if (isRight) {
-            if (message.getSendSuccessState() == 1) {
+            if (message.getSendSuccessState() == ZhiChiConstant.MSG_SEND_STATUS_SUCCESS) {
                 ll_voice_layout.clearAnimation();
                 msgStatus.setVisibility(View.GONE);
                 msgProgressBar.setVisibility(View.GONE);
                 voiceTimeLong.setVisibility(View.VISIBLE);
                 voicePlay.setVisibility(View.VISIBLE);
-            } else if (message.getSendSuccessState() == 0) {
+            } else if (message.getSendSuccessState() == ZhiChiConstant.MSG_SEND_STATUS_ERROR) {
                 ll_voice_layout.clearAnimation();
                 msgStatus.setVisibility(View.VISIBLE);
                 msgProgressBar.setVisibility(View.GONE);
@@ -79,12 +80,12 @@ public class VoiceMessageHolder extends MessageHolderBase {
                 // 语音的重新发送
                 msgStatus.setOnClickListener(new RetrySendVoiceLisenter(context, message.getId(),
                         message.getAnswer().getMsg(), message.getAnswer().getDuration(), msgStatus));
-            } else if (message.getSendSuccessState() == 2) {// 发送中
+            } else if (message.getSendSuccessState() == ZhiChiConstant.MSG_SEND_STATUS_LOADING) {// 发送中
                 msgProgressBar.setVisibility(View.VISIBLE);
                 msgStatus.setVisibility(View.GONE);
                 voiceTimeLong.setVisibility(View.GONE);
                 voicePlay.setVisibility(View.GONE);
-            } else if (message.getSendSuccessState() == 4) {
+            } else if (message.getSendSuccessState() == ZhiChiConstant.MSG_SEND_STATUS_ANIM) {
                 msgProgressBar.setVisibility(View.GONE);
                 msgStatus.setVisibility(View.GONE);
                 voiceTimeLong.setVisibility(View.GONE);

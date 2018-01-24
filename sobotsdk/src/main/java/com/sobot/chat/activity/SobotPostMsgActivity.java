@@ -12,6 +12,7 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -27,15 +28,15 @@ import com.sobot.chat.adapter.base.SobotPicListAdapter;
 import com.sobot.chat.api.ResultCallBack;
 import com.sobot.chat.api.model.CommonModelBase;
 import com.sobot.chat.api.model.PostParamModel;
-import com.sobot.chat.api.model.SobotCusFieldConfig;
 import com.sobot.chat.api.model.SobotFieldModel;
 import com.sobot.chat.api.model.SobotLeaveMsgParamModel;
-import com.sobot.chat.api.model.SobotPostCusFieldModel;
 import com.sobot.chat.api.model.SobotTypeModel;
 import com.sobot.chat.api.model.ZhiChiMessage;
 import com.sobot.chat.api.model.ZhiChiUploadAppFileModelResult;
 import com.sobot.chat.application.MyApplication;
 import com.sobot.chat.core.http.callback.StringResultCallBack;
+import com.sobot.chat.listener.ISobotCusField;
+import com.sobot.chat.presenter.StCusFieldPresenter;
 import com.sobot.chat.utils.ChatUtils;
 import com.sobot.chat.utils.HtmlTools;
 import com.sobot.chat.utils.LogUtils;
@@ -48,15 +49,11 @@ import com.sobot.chat.widget.dialog.SobotDialogUtils;
 import com.sobot.chat.widget.dialog.SobotSelectPicDialog;
 import com.sobot.chat.widget.kpswitch.util.KeyboardUtil;
 
-import org.json.JSONArray;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @SuppressLint("HandlerLeak")
-public class SobotPostMsgActivity extends SobotBaseActivity implements OnClickListener {
+public class SobotPostMsgActivity extends SobotBaseActivity implements OnClickListener,ISobotCusField {
 
     private EditText sobot_post_email, sobot_et_content, sobot_post_phone;
     private TextView sobot_tv_post_msg, sobot_post_email_lable, sobot_post_phone_lable, sobot_post_lable, sobot_post_question_type;
@@ -68,7 +65,6 @@ public class SobotPostMsgActivity extends SobotBaseActivity implements OnClickLi
     private List<ZhiChiUploadAppFileModelResult> pic_list = new ArrayList<>();
     private SobotPicListAdapter adapter;
     private SobotSelectPicDialog menuWindow;
-    private SobotCusFieldConfig mCusFieldConfig;
     private ArrayList<SobotFieldModel> field;
     private ArrayList<SobotTypeModel> types;
 
@@ -118,32 +114,10 @@ public class SobotPostMsgActivity extends SobotBaseActivity implements OnClickLi
     }
 
     private void setCusFieldValue() {
-        if (field != null && field.size() != 0) {
-            for (int j = 0; j < field.size(); j++) {
-                if (field.get(j).getCusFieldConfig() == null) {
-                    continue;
-                }
-                View view = sobot_post_customer_field.findViewWithTag(field.get(j).getCusFieldConfig().getFieldId());
-                if (view != null) {
-                    if (ZhiChiConstant.WORK_ORDER_CUSTOMER_FIELD_SINGLE_LINE_TYPE == field.get(j).getCusFieldConfig().getFieldType()) {
-                        EditText singleContent = (EditText) view.findViewById(ResourceUtils.getIdByName(SobotPostMsgActivity.this, "id", "work_order_customer_field_text_single"));
-                        field.get(j).getCusFieldConfig().setValue(singleContent.getText() + "");
-                    } else if (ZhiChiConstant.WORK_ORDER_CUSTOMER_FIELD_MORE_LINE_TYPE == field.get(j).getCusFieldConfig().getFieldType()) {
-                        EditText moreContent = (EditText) view.findViewById(ResourceUtils.getIdByName(SobotPostMsgActivity.this, "id", "work_order_customer_field_text_more_content"));
-                        field.get(j).getCusFieldConfig().setValue(moreContent.getText() + "");
-                    } else if (ZhiChiConstant.WORK_ORDER_CUSTOMER_FIELD_TIME_TYPE == field.get(j).getCusFieldConfig().getFieldType()
-                            || ZhiChiConstant.WORK_ORDER_CUSTOMER_FIELD_DATE_TYPE== field.get(j).getCusFieldConfig().getFieldType() ) {
-                        TextView textClick = (TextView) view.findViewById(ResourceUtils.getIdByName(SobotPostMsgActivity.this, "id", "work_order_customer_date_text_click"));
-                        field.get(j).getCusFieldConfig().setValue(textClick.getText() + "");
-                    } else if (ZhiChiConstant.WORK_ORDER_CUSTOMER_FIELD_NUMBER_TYPE == field.get(j).getCusFieldConfig().getFieldType()) {
-                        EditText numberContent = (EditText) view.findViewById(ResourceUtils.getIdByName(SobotPostMsgActivity.this, "id", "work_order_customer_field_text_number"));
-                        field.get(j).getCusFieldConfig().setValue(numberContent.getText() + "");
-                    }
-                }
-            }
-        }
+        StCusFieldPresenter.formatCusFieldVal(SobotPostMsgActivity.this,sobot_post_customer_field,field);
         checkSubmit();
     }
+
 
     private void checkSubmit() {
         String userPhone = "", userEamil = "";
@@ -233,9 +207,7 @@ public class SobotPostMsgActivity extends SobotBaseActivity implements OnClickLi
     @SuppressWarnings("deprecation")
     public void showHint(String content, final boolean flag) {
         if (!isFinishing()) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(sobot_post_email.getWindowToken(), 0); // 强制隐藏键盘
-            imm.hideSoftInputFromWindow(sobot_et_content.getWindowToken(), 0); // 强制隐藏键盘
+            KeyboardUtil.hideKeyboard(SobotPostMsgActivity.this.getCurrentFocus());
             if (d != null) {
                 d.dismiss();
             }
@@ -245,24 +217,28 @@ public class SobotPostMsgActivity extends SobotBaseActivity implements OnClickLi
             d = customBuilder.create();
             d.show();
 
-            WindowManager.LayoutParams lp = d.getWindow().getAttributes();
-            float dpToPixel = ScreenUtils.dpToPixel(
-                    getApplicationContext(), 1);
-            lp.width = (int) (dpToPixel * 200); // 设置宽度
-            d.getWindow().setAttributes(lp);
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (!isFinishing()) {
-                        if (d != null) {
-                            d.dismiss();
-                        }
-                        if (flag) {
-                            handler.sendEmptyMessage(1);
+            Window window = d.getWindow();
+            if (window != null) {
+                WindowManager.LayoutParams lp = window.getAttributes();
+
+                float dpToPixel = ScreenUtils.dpToPixel(
+                        getApplicationContext(), 1);
+                lp.width = (int) (dpToPixel * 200); // 设置宽度
+                d.getWindow().setAttributes(lp);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!isFinishing()) {
+                            if (d != null) {
+                                d.dismiss();
+                            }
+                            if (flag) {
+                                handler.sendEmptyMessage(1);
+                            }
                         }
                     }
-                }
-            }, 2000);
+                }, 2000);
+            }
         }
     }
 
@@ -315,18 +291,6 @@ public class SobotPostMsgActivity extends SobotBaseActivity implements OnClickLi
 
     private void postMsg(String userPhone, String userEamil) {
 
-        List<Map<String, String>> listModel = new ArrayList<>();
-        if (field != null && field.size() != 0) {
-            for (int i = 0; i < field.size(); i++) {
-                Map<String, String> model = new HashMap<>();
-                if (field.get(i).getCusFieldConfig() != null && !TextUtils.isEmpty(field.get(i).getCusFieldConfig().getFieldId()) && !TextUtils.isEmpty(field.get(i).getCusFieldConfig().getValue())){
-                    model.put("id", field.get(i).getCusFieldConfig().getFieldId());
-                    model.put("value", field.get(i).getCusFieldConfig().getValue());
-                    listModel.add(model);
-                }
-            }
-        }
-
         PostParamModel postParam = new PostParamModel();
         postParam.setUid(uid);
         postParam.setTicketContent(sobot_et_content.getText().toString());
@@ -339,11 +303,9 @@ public class SobotPostMsgActivity extends SobotBaseActivity implements OnClickLi
             postParam.setTicketTypeId(sobot_post_question_type.getTag().toString());
         }
 
-        if (listModel.size() != 0) {
-            JSONArray jsonArray = new JSONArray(listModel);//把  List 对象  转成json数据
-            postParam.setExtendFields(jsonArray.toString());
-        }
-        zhiChiApi.postMsg(postParam, new StringResultCallBack<CommonModelBase>() {
+        postParam.setExtendFields(StCusFieldPresenter.getSaveFieldVal(field));
+
+        zhiChiApi.postMsg(SobotPostMsgActivity.this,postParam, new StringResultCallBack<CommonModelBase>() {
             @Override
             public void onSuccess(CommonModelBase base) {
                 if (Integer.parseInt(base.getStatus()) == 0) {
@@ -464,7 +426,7 @@ public class SobotPostMsgActivity extends SobotBaseActivity implements OnClickLi
 
     private ChatUtils.SobotSendFileListener sendFileListener = new ChatUtils.SobotSendFileListener() {
         @Override
-        public void onSuccess(String filePath) {
+        public void onSuccess(final String filePath) {
             zhiChiApi.fileUploadForPostMsg(companyId, filePath, new ResultCallBack<ZhiChiMessage>() {
                 @Override
                 public void onSuccess(ZhiChiMessage zhiChiMessage) {
@@ -472,6 +434,7 @@ public class SobotPostMsgActivity extends SobotBaseActivity implements OnClickLi
                     if (zhiChiMessage.getData() != null) {
                         ZhiChiUploadAppFileModelResult item = new ZhiChiUploadAppFileModelResult();
                         item.setFileUrl(zhiChiMessage.getData().getUrl());
+                        item.setFileLocalPath(filePath);
                         item.setViewState(1);
                         adapter.addData(item);
                     }
@@ -601,7 +564,7 @@ public class SobotPostMsgActivity extends SobotBaseActivity implements OnClickLi
             sobot_enclosure_container.setVisibility(View.GONE);
         }
 
-        zhiChiApi.getLeaveMsgParam(uid, new ResultCallBack<SobotLeaveMsgParamModel>() {
+        zhiChiApi.getLeaveMsgParam(SobotPostMsgActivity.this,uid, new ResultCallBack<SobotLeaveMsgParamModel>() {
 
             @Override
             public void onFailure(Exception e, String des) {
@@ -629,7 +592,7 @@ public class SobotPostMsgActivity extends SobotBaseActivity implements OnClickLi
 
                     if (result.getField() != null && result.getField().size() != 0) {
                         field = result.getField();
-                        ChatUtils.addWorkOrderCusFields(SobotPostMsgActivity.this, result.getField(), sobot_post_customer_field);
+                        StCusFieldPresenter.addWorkOrderCusFields(SobotPostMsgActivity.this, field, sobot_post_customer_field,SobotPostMsgActivity.this);
                     }
 
                     if (result.getType() != null && result.getType().size() != 0) {
@@ -664,62 +627,24 @@ public class SobotPostMsgActivity extends SobotBaseActivity implements OnClickLi
         }
 
         if (data != null) {
-            if ("CATEGORYSMALL".equals(data.getStringExtra("CATEGORYSMALL")) && mCusFieldConfig != null) {
-                if (-1 != data.getIntExtra("fieldType", -1) && ZhiChiConstant.WORK_ORDER_CUSTOMER_FIELD_CHECKBOX_TYPE == data.getIntExtra("fieldType", -1)) {
-                    String value = data.getStringExtra("category_typeName");
-                    String id = data.getStringExtra("category_fieldId");
-                    String dataValue = data.getStringExtra("category_typeValue");
-                    if (!TextUtils.isEmpty(value) && !TextUtils.isEmpty(dataValue) && mCusFieldConfig.getFieldId() != null && mCusFieldConfig.getFieldId().equals(id)) {
-                        mCusFieldConfig.setValue(dataValue);
-                        mCusFieldConfig.setId(id);
-                        for (int i = 0; i < field.size(); i++) {
-                            SobotCusFieldConfig model = field.get(i).getCusFieldConfig();
-                            if (model.getFieldId().equals(mCusFieldConfig.getFieldId())) {
-                                mCusFieldConfig.setChecked(true);
-                                View view = sobot_post_customer_field.findViewWithTag(model.getFieldId());
-                                TextView textClick = (TextView) view.findViewById(ResourceUtils.getIdByName(SobotPostMsgActivity.this, "id", "work_order_customer_date_text_click"));
-                                textClick.setText(value.substring(0, value.length() - 1));
-                            }
-                        }
+
+            StCusFieldPresenter.onStCusFieldActivityResult(SobotPostMsgActivity.this,data,field,sobot_post_customer_field);
+
+            switch (requestCode) {
+                case ZhiChiConstant.SOBOT_KEYTYPE_DELETE_FILE_SUCCESS://图片预览
+                    List<ZhiChiUploadAppFileModelResult> tmpList = (List<ZhiChiUploadAppFileModelResult>) data.getExtras().getSerializable(ZhiChiConstant.SOBOT_KEYTYPE_PIC_LIST);
+                    adapter.addDatas(tmpList);
+                    break;
+                case ZhiChiConstant.work_order_list_display_type_category:
+                    if (!TextUtils.isEmpty(data.getStringExtra("category_typeId"))) {
+                        String typeName = data.getStringExtra("category_typeName");
+                        String typeId = data.getStringExtra("category_typeId");
+                        sobot_post_question_type.setText(typeName);
+                        sobot_post_question_type.setTag(typeId);
                     }
-                } else {
-                    if (mCusFieldConfig.getFieldId().equals(data.getStringExtra("category_fieldId"))) {
-                        String value = data.getStringExtra("category_typeName");
-                        String id = data.getStringExtra("category_fieldId");
-                        String dataValue = data.getStringExtra("category_typeValue");
-                        if (!TextUtils.isEmpty(value) && !TextUtils.isEmpty(dataValue)) {
-                            mCusFieldConfig.setValue(dataValue);
-                            mCusFieldConfig.setId(id);
-                            for (int i = 0; i < field.size(); i++) {
-                                SobotCusFieldConfig model = field.get(i).getCusFieldConfig();
-                                if (mCusFieldConfig.getFieldId().equals(model.getFieldId())) {
-                                    mCusFieldConfig.setChecked(true);
-                                    View view = sobot_post_customer_field.findViewWithTag(model.getFieldId());
-                                    TextView textClick = (TextView) view.findViewById(ResourceUtils.getIdByName(SobotPostMsgActivity.this, "id", "work_order_customer_date_text_click"));
-                                    textClick.setText(value);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            } else {
-                switch (requestCode) {
-                    case ZhiChiConstant.SOBOT_KEYTYPE_DELETE_FILE_SUCCESS://图片预览
-                        List<ZhiChiUploadAppFileModelResult> tmpList = (List<ZhiChiUploadAppFileModelResult>) data.getExtras().getSerializable(ZhiChiConstant.SOBOT_KEYTYPE_PIC_LIST);
-                        adapter.addDatas(tmpList);
-                        break;
-                    case ZhiChiConstant.work_order_list_display_type_category:
-                        if (!TextUtils.isEmpty(data.getStringExtra("category_typeId"))) {
-                            String typeName = data.getStringExtra("category_typeName");
-                            String typeId = data.getStringExtra("category_typeId");
-                            sobot_post_question_type.setText(typeName);
-                            sobot_post_question_type.setTag(typeId);
-                        }
-                        break;
-                    default:
-                        break;
-                }
+                    break;
+                default:
+                    break;
             }
         }
     }
@@ -737,16 +662,6 @@ public class SobotPostMsgActivity extends SobotBaseActivity implements OnClickLi
 
         setTitle(getResString("sobot_str_bottom_message"));
         setShowNetRemind(false);
-        String bg_color = SharedPreferencesUtil.getStringData(this,
-                "robot_current_themeColor", "");
-        if (bg_color != null && bg_color.trim().length() != 0) {
-            relative.setBackgroundColor(Color.parseColor(bg_color));
-        }
-
-        int robot_current_themeImg = SharedPreferencesUtil.getIntData(this, "robot_current_themeImg", 0);
-        if (robot_current_themeImg != 0) {
-            relative.setBackgroundResource(robot_current_themeImg);
-        }
 
         //获取本地数据，赋值
         telShowTvFlag = SharedPreferencesUtil.getBooleanData(this, ZhiChiConstant.SOBOT_POSTMSG_TELSHOWFLAG, false);//控制textView是否显示
@@ -774,14 +689,20 @@ public class SobotPostMsgActivity extends SobotBaseActivity implements OnClickLi
         }
     };
 
-    public void startSobotCusFieldActivity(SobotCusFieldConfig cusFieldConfig, SobotFieldModel cusFieldList) {
-        mCusFieldConfig = cusFieldConfig;
-        Intent intent = new Intent(this, SobotCusFieldActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putInt("fieldType", cusFieldConfig.getFieldType());
-        bundle.putSerializable("cusFieldConfig", cusFieldConfig);
-        bundle.putSerializable("cusFieldList", cusFieldList);
-        intent.putExtra("bundle", bundle);
-        startActivityForResult(intent, cusFieldConfig.getFieldType());
+    @Override
+    public void onClickCusField(View view,int fieldType, SobotFieldModel cusField) {
+        switch (fieldType) {
+            case ZhiChiConstant.WORK_ORDER_CUSTOMER_FIELD_DATE_TYPE:
+            case ZhiChiConstant.WORK_ORDER_CUSTOMER_FIELD_TIME_TYPE:
+                StCusFieldPresenter.openTimePicker(SobotPostMsgActivity.this,view,fieldType);
+                break;
+            case ZhiChiConstant.WORK_ORDER_CUSTOMER_FIELD_SPINNER_TYPE:
+            case ZhiChiConstant.WORK_ORDER_CUSTOMER_FIELD_RADIO_TYPE:
+            case ZhiChiConstant.WORK_ORDER_CUSTOMER_FIELD_CHECKBOX_TYPE:
+                StCusFieldPresenter.startSobotCusFieldActivity(SobotPostMsgActivity.this,cusField);
+                break;
+            default:
+                break;
+        }
     }
 }

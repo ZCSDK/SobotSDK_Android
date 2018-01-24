@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2016 Jacksgong(blog.dreamtobe.cn)
+ * Copyright (C) 2015-2017 Jacksgong(blog.dreamtobe.cn)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,9 +27,9 @@ public class StatusBarHeightUtil {
     private static boolean INIT = false;
     private static int STATUS_BAR_HEIGHT = 50;
 
-    private final static String STATUS_BAR_DEF_PACKAGE = "android";
-    private final static String STATUS_BAR_DEF_TYPE = "dimen";
-    private final static String STATUS_BAR_NAME = "status_bar_height";
+    private static final String STATUS_BAR_DEF_PACKAGE = "android";
+    private static final String STATUS_BAR_DEF_TYPE = "dimen";
+    private static final String STATUS_BAR_NAME = "status_bar_height";
 
     public static synchronized int getStatusBarHeight(final Context context) {
         if (!INIT) {

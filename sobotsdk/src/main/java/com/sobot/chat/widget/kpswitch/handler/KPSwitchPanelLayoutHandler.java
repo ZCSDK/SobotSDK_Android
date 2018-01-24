@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2016 Jacksgong(blog.dreamtobe.cn)
+ * Copyright (C) 2015-2017 Jacksgong(blog.dreamtobe.cn)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package com.sobot.chat.widget.kpswitch.handler;
 
-import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.View;
@@ -35,9 +34,7 @@ import com.sobot.chat.widget.kpswitch.util.ViewUtil;
  * be hide by {@link #handleHide()} -> {@link #processOnMeasure(int, int)}.
  * Easy and safe way: {@link com.sobot.chat.widget.kpswitch.util.KPSwitchConflictUtil#showKeyboard(View, View)}.
  *
- * @see com.sobot.chat.widget.kpswitch.widget.KPSwitchPanelFrameLayout
  * @see com.sobot.chat.widget.kpswitch.widget.KPSwitchPanelLinearLayout
- * @see com.sobot.chat.widget.kpswitch.widget.KPSwitchPanelRelativeLayout
  */
 public class KPSwitchPanelLayoutHandler implements IPanelConflictLayout {
     private final View panelLayout;
@@ -51,7 +48,8 @@ public class KPSwitchPanelLayoutHandler implements IPanelConflictLayout {
      * if true, the status is non-Visible or will
      * non-Visible(may delay and handle in {@link #processOnMeasure(int, int)})
      * <p/>
-     * The value of {@link View#getVisibility()} maybe be assigned dully for cover the keyboard->panel.
+     * The value of {@link View#getVisibility()} maybe be assigned dully for cover the
+     * keyboard->panel.
      * In this case, the {@code mIsHide} will mark the right status.
      * Handle by {@link #filterSetVisibility(int)} & {@link #processOnMeasure(int, int)}
      */
@@ -105,10 +103,12 @@ public class KPSwitchPanelLayoutHandler implements IPanelConflictLayout {
          * For handling Keyboard->Panel.
          *
          * Will be handled on {@link KPSwitchRootLayoutHandler#handleBeforeMeasure(int, int)} ->
-         * {@link IPanelConflictLayout#handleShow()} Delay show, until the {@link KPSwitchRootLayoutHandler} discover
+         * {@link IPanelConflictLayout#handleShow()} Delay show, until the
+         * {@link KPSwitchRootLayoutHandler} discover
          * the size is changed by keyboard-show. And will show, on the next frame of the above
          * change discovery.
          */
+        //noinspection RedundantIfStatement
         if (isKeyboardShowing() && visibility == View.VISIBLE) {
             return true;
         }
@@ -161,9 +161,9 @@ public class KPSwitchPanelLayoutHandler implements IPanelConflictLayout {
 
     @Override
     public void handleShow() {
-        throw new IllegalAccessError("You can't invoke handle show in handler," +
-                " please instead of handling in the panel layout, maybe just need invoke " +
-                "super.setVisibility(View.VISIBLE)");
+        throw new IllegalAccessError("You can't invoke handle show in handler,"
+                + " please instead of handling in the panel layout, maybe just need invoke "
+                + "super.setVisibility(View.VISIBLE)");
     }
 
     /**
@@ -191,8 +191,8 @@ public class KPSwitchPanelLayoutHandler implements IPanelConflictLayout {
     /**
      * @param ignoreRecommendHeight Whether ignore the recommend panel height, what would be equal
      *                              to the height of keyboard in most situations.
+     * @attr ref cn.dreamtobe.kpswitch.R.styleable#KPSwitchPanelLayout_ignore_recommend_height
      * @see #resetToRecommendPanelHeight(int)
-     * @attr ref com.sobot.chat.widget.kpswitch.R.styleable#KPSwitchPanelLayout_ignore_recommend_height
      */
     public void setIgnoreRecommendHeight(boolean ignoreRecommendHeight) {
         this.mIgnoreRecommendHeight = ignoreRecommendHeight;

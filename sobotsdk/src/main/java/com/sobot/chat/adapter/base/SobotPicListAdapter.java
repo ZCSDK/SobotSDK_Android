@@ -125,7 +125,7 @@ public class SobotPicListAdapter extends SobotBaseAdapter<ZhiChiUploadAppFileMod
             }else{
                 sobot_iv_pic.setVisibility(View.VISIBLE);
                 sobot_iv_pic_add.setVisibility(View.GONE);
-                BitmapUtil.display(mContext, message.getFileUrl(), sobot_iv_pic, ResourceUtils
+                BitmapUtil.display(mContext, message.getFileLocalPath(), sobot_iv_pic, ResourceUtils
                         .getIdByName(mContext, "drawable", "sobot_default_pic"), ResourceUtils
                         .getIdByName(mContext, "drawable", "sobot_default_pic_err"));
             }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -16,6 +17,7 @@ import com.sobot.chat.utils.SharedPreferencesUtil;
 import com.sobot.chat.utils.ZhiChiConstant;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Administrator on 2017/7/13.
@@ -25,13 +27,11 @@ public class SobotPostCategoryActivity extends SobotBaseActivity {
 
     private SobotPostCategoryAdapter categoryAdapter;
     private ListView listView;
-    private ArrayList<SobotTypeModel> typeList = new ArrayList<>();
-    private ArrayList<SobotTypeModel> types = new ArrayList<>();
-    private ArrayList<SobotTypeModel> type1;
-    private ArrayList<SobotTypeModel> type2;
-    private ArrayList<SobotTypeModel> type3;
-    private ArrayList<SobotTypeModel> type4;
-    private int typeLevel = 0;
+
+    private List<SobotTypeModel> types = new ArrayList<>();
+    private SparseArray<List<SobotTypeModel>> tmpMap = new SparseArray<>();
+    private List<SobotTypeModel> tmpDatas = new ArrayList<>();
+    private int currentLevel = 1;
     private String typeName;
     private String typeId;
 
@@ -43,9 +43,16 @@ public class SobotPostCategoryActivity extends SobotBaseActivity {
         types.clear();
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra("bundle");
-        typeList = types = (ArrayList<SobotTypeModel>) bundle.getSerializable("types");
+        ArrayList<SobotTypeModel> typeTemp = (ArrayList<SobotTypeModel>) bundle.getSerializable("types");
+        if (typeTemp != null) {
+            types.addAll(typeTemp);
+        }
+
         typeName = bundle.getString("typeName");
         typeId = bundle.getString("typeId");
+        //存贮一级List
+        currentLevel = 1;
+        tmpMap.put(1, types);
 
         initView();
     }
@@ -56,74 +63,57 @@ public class SobotPostCategoryActivity extends SobotBaseActivity {
     }
 
     private void initView() {
-        String bg_color = SharedPreferencesUtil.getStringData(this, "robot_current_themeColor", "");
-        if (!TextUtils.isEmpty(bg_color)) {
-            relative.setBackgroundColor(Color.parseColor(bg_color));
-        }
+
         sobot_tv_left.setOnClickListener(this);
         listView = (ListView) findViewById(getResId("sobot_activity_post_category_listview"));
         if (types != null && types.size() != 0) {
-            resetChecked(types);
-            categoryAdapter = new SobotPostCategoryAdapter(this, types);
-            listView.setAdapter(categoryAdapter);
+            showDataWithLevel(-1);
         }
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if (ZhiChiConstant.WORK_WORK_ORDER_CATEGORY_NODEFLAG_YES == types.get(position).getNodeFlag()
-                        && ZhiChiConstant.WORK_WORK_ORDER_CATEGORY_NODE_LEVEL_FIRST == types.get(position).getTypeLevel()) {
-                    typeLevel = types.get(position).getTypeLevel();
-                    type1 = types.get(position).getItems();
-                    types = type1;
-                    resetChecked(type1);
-                    categoryAdapter = new SobotPostCategoryAdapter(SobotPostCategoryActivity.this, type1);
-                    listView.setAdapter(categoryAdapter);
-                } else if (ZhiChiConstant.WORK_WORK_ORDER_CATEGORY_NODEFLAG_YES == types.get(position).getNodeFlag()
-                        && ZhiChiConstant.WORK_WORK_ORDER_CATEGORY_NODE_LEVEL_SECOND == types.get(position).getTypeLevel()) {
-                    typeLevel = types.get(position).getTypeLevel();
-                    type2 = types.get(position).getItems();
-                    types = type2;
-                    resetChecked(type2);
-                    categoryAdapter = new SobotPostCategoryAdapter(SobotPostCategoryActivity.this, type2);
-                    listView.setAdapter(categoryAdapter);
-                }  else if (ZhiChiConstant.WORK_WORK_ORDER_CATEGORY_NODEFLAG_YES == types.get(position).getNodeFlag()
-                        && ZhiChiConstant.WORK_WORK_ORDER_CATEGORY_NODE_LEVEL_THRID== types.get(position).getTypeLevel()) {
-                    typeLevel = types.get(position).getTypeLevel();
-                    type3 = types.get(position).getItems();
-                    types = type3;
-                    resetChecked(type3);
-                    categoryAdapter = new SobotPostCategoryAdapter(SobotPostCategoryActivity.this, type3);
-                    listView.setAdapter(categoryAdapter);
-                }  else if (ZhiChiConstant.WORK_WORK_ORDER_CATEGORY_NODEFLAG_YES == types.get(position).getNodeFlag()
-                        && ZhiChiConstant.WORK_WORK_ORDER_CATEGORY_NODE_LEVEL_FOURTH == types.get(position).getTypeLevel()) {
-                    typeLevel = types.get(position).getTypeLevel();
-                    type4 = types.get(position).getItems();
-                    types = type4;
-                    resetChecked(type4);
-                    categoryAdapter = new SobotPostCategoryAdapter(SobotPostCategoryActivity.this, type4);
-                    listView.setAdapter(categoryAdapter);
+                if (ZhiChiConstant.WORK_WORK_ORDER_CATEGORY_NODEFLAG_YES == tmpMap.get(currentLevel).get(position).getNodeFlag()) {
+                    currentLevel++;
+                    showDataWithLevel(position);
                 } else {
                     Intent intent = new Intent();
-                    intent.putExtra("category_typeName", types.get(position).getTypeName());
-                    intent.putExtra("category_typeId", types.get(position).getTypeId());
+                    intent.putExtra("category_typeName", tmpMap.get(currentLevel).get(position).getTypeName());
+                    intent.putExtra("category_typeId", tmpMap.get(currentLevel).get(position).getTypeId());
                     setResult(ZhiChiConstant.work_order_list_display_type_category, intent);
-                    if (types.get(position).isChecked()) {
-                        types.get(position).setChecked(false);
-                    } else {
-                        types.get(position).setChecked(true);
-                    }
-                    for (int i = 0; i < types.size(); i++) {
-                        if (i != position) {
-                            types.get(i).setChecked(false);
-                        }
+                    for (int i = 0; i < tmpMap.get(currentLevel).size(); i++) {
+                        tmpMap.get(currentLevel).get(i).setChecked(i == position);
                     }
                     categoryAdapter.notifyDataSetChanged();
                     finish();
                 }
             }
         });
+    }
+
+    private void showDataWithLevel(int position) {
+        if (position >= 0) {
+            tmpMap.put(currentLevel, tmpMap.get(currentLevel - 1).get(position).getItems());
+        }
+
+        ArrayList<SobotTypeModel> currentList = (ArrayList<SobotTypeModel>) tmpMap.get(currentLevel);
+        if (currentList != null) {
+            resetChecked(currentList);
+            notifyListData(currentList);
+        }
+
+    }
+
+    private void notifyListData(List<SobotTypeModel> currentList) {
+        tmpDatas.clear();
+        tmpDatas.addAll(currentList);
+        if (categoryAdapter != null) {
+            categoryAdapter.notifyDataSetChanged();
+        } else {
+            categoryAdapter = new SobotPostCategoryAdapter(SobotPostCategoryActivity.this, tmpDatas);
+            listView.setAdapter(categoryAdapter);
+        }
     }
 
     @Override
@@ -139,33 +129,19 @@ public class SobotPostCategoryActivity extends SobotBaseActivity {
     }
 
     private void backPressed() {
-        if (typeLevel == 4){
-            typeLevel = 3;
-            types = type3;
-            categoryAdapter = new SobotPostCategoryAdapter(this, types);
-            listView.setAdapter(categoryAdapter);
-        } else if (typeLevel == 3){
-            typeLevel = 2;
-            types = type2;
-            categoryAdapter = new SobotPostCategoryAdapter(this, types);
-            listView.setAdapter(categoryAdapter);
-        } else if (typeLevel == 2) {
-            typeLevel = 1;
-            types = type1;
-            categoryAdapter = new SobotPostCategoryAdapter(this, types);
-            listView.setAdapter(categoryAdapter);
-        } else if (typeLevel == 1) {
-            typeLevel = 0;
-            categoryAdapter = new SobotPostCategoryAdapter(this, typeList);
-            listView.setAdapter(categoryAdapter);
-        } else {
+        if (currentLevel <= 1) {
             finish();
+        } else {
+            currentLevel--;
+            List<SobotTypeModel> sobotTypeModels = tmpMap.get(currentLevel);
+            notifyListData(sobotTypeModels);
         }
+
     }
 
-    private void resetChecked(ArrayList<SobotTypeModel> type){
+    private void resetChecked(ArrayList<SobotTypeModel> type) {
         for (int i = 0; i < type.size(); i++) {
-            if (!TextUtils.isEmpty(typeId) && typeId.equals(type.get(i).getTypeId())){
+            if (!TextUtils.isEmpty(typeId) && typeId.equals(type.get(i).getTypeId())) {
                 type.get(i).setChecked(true);
             }
         }
