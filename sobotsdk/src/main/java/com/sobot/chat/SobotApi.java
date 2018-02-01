@@ -20,6 +20,7 @@ import com.sobot.chat.core.http.callback.StringResultCallBack;
 import com.sobot.chat.listener.HyperlinkListener;
 import com.sobot.chat.listener.SobotLeaveMsgListener;
 import com.sobot.chat.server.SobotSessionServer;
+import com.sobot.chat.utils.CommonUtils;
 import com.sobot.chat.utils.LogUtils;
 import com.sobot.chat.utils.NotificationUtils;
 import com.sobot.chat.utils.SharedPreferencesUtil;
@@ -39,6 +40,20 @@ import java.util.Map;
 public class SobotApi {
 
 	private static String Tag = SobotApi.class.getSimpleName();
+
+	/**
+	 * 初始化sdk
+	 * @param context 上下文  必填
+	 * @param appkey  用户的appkey  必填 如果是平台用户需要传总公司的appkey
+	 * @param uid     用户的唯一标识不能传一样的值
+	 */
+	public static void initSobotSDK(Context context,String appkey,String uid){
+		if (context == null || TextUtils.isEmpty(appkey)) {
+			Log.e(Tag,"initSobotSDK  参数为空 context:" + context + "  appkey:" + appkey);
+			return;
+		}
+		SobotMsgManager.getInstance(context).initSobotSDK(context,appkey,uid);
+	}
 
 	/**
 	 * 初始化平台
@@ -61,6 +76,11 @@ public class SobotApi {
 	public static void startSobotChat(Context context, Information information) {
 		if (information == null || context == null){
 			Log.e(Tag, "Information is Null!");
+			return;
+		}
+		boolean initSdk = SharedPreferencesUtil.getBooleanData(context, ZhiChiConstant.SOBOT_CONFIG_INITSDK, false);
+		if (!initSdk) {
+			Log.e(Tag, "请在Application中调用【SobotApi.initSobotSDK()】来初始化SDK!");
 			return;
 		}
 		Intent intent = new Intent(context, SobotChatActivity.class);

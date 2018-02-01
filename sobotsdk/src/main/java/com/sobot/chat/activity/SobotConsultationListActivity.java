@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
@@ -12,37 +11,24 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.sobot.chat.SobotApi;
 import com.sobot.chat.activity.base.SobotBaseActivity;
-import com.sobot.chat.adapter.base.SobotMsgAdapter;
 import com.sobot.chat.adapter.base.SobotMsgCenterAdapter;
 import com.sobot.chat.api.apiUtils.GsonUtil;
 import com.sobot.chat.api.apiUtils.ZhiChiConstants;
-import com.sobot.chat.api.enumtype.CustomerState;
 import com.sobot.chat.api.model.Information;
 import com.sobot.chat.api.model.SobotMsgCenterModel;
-import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.api.model.ZhiChiPushMessage;
 import com.sobot.chat.api.model.ZhiChiReplyAnswer;
-import com.sobot.chat.server.SobotSessionServer;
-import com.sobot.chat.utils.ChatUtils;
 import com.sobot.chat.utils.DateUtil;
-import com.sobot.chat.utils.LogUtils;
 import com.sobot.chat.utils.ResourceUtils;
-import com.sobot.chat.utils.SharedPreferencesUtil;
 import com.sobot.chat.utils.SobotCache;
 import com.sobot.chat.utils.ZhiChiConstant;
-import com.sobot.chat.viewHolder.RichTextMessageHolder;
-import com.sobot.chat.viewHolder.VoiceMessageHolder;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 咨询列表
