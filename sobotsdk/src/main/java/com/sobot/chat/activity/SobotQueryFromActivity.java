@@ -1,7 +1,6 @@
 package com.sobot.chat.activity;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -46,13 +45,19 @@ public class SobotQueryFromActivity extends SobotBaseActivity implements ISobotC
     private boolean isSubmitting = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(ResourceUtils.getIdByName(this, "layout", "sobot_activity_query_from"));
-        initBundleData(savedInstanceState);
-        initView();
-        initData();
+    protected int getContentViewResId() {
+        return getResLayoutId("sobot_activity_query_from");
+    }
 
+    protected void initBundleData(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            mIntentBundleData = getIntent().getBundleExtra(ZhiChiConstant.SOBOT_INTENT_BUNDLE_DATA);
+        } else {
+            mIntentBundleData = savedInstanceState.getBundle(ZhiChiConstant.SOBOT_INTENT_BUNDLE_DATA);
+        }
+        if (mIntentBundleData != null) {
+            initIntent(mIntentBundleData);
+        }
     }
 
     private void initIntent(Bundle mIntentBundleData) {
@@ -65,16 +70,11 @@ public class SobotQueryFromActivity extends SobotBaseActivity implements ISobotC
         }
     }
 
-    private void initView() {
+    @Override
+    protected void initView() {
+        showRightMenu(0, getResString("sobot_submit"), true);
+        showLeftMenu(getResDrawableId("sobot_btn_back_selector"),getResString("sobot_back"),true);
 
-        showRightView(0, getResString("sobot_submit"), true);
-        Drawable drawable = getResources().getDrawable(getResDrawableId("sobot_btn_back_selector"));
-        if (drawable != null) {
-            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-        }
-        sobot_tv_left.setCompoundDrawables(drawable, null, null, null);
-        sobot_tv_left.setText(getResString("sobot_back"));
-        sobot_tv_left.setOnClickListener(this);
         sobot_container = (LinearLayout) findViewById(getResId("sobot_container"));
         sobot_tv_doc = (TextView) findViewById(getResId("sobot_tv_doc"));
         if (mQueryFormModel != null) {
@@ -84,19 +84,9 @@ public class SobotQueryFromActivity extends SobotBaseActivity implements ISobotC
         StCusFieldPresenter.addWorkOrderCusFields(SobotQueryFromActivity.this, mField, sobot_container, SobotQueryFromActivity.this);
     }
 
-    private void initData() {
+    @Override
+    protected void initData() {
 
-    }
-
-    private void initBundleData(Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
-            mIntentBundleData = getIntent().getBundleExtra(ZhiChiConstant.SOBOT_INTENT_BUNDLE_DATA);
-        } else {
-            mIntentBundleData = savedInstanceState.getBundle(ZhiChiConstant.SOBOT_INTENT_BUNDLE_DATA);
-        }
-        if (mIntentBundleData != null) {
-            initIntent(mIntentBundleData);
-        }
     }
 
     @Override
@@ -107,7 +97,7 @@ public class SobotQueryFromActivity extends SobotBaseActivity implements ISobotC
     }
 
     @Override
-    public void forwordMethod() {
+    protected void onRightMenuClick(View view) {
         StCusFieldPresenter.formatCusFieldVal(SobotQueryFromActivity.this, sobot_container, mField);
 
         if (!checkInput(mField)) {
@@ -188,13 +178,6 @@ public class SobotQueryFromActivity extends SobotBaseActivity implements ISobotC
             }
         }
         return true;
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v == sobot_tv_left) {
-            backPressed();
-        }
     }
 
     @Override

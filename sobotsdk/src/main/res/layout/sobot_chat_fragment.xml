@@ -34,11 +34,6 @@
             android:src="@drawable/sobot_icon_tag_nonet" />
     </RelativeLayout>
 
-    <FrameLayout
-        android:id="@+id/sobot_layout_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#fff" >
-    </FrameLayout>
+    <include layout="@layout/sobot_chat_main" />
 
 </com.sobot.chat.widget.kpswitch.widget.KPSwitchRootLinearLayout>

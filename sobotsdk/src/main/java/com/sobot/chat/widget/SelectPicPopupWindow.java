@@ -125,9 +125,8 @@ public class SelectPicPopupWindow extends PopupWindow {
 	};
 
 	private void showHint(String content){
-		CustomToast mCToast = CustomToast.makeText(context, content, 1000,
-				ResourceUtils.getIdByName(context,"drawable","sobot_iv_login_right"));
-		mCToast.show();
+		CustomToast.makeText(context, content, 1000,
+				ResourceUtils.getIdByName(context,"drawable","sobot_iv_login_right")).show();
 	}
 
 	public void saveImageToGallery(Context context, Bitmap bmp) {

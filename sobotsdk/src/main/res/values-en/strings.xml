@@ -8,6 +8,8 @@
     <string name="sobot_button_send">Send</string>
     <string name="sobot_attach_take_pic">Camera</string>
     <string name="sobot_btn_submit_text">Submit feedback</string>
+    <string name="sobot_please">SOBOT SDK  2.4.3</string>
+    <string name="sobot_appkey">07a5ff1050c047c4b9d3c57eeb7ced29</string>
     <string name="sobot_move_up_to_cancel">Slide up to cancel</string>
     <string name="sobot_release_to_cancel">Slide up to cancel</string>
     <string name="sobot_up_send_calcel">Slide up to cancel</string>

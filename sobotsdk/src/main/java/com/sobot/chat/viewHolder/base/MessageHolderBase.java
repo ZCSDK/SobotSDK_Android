@@ -27,6 +27,7 @@ import com.sobot.chat.widget.ReSendDialog;
  */
 public abstract class MessageHolderBase {
     public boolean isRight = false;
+    protected SobotMsgAdapter.SobotMsgCallBack msgCallBack;
 
     public TextView name; // 用户姓名
     public ImageView imgHead;// 头像
@@ -99,6 +100,10 @@ public abstract class MessageHolderBase {
 
     public void setRight(boolean right) {
         isRight = right;
+    }
+
+    public void setMsgCallBack(SobotMsgAdapter.SobotMsgCallBack msgCallBack) {
+        this.msgCallBack = msgCallBack;
     }
 
     /**

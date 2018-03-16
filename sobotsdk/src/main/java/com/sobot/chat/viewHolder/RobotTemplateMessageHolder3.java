@@ -88,7 +88,7 @@ public class RobotTemplateMessageHolder3 extends MessageHolderBase {
                                 sobot_template3_anchor.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        ChatUtils.sendMultiRoundQuestions(context, multiDiaRespInfo, (Map<String, String>) v.getTag());
+                                        ChatUtils.sendMultiRoundQuestions(context, multiDiaRespInfo, (Map<String, String>) v.getTag(),msgCallBack);
                                     }
                                 });
                             }

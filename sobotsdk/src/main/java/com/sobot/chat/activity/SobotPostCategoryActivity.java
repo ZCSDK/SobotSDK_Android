@@ -1,7 +1,6 @@
 package com.sobot.chat.activity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.SparseArray;
@@ -12,17 +11,15 @@ import android.widget.ListView;
 import com.sobot.chat.activity.base.SobotBaseActivity;
 import com.sobot.chat.adapter.base.SobotPostCategoryAdapter;
 import com.sobot.chat.api.model.SobotTypeModel;
-import com.sobot.chat.utils.ResourceUtils;
-import com.sobot.chat.utils.SharedPreferencesUtil;
 import com.sobot.chat.utils.ZhiChiConstant;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ *
  * Created by Administrator on 2017/7/13.
  */
-
 public class SobotPostCategoryActivity extends SobotBaseActivity {
 
     private SobotPostCategoryAdapter categoryAdapter;
@@ -36,10 +33,12 @@ public class SobotPostCategoryActivity extends SobotBaseActivity {
     private String typeId;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(ResourceUtils.getIdByName(this, "layout", "sobot_activity_post_category"));
-        setTitle("选择分类");
+    protected int getContentViewResId() {
+        return getResLayoutId("sobot_activity_post_category");
+    }
+
+    @Override
+    protected void initBundleData(Bundle savedInstanceState) {
         types.clear();
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra("bundle");
@@ -53,18 +52,13 @@ public class SobotPostCategoryActivity extends SobotBaseActivity {
         //存贮一级List
         currentLevel = 1;
         tmpMap.put(1, types);
-
-        initView();
     }
 
     @Override
-    public void forwordMethod() {
-        backPressed();
-    }
+    protected void initView() {
 
-    private void initView() {
-
-        sobot_tv_left.setOnClickListener(this);
+        setTitle("选择分类");
+        showLeftMenu(getResDrawableId("sobot_btn_back_selector"), getResString("sobot_back"), true);
         listView = (ListView) findViewById(getResId("sobot_activity_post_category_listview"));
         if (types != null && types.size() != 0) {
             showDataWithLevel(-1);
@@ -92,6 +86,11 @@ public class SobotPostCategoryActivity extends SobotBaseActivity {
         });
     }
 
+    @Override
+    protected void initData() {
+
+    }
+
     private void showDataWithLevel(int position) {
         if (position >= 0) {
             tmpMap.put(currentLevel, tmpMap.get(currentLevel - 1).get(position).getItems());
@@ -102,7 +101,6 @@ public class SobotPostCategoryActivity extends SobotBaseActivity {
             resetChecked(currentList);
             notifyListData(currentList);
         }
-
     }
 
     private void notifyListData(List<SobotTypeModel> currentList) {
@@ -113,13 +111,6 @@ public class SobotPostCategoryActivity extends SobotBaseActivity {
         } else {
             categoryAdapter = new SobotPostCategoryAdapter(SobotPostCategoryActivity.this, tmpDatas);
             listView.setAdapter(categoryAdapter);
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v == sobot_tv_left) {
-            backPressed();
         }
     }
 
@@ -136,7 +127,6 @@ public class SobotPostCategoryActivity extends SobotBaseActivity {
             List<SobotTypeModel> sobotTypeModels = tmpMap.get(currentLevel);
             notifyListData(sobotTypeModels);
         }
-
     }
 
     private void resetChecked(ArrayList<SobotTypeModel> type) {

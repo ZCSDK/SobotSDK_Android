@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.sobot.chat.activity.SobotChatActivity;
+import com.sobot.chat.adapter.base.SobotMsgAdapter;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.api.model.ZhiChiReplyAnswer;
 import com.sobot.chat.utils.DateUtil;
@@ -59,7 +59,9 @@ public class VoiceMessageHolder extends MessageHolderBase {
 
             @Override
             public void onClick(View v) {
-                ((SobotChatActivity) context).clickAudioItem(message);
+                if(msgCallBack != null){
+                    msgCallBack.clickAudioItem(message);
+                }
             }
         });
 
@@ -79,7 +81,7 @@ public class VoiceMessageHolder extends MessageHolderBase {
                 stopAnim();
                 // 语音的重新发送
                 msgStatus.setOnClickListener(new RetrySendVoiceLisenter(context, message.getId(),
-                        message.getAnswer().getMsg(), message.getAnswer().getDuration(), msgStatus));
+                        message.getAnswer().getMsg(), message.getAnswer().getDuration(), msgStatus,msgCallBack));
             } else if (message.getSendSuccessState() == ZhiChiConstant.MSG_SEND_STATUS_LOADING) {// 发送中
                 msgProgressBar.setVisibility(View.VISIBLE);
                 msgStatus.setVisibility(View.GONE);
@@ -155,11 +157,13 @@ public class VoiceMessageHolder extends MessageHolderBase {
         private String duration;
         private ImageView img;
         private Context context;
+        private SobotMsgAdapter.SobotMsgCallBack msgCallBack;
 
         public RetrySendVoiceLisenter(Context context,String id, String voicePath,
-                                      String duration, ImageView image) {
+                                      String duration, ImageView image,SobotMsgAdapter.SobotMsgCallBack msgCallBack) {
             super();
             this.context = context;
+            this.msgCallBack = msgCallBack;
             this.voicePath = voicePath;
             this.id = id;
             this.duration = duration;
@@ -175,8 +179,7 @@ public class VoiceMessageHolder extends MessageHolderBase {
             showReSendVoiceDialog(context,voicePath, id, duration,img);
         }
 
-        @SuppressWarnings("deprecation")
-        private static void showReSendVoiceDialog(final Context context,final String mvoicePath,
+        private void showReSendVoiceDialog(final Context context,final String mvoicePath,
                                                   final String mid, final String mduration,final ImageView msgStatus) {
             showReSendDialog(context,msgStatus,new ReSendListener(){
 
@@ -189,7 +192,9 @@ public class VoiceMessageHolder extends MessageHolderBase {
                         msgObj.setContent(mvoicePath);
                         msgObj.setId(mid);
                         msgObj.setAnswer(answer);
-                        ((SobotChatActivity) context).sendMessageToRobot(msgObj,2 , 3,"");
+                        if (msgCallBack != null) {
+                            msgCallBack.sendMessageToRobot(msgObj,2 , 3,"");
+                        }
                     }
                 }
             });

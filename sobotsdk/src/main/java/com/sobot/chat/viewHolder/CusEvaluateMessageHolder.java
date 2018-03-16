@@ -1,25 +1,17 @@
 package com.sobot.chat.viewHolder;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.IdRes;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.sobot.chat.activity.SobotChatActivity;
 import com.sobot.chat.api.model.SobotEvaluateModel;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
-import com.sobot.chat.utils.BitmapUtil;
 import com.sobot.chat.utils.ChatUtils;
-import com.sobot.chat.utils.CommonUtils;
-import com.sobot.chat.utils.LogUtils;
 import com.sobot.chat.utils.ResourceUtils;
 import com.sobot.chat.viewHolder.base.MessageHolderBase;
 
@@ -183,8 +175,9 @@ public class CusEvaluateMessageHolder extends MessageHolderBase implements Radio
                 }
             }
             message.getSobotEvaluateModel().setIsResolved(resolved);
-
-            ((SobotChatActivity) mContext).doEvaluate(evaluateFlag, message);
+            if (msgCallBack != null) {
+                msgCallBack.doEvaluate(evaluateFlag, message);
+            }
         }
     }
 

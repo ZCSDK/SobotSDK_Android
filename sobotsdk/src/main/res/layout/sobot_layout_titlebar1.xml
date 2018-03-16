@@ -18,37 +18,6 @@
         android:textColor="@color/sobot_color_title_bar_title"
         android:textSize="@dimen/sobot_text_title" />
 
-    <LinearLayout
-        android:id="@+id/sobot_container_conn_status"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginRight="70dp"
-        android:layout_toRightOf="@+id/sobot_tv_left"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <ProgressBar
-            android:id="@+id/sobot_conn_loading"
-            style="@style/sobot_progress_circle"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/sobot_title_conn_status"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:ellipsize="end"
-            android:gravity="center|center_horizontal"
-            android:singleLine="true"
-            android:text="@string/sobot_conntype_unconnected"
-            android:textColor="@color/sobot_color_title_bar_title"
-            android:textSize="@dimen/sobot_text_title"
-            android:visibility="visible" />
-    </LinearLayout>
-
-
     <TextView
         android:id="@+id/sobot_tv_left"
         android:layout_width="80dp"

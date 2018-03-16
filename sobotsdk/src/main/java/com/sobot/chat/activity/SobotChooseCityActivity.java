@@ -12,7 +12,6 @@ import com.sobot.chat.adapter.SobotProvinAdapter;
 import com.sobot.chat.api.model.SobotCityResult;
 import com.sobot.chat.api.model.SobotProvinInfo;
 import com.sobot.chat.core.http.callback.StringResultCallBack;
-import com.sobot.chat.utils.ResourceUtils;
 import com.sobot.chat.utils.ToastUtil;
 import com.sobot.chat.utils.ZhiChiConstant;
 import com.sobot.chat.widget.dialog.SobotDialogUtils;
@@ -39,20 +38,12 @@ public class SobotChooseCityActivity extends SobotBaseActivity {
     private SobotProvinInfo.SobotProvinceModel mFinalData = new SobotProvinInfo.SobotProvinceModel();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(ResourceUtils.getIdByName(this, "layout", "sobot_activity_cusfield"));
-        initBundleData(savedInstanceState);
-        initView();
-        initData();
+    protected int getContentViewResId() {
+        return getResLayoutId("sobot_activity_cusfield");
     }
 
     @Override
-    public void forwordMethod() {
-
-    }
-
-    private void initBundleData(Bundle savedInstanceState) {
+    protected void initBundleData(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             mIntentBundleData = getIntent().getBundleExtra(ZhiChiConstant.SOBOT_INTENT_BUNDLE_DATA);
         } else {
@@ -81,10 +72,8 @@ public class SobotChooseCityActivity extends SobotBaseActivity {
     }
 
     @Override
-    public void onClick(View v) {
-        if (v == sobot_tv_left) {
-            backPressed();
-        }
+    protected void onLeftMenuClick(View view) {
+        backPressed();
     }
 
     @Override
@@ -105,8 +94,8 @@ public class SobotChooseCityActivity extends SobotBaseActivity {
         }
     }
 
-    private void initView() {
-        sobot_tv_left.setOnClickListener(this);
+    @Override
+    public void initView() {
         mListView = (ListView) findViewById(getResId("sobot_activity_cusfield_listview"));
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -130,7 +119,8 @@ public class SobotChooseCityActivity extends SobotBaseActivity {
         });
     }
 
-    private void initData() {
+    @Override
+    public void initData() {
         if (mProvinInfo != null && mProvinInfo.getProvinces() != null) {
             showDataWithLevel(null);
         }

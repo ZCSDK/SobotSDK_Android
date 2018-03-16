@@ -9,8 +9,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sobot.chat.activity.SobotChatActivity;
 import com.sobot.chat.activity.WebViewActivity;
+import com.sobot.chat.adapter.base.SobotMsgAdapter;
 import com.sobot.chat.api.apiUtils.GsonUtil;
 import com.sobot.chat.api.model.Suggestions;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
@@ -291,7 +291,7 @@ public class RichTextMessageHolder extends MessageHolderBase {
                             .getColor(ResourceUtils.getIdByName(context,
                                     "color","sobot_color_link")));
                     answer.setOnClickListener(new AnsWerClickLisenter(context,null,
-                            currentItem + "、" + listSuggestions.get(i).getQuestion(), null ,listSuggestions.get(i).getDocId()));
+                            currentItem + "、" + listSuggestions.get(i).getQuestion(), null ,listSuggestions.get(i).getDocId(),msgCallBack));
                     String tempStr = currentItem + "、" + listSuggestions.get(i).getQuestion();
                     answer.setText(tempStr);
                     answersList.addView(answer);
@@ -358,8 +358,8 @@ public class RichTextMessageHolder extends MessageHolderBase {
 
             @Override
             public void onNoDoubleClick(View v) {
-                if(mContext != null){
-                    ((SobotChatActivity) mContext).doClickTransferBtn();
+                if(msgCallBack != null){
+                    msgCallBack.doClickTransferBtn();
                 }
             }
         });
@@ -412,8 +412,8 @@ public class RichTextMessageHolder extends MessageHolderBase {
      * @param revaluateFlag true 顶  false 踩
      */
     private void doRevaluate(boolean revaluateFlag){
-        if(mContext != null){
-            ((SobotChatActivity) mContext).doRevaluate(revaluateFlag,message);
+        if(msgCallBack != null){
+            msgCallBack.doRevaluate(revaluateFlag,message);
         }
     }
 
@@ -519,15 +519,17 @@ public class RichTextMessageHolder extends MessageHolderBase {
         private ImageView img;
         private String docId;
         private Context context;
+        private SobotMsgAdapter.SobotMsgCallBack mMsgCallBack;
 
-        public AnsWerClickLisenter(Context context,String id, String msgContent, ImageView image,
-                                   String docId) {
+        public AnsWerClickLisenter(Context context, String id, String msgContent, ImageView image,
+                                   String docId, SobotMsgAdapter.SobotMsgCallBack msgCallBack) {
             super();
             this.context = context;
             this.msgContent = msgContent;
             this.id = id;
             this.img = image;
             this.docId = docId;
+            mMsgCallBack = msgCallBack;
         }
 
         @Override
@@ -536,14 +538,12 @@ public class RichTextMessageHolder extends MessageHolderBase {
                 img.setVisibility(View.GONE);
             }
 
-            if (context != null){
-                SobotChatActivity activity = (SobotChatActivity) context;
-				/* 点击回答语。强制隐藏键盘 */
-                activity.hidePanelAndKeyboard(activity.mPanelRoot);
+            if (mMsgCallBack != null){
+                mMsgCallBack.hidePanelAndKeyboard();
                 ZhiChiMessageBase msgObj = new ZhiChiMessageBase();
                 msgObj.setContent(msgContent);
                 msgObj.setId(id);
-                activity.sendMessageToRobot(msgObj, 0, 1, docId);
+                mMsgCallBack.sendMessageToRobot(msgObj, 0, 1, docId);
             }
         }
     }

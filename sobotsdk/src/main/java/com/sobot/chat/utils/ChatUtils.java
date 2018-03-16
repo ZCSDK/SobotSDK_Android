@@ -11,13 +11,13 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ListView;
 
 import com.sobot.chat.SobotApi;
-import com.sobot.chat.activity.SobotChatActivity;
 import com.sobot.chat.adapter.base.SobotMsgAdapter;
 import com.sobot.chat.api.ResultCallBack;
 import com.sobot.chat.api.ZhiChiApi;
@@ -68,10 +68,18 @@ public class ChatUtils {
 	}
 
 	/**
-	 * 打开选择图片界面
+	 * activity打开选择图片界面
 	 * @param act
 	 */
 	public static void openSelectPic(Activity act) {
+		openSelectPic(act,null);
+	}
+
+	/**
+	 * Fragment打开选择图片界面
+	 * @param act
+	 */
+	public static void openSelectPic(Activity act,Fragment childFragment) {
 		if(act == null){
 			return;
 		}
@@ -84,18 +92,32 @@ public class ChatUtils {
 					android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 		}
 		try {
-			act.startActivityForResult(intent, ZhiChiConstant.REQUEST_CODE_picture);
+			if (childFragment != null) {
+				childFragment.startActivityForResult(intent, ZhiChiConstant.REQUEST_CODE_picture);
+			} else {
+				act.startActivityForResult(intent, ZhiChiConstant.REQUEST_CODE_picture);
+			}
 		}catch (Exception e){
 			ToastUtil.showToast(act.getApplicationContext(),"无法打开相册，请检查相册是否开启");
 		}
 	}
 
 	/**
-	 * 打开相机
+	 * activity打开相机
 	 * @param act
 	 * @return
-     */
+	 */
 	public static File openCamera(Activity act) {
+		return openCamera(act, null);
+	}
+
+	/**
+	 * Fragment打开相机
+	 * @param act
+	 * @param childFragment 打开相机的fragment
+	 * @return
+     */
+	public static File openCamera(Activity act, Fragment childFragment) {
 		String path = CommonUtils.getSDCardRootPath() + "/" +
 				CommonUtils.getApplicationName(act.getApplicationContext()) + "/" + System.currentTimeMillis() + ".jpg";
 		// 创建图片文件存放的位置
@@ -113,7 +135,11 @@ public class ChatUtils {
 		}
 		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore
 				.EXTRA_OUTPUT, uri);
-		act.startActivityForResult(intent, ZhiChiConstant.REQUEST_CODE_makePictureFromCamera);
+		if (childFragment != null) {
+			childFragment.startActivityForResult(intent, ZhiChiConstant.REQUEST_CODE_makePictureFromCamera);
+		} else {
+			act.startActivityForResult(intent, ZhiChiConstant.REQUEST_CODE_makePictureFromCamera);
+		}
 		return cameraFile;
 	}
 
@@ -681,14 +707,16 @@ public class ChatUtils {
 		LocalBroadcastManager.getInstance(context).sendBroadcast(lastMsgIntent);
 	}
 
-	public static void sendMultiRoundQuestions(Context context, SobotMultiDiaRespInfo multiDiaRespInfo, Map<String, String> interfaceRet) {
+	public static void sendMultiRoundQuestions(Context context, SobotMultiDiaRespInfo multiDiaRespInfo, Map<String, String> interfaceRet, SobotMsgAdapter.SobotMsgCallBack msgCallBack) {
 		if (context != null && multiDiaRespInfo != null && interfaceRet != null) {
 			ZhiChiMessageBase msgObj = new ZhiChiMessageBase();
 			String content = "{\"interfaceRetList\":[" + GsonUtil.map2Json(interfaceRet) + "]," + "\"template\":" + multiDiaRespInfo.getTemplate() + "}";
 
 			msgObj.setContent(formatQuestionStr(multiDiaRespInfo.getOutPutParamList(), interfaceRet, multiDiaRespInfo));
 			msgObj.setId(System.currentTimeMillis() + "");
-			((SobotChatActivity) context).sendMessageToRobot(msgObj, 4, 2, content, interfaceRet.get("title"));
+			if (msgCallBack != null) {
+				msgCallBack.sendMessageToRobot(msgObj, 4, 2, content, interfaceRet.get("title"));
+			}
 		}
 	}
 

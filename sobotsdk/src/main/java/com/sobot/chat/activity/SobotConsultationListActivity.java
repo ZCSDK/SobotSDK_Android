@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
@@ -22,8 +21,6 @@ import com.sobot.chat.api.model.SobotMsgCenterModel;
 import com.sobot.chat.api.model.ZhiChiPushMessage;
 import com.sobot.chat.api.model.ZhiChiReplyAnswer;
 import com.sobot.chat.utils.DateUtil;
-import com.sobot.chat.utils.ResourceUtils;
-import com.sobot.chat.utils.SobotCache;
 import com.sobot.chat.utils.ZhiChiConstant;
 
 import java.util.ArrayList;
@@ -38,24 +35,35 @@ public class SobotConsultationListActivity extends SobotBaseActivity {
 
     private ListView sobot_ll_msg_center;
     private SobotMsgCenterAdapter adapter;
-    private SobotCache mCache;
-    private List<SobotMsgCenterModel> datas = new ArrayList<SobotMsgCenterModel>();
+    private List<SobotMsgCenterModel> datas = new ArrayList<>();
     private LocalBroadcastManager localBroadcastManager;
     private SobotMessageReceiver receiver;
-
     private String currentUid;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected int getContentViewResId() {
+        return getResLayoutId("sobot_activity_consultation_list");
+    }
+
+    @Override
+    protected void initBundleData(Bundle savedInstanceState) {
         if(savedInstanceState == null ){
             currentUid = getIntent().getStringExtra(ZhiChiConstant.SOBOT_CURRENT_IM_PARTNERID);
         }else{
             currentUid = savedInstanceState.getString(ZhiChiConstant.SOBOT_CURRENT_IM_PARTNERID);
         }
-        setContentView(ResourceUtils.getIdByName(this, "layout", "sobot_activity_consultation_list"));
-        mCache = SobotCache.get(getApplicationContext());
-        initView();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //销毁前缓存数据
+        outState.putString(ZhiChiConstant.SOBOT_CURRENT_IM_PARTNERID,currentUid);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         initBrocastReceiver();
     }
 
@@ -79,35 +87,10 @@ public class SobotConsultationListActivity extends SobotBaseActivity {
         initData();
     }
 
-    private void initData() {
-        List<SobotMsgCenterModel> msgCenterList = SobotApi.getMsgCenterList(getApplicationContext(),currentUid);
-        if (msgCenterList != null && msgCenterList.size() > 0) {
-            datas.clear();
-            datas.addAll(msgCenterList);
-
-            if (adapter == null) {
-                adapter = new SobotMsgCenterAdapter(SobotConsultationListActivity.this, datas);
-                sobot_ll_msg_center.setAdapter(adapter);
-            } else {
-                adapter.notifyDataSetChanged();
-            }
-        } else {
-            //empty
-        }
-
-    }
-
-    private void initView() {
-        Drawable drawable = getResources().getDrawable(getResDrawableId("sobot_btn_back_selector"));
-        if (drawable != null) {
-            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-        }
-        sobot_tv_left.setCompoundDrawables(drawable, null, null, null);
-        sobot_tv_left.setText(getResString("sobot_back"));
-        sobot_tv_left.setOnClickListener(this);
-
+    @Override
+    public void initView() {
+        showLeftMenu(getResDrawableId("sobot_btn_back_selector"), getResString("sobot_back"), true);
         setTitle(getResString("sobot_consultation_list"));
-        setShowNetRemind(false);
 
         sobot_ll_msg_center = (ListView) findViewById(getResId("sobot_ll_msg_center"));
         sobot_ll_msg_center.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -120,7 +103,22 @@ public class SobotConsultationListActivity extends SobotBaseActivity {
                 }
             }
         });
+    }
 
+    @Override
+    public void initData() {
+        List<SobotMsgCenterModel> msgCenterList = SobotApi.getMsgCenterList(getApplicationContext(),currentUid);
+        if (msgCenterList != null && msgCenterList.size() > 0) {
+            datas.clear();
+            datas.addAll(msgCenterList);
+
+            if (adapter == null) {
+                adapter = new SobotMsgCenterAdapter(SobotConsultationListActivity.this, datas);
+                sobot_ll_msg_center.setAdapter(adapter);
+            } else {
+                adapter.notifyDataSetChanged();
+            }
+        }
     }
 
     public class SobotMessageReceiver extends BroadcastReceiver {
@@ -138,7 +136,7 @@ public class SobotConsultationListActivity extends SobotBaseActivity {
                     for (int i = 0; i < datas.size(); i++) {
                         SobotMsgCenterModel sobotMsgCenterModel = datas.get(i);
                         if (sobotMsgCenterModel.getInfo() != null && pushMessage.getAppId().equals(sobotMsgCenterModel.getInfo().getAppkey())) {
-                            ZhiChiReplyAnswer reply = null;
+                            ZhiChiReplyAnswer reply;
                             if (TextUtils.isEmpty(pushMessage.getMsgType())) {
                                 return;
                             }
@@ -194,29 +192,11 @@ public class SobotConsultationListActivity extends SobotBaseActivity {
     }
 
     @Override
-    public void forwordMethod() {
-
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v == sobot_tv_left) {
-            finish();
-        }
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
         // 取消广播接受者
         if (localBroadcastManager != null) {
             localBroadcastManager.unregisterReceiver(receiver);
         }
-    }
-
-    protected void onSaveInstanceState(Bundle outState) {
-        //销毁前缓存数据
-        outState.putString(ZhiChiConstant.SOBOT_CURRENT_IM_PARTNERID,currentUid);
-        super.onSaveInstanceState(outState);
     }
 }

@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sobot.chat.activity.WebViewActivity;
+import com.sobot.chat.adapter.base.SobotMsgAdapter;
 import com.sobot.chat.api.model.SobotMultiDiaRespInfo;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.utils.BitmapUtil;
@@ -55,7 +56,7 @@ public class RobotTemplateMessageHolder1 extends MessageHolderBase {
                         viewHolder = (Template1ViewHolder) convertView.getTag();
                     } else {
                         View view = View.inflate(context, ResourceUtils.getIdByName(context, "layout", "sobot_chat_msg_item_template1_item_l"), null);
-                        viewHolder = new Template1ViewHolder(context, view);
+                        viewHolder = new Template1ViewHolder(context, view,msgCallBack);
                         view.setTag(viewHolder);
                         sobot_horizontal_scrollview_layout.addView(view);
                     }
@@ -76,13 +77,15 @@ public class RobotTemplateMessageHolder1 extends MessageHolderBase {
         Context mContext;
         Map<String, String> mInterfaceRet;
         SobotMultiDiaRespInfo mMultiDiaRespInfo;
+        SobotMsgAdapter.SobotMsgCallBack msgCallBack;
 
-        public Template1ViewHolder(Context context, View convertView) {
+        public Template1ViewHolder(Context context, View convertView, SobotMsgAdapter.SobotMsgCallBack msgCallBack) {
             sobotLayout = (LinearLayout) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_template1_item_"));
             sobotThumbnail = (ImageView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_template1_item_thumbnail"));
             sobotTitle = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_template1_item_title"));
             sobotSummary = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_template1_item_summary"));
             sobotLable = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_template1_item_lable"));
+            this.msgCallBack = msgCallBack;
         }
 
         public void bindData(final Context context, final ZhiChiMessageBase message, final Map<String, String> interfaceRet, final SobotMultiDiaRespInfo multiDiaRespInfo) {
@@ -121,7 +124,7 @@ public class RobotTemplateMessageHolder1 extends MessageHolderBase {
                 intent.putExtra("url", mInterfaceRet.get("anchor"));
                 mContext.startActivity(intent);
             } else {
-                ChatUtils.sendMultiRoundQuestions(mContext, mMultiDiaRespInfo, mInterfaceRet);
+                ChatUtils.sendMultiRoundQuestions(mContext, mMultiDiaRespInfo, mInterfaceRet,msgCallBack);
             }
         }
     }

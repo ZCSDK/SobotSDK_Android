@@ -5,6 +5,8 @@
     android:background="#EFF3FA"
     android:orientation="vertical">
 
+    <include layout="@layout/sobot_layout_titlebar1" />
+
     <ListView
         android:id="@+id/sobot_activity_post_category_listview"
         android:layout_width="match_parent"

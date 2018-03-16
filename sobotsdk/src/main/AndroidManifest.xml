@@ -27,7 +27,7 @@
 
     <application>
         <activity
-            android:name="com.sobot.chat.activity.SobotChatActivity"
+            android:name="com.sobot.chat.conversation.SobotChatActivity"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -89,7 +89,6 @@
             android:exported="false"
             android:label="SobotChatTCPServer"/>
         <service android:name="com.sobot.chat.server.SobotSessionServer" />
-        <service android:name="com.pg.core.sdk.lib.YayaService"/>
     </application>
 
 </manifest>

@@ -1,7 +1,6 @@
 package com.sobot.chat.activity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -13,8 +12,6 @@ import com.sobot.chat.adapter.base.SobotCusFieldAdapter;
 import com.sobot.chat.api.model.SobotCusFieldConfig;
 import com.sobot.chat.api.model.SobotCusFieldDataInfo;
 import com.sobot.chat.api.model.SobotFieldModel;
-import com.sobot.chat.utils.ResourceUtils;
-import com.sobot.chat.utils.SharedPreferencesUtil;
 import com.sobot.chat.utils.ZhiChiConstant;
 
 import java.util.ArrayList;
@@ -34,9 +31,12 @@ public class SobotCusFieldActivity extends SobotBaseActivity {
     private StringBuffer dataValue = new StringBuffer();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(ResourceUtils.getIdByName(this, "layout", "sobot_activity_cusfield"));
+    protected int getContentViewResId() {
+        return getResLayoutId("sobot_activity_cusfield");
+    }
+
+    @Override
+    protected void initBundleData(Bundle savedInstanceState) {
         Intent intent = getIntent();
         bundle = intent.getBundleExtra("bundle");
         if (bundle != null) {
@@ -53,17 +53,10 @@ public class SobotCusFieldActivity extends SobotBaseActivity {
         if (cusFieldConfig != null && !TextUtils.isEmpty(cusFieldConfig.getFieldName())) {
             setTitle(cusFieldConfig.getFieldName());
         }
-
-        if (ZhiChiConstant.WORK_ORDER_CUSTOMER_FIELD_CHECKBOX_TYPE == fieldType) {
-            showRightView(0, getResString("sobot_submit"), true);
-        }
-
-        initView();
-        initData();
     }
 
     @Override
-    public void forwordMethod() {
+    protected void onRightMenuClick(View view) {
         if (dataName.length() != 0 && fieldId.length() != 0 && dataValue.length() != 0) {
             Intent intent = new Intent();
             intent.putExtra("CATEGORYSMALL", "CATEGORYSMALL");
@@ -77,15 +70,10 @@ public class SobotCusFieldActivity extends SobotBaseActivity {
     }
 
     @Override
-    public void onClick(View v) {
-        if (v == sobot_tv_left) {
-            finish();
+    public void initView() {
+        if (ZhiChiConstant.WORK_ORDER_CUSTOMER_FIELD_CHECKBOX_TYPE == fieldType) {
+            showRightMenu(0, getResString("sobot_submit"), true);
         }
-    }
-
-    private void initView() {
-
-        sobot_tv_left.setOnClickListener(this);
         mListView = (ListView) findViewById(getResId("sobot_activity_cusfield_listview"));
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -134,7 +122,8 @@ public class SobotCusFieldActivity extends SobotBaseActivity {
         });
     }
 
-    private void initData() {
+    @Override
+    public void initData() {
         if (model != null && model.getCusFieldDataInfoList().size() != 0) {
             infoLists = model.getCusFieldDataInfoList();
 

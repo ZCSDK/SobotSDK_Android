@@ -4,6 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <include layout="@layout/sobot_layout_titlebar1" />
+
     <ListView
         android:id="@+id/sobot_ll_msg_center"
         android:layout_width="match_parent"

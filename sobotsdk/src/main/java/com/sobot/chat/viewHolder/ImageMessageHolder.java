@@ -8,7 +8,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sobot.chat.activity.SobotChatActivity;
+import com.sobot.chat.adapter.base.SobotMsgAdapter;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.utils.BitmapUtil;
 import com.sobot.chat.utils.ResourceUtils;
@@ -61,7 +61,7 @@ public class ImageMessageHolder extends MessageHolderBase {
                 sobot_pic_progress_rl.setVisibility(View.GONE);
                 // 点击重新发送按钮
                 pic_send_status.setOnClickListener(new RetrySendImageLisenter(context,message
-                        .getId(), message.getAnswer().getMsg(), pic_send_status));
+                        .getId(), message.getAnswer().getMsg(), pic_send_status,msgCallBack));
             } else if (ZhiChiConstant.MSG_SEND_STATUS_SUCCESS == message.getSendSuccessState()) {
                 pic_send_status.setVisibility(View.GONE);
                 pic_progress.setVisibility(View.GONE);
@@ -95,14 +95,16 @@ public class ImageMessageHolder extends MessageHolderBase {
         private ImageView img;
 
         private Context context;
+        SobotMsgAdapter.SobotMsgCallBack mMsgCallBack;
 
         public RetrySendImageLisenter(final Context context,String id, String imageUrl,
-                                      ImageView image) {
+                                      ImageView image,final SobotMsgAdapter.SobotMsgCallBack msgCallBack) {
             super();
             this.id = id;
             this.imageUrl = imageUrl;
             this.img = image;
             this.context = context;
+            mMsgCallBack = msgCallBack;
         }
 
         @Override
@@ -113,26 +115,27 @@ public class ImageMessageHolder extends MessageHolderBase {
             }
             showReSendPicDialog(context, imageUrl, id,img);
         }
-    }
 
-    @SuppressWarnings("deprecation")
-    private static void showReSendPicDialog(final Context context,final String mimageUrl, final String mid,final ImageView msgStatus) {
+        private void showReSendPicDialog(final Context context, final String mimageUrl, final String mid, final ImageView msgStatus) {
 
-        showReSendDialog(context,msgStatus,new ReSendListener(){
+            showReSendDialog(context,msgStatus,new ReSendListener(){
 
-            @Override
-            public void onReSend() {
-                // 获取图片的地址url
-                // 上传url
-                // 采用广播进行重发
-                if (context != null) {
-                    ZhiChiMessageBase msgObj = new ZhiChiMessageBase();
-                    msgObj.setContent(mimageUrl);
-                    msgObj.setId(mid);
-                    msgObj.setSendSuccessState(ZhiChiConstant.MSG_SEND_STATUS_LOADING);
-                    ((SobotChatActivity) context).sendMessageToRobot(msgObj, 3, 3, "");
+                @Override
+                public void onReSend() {
+                    // 获取图片的地址url
+                    // 上传url
+                    // 采用广播进行重发
+                    if (context != null) {
+                        ZhiChiMessageBase msgObj = new ZhiChiMessageBase();
+                        msgObj.setContent(mimageUrl);
+                        msgObj.setId(mid);
+                        msgObj.setSendSuccessState(ZhiChiConstant.MSG_SEND_STATUS_LOADING);
+                        if(mMsgCallBack != null){
+                            mMsgCallBack.sendMessageToRobot(msgObj, 3, 3, "");
+                        }
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 }

@@ -1,6 +1,5 @@
 package com.sobot.chat.widget.kpswitch;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.AttributeSet;
@@ -33,10 +32,10 @@ public class CustomeChattingPanel extends RelativeLayout {
         super(context, attrs, defStyle);
     }
 
-    public void setupView(Activity act, final int btnid, Bundle bundle) {
+    public void setupView(final int btnid, Bundle bundle, BaseChattingPanelView.SobotBasePanelListener listener) {
         int childCount = this.getChildCount();
         //找到tag对应的view  显示或隐藏掉view
-        instanceTag = CustomeViewFactory.getInstanceTag(act, btnid);
+        instanceTag = CustomeViewFactory.getInstanceTag(getContext(), btnid);
         if (childCount > 0) {
             for (int i = 0; i < childCount; i++) {
                 View childAt = this.getChildAt(i);
@@ -51,11 +50,12 @@ public class CustomeChattingPanel extends RelativeLayout {
 
         BaseChattingPanelView baseChattingPanelView = map.get(btnid);
         if (baseChattingPanelView == null) {
-            BaseChattingPanelView view = CustomeViewFactory.getInstance(act, btnid);
+            BaseChattingPanelView view = CustomeViewFactory.getInstance(getContext(), btnid);
             map.put(btnid, view);
             this.addView(view.getRootView());
             view.initView();
             view.initData();
+            view.setListener(listener);
 
             view.onViewStart(bundle);
         } else {

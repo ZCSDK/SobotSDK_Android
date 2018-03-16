@@ -4,11 +4,10 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.sobot.chat.activity.SobotChatActivity;
 import com.sobot.chat.utils.BitmapUtil;
+import com.sobot.chat.utils.ResourceUtils;
 import com.sobot.chat.widget.emoji.DisplayRules;
 import com.sobot.chat.widget.emoji.Emojicon;
-
 import com.sobot.chat.widget.kpswitch.view.emoticon.EmoticonPageView;
 import com.sobot.chat.widget.kpswitch.view.emoticon.EmoticonsFuncView;
 import com.sobot.chat.widget.kpswitch.view.emoticon.EmoticonsIndicatorView;
@@ -28,6 +27,7 @@ public class ChattingPanelEmoticonView extends BaseChattingPanelView implements 
 
     protected EmoticonsFuncView mEmoticonsFuncView;
     protected EmoticonsIndicatorView mEmoticonsIndicatorView;
+    SobotEmoticonClickListener mListener;
 
     public ChattingPanelEmoticonView(Context context) {
         super(context);
@@ -47,12 +47,27 @@ public class ChattingPanelEmoticonView extends BaseChattingPanelView implements 
         setAdapter();
     }
 
+    @Override
+    public void setListener(SobotBasePanelListener listener) {
+        if (listener != null && listener instanceof SobotEmoticonClickListener) {
+            mListener = (SobotEmoticonClickListener) listener;
+        }
+    }
+
+    private int getResIntegerId(String name) {
+        return ResourceUtils.getIdByName(context, "integer", name);
+    }
+
+    private int getResInteger(String name) {
+        return context.getResources().getInteger(getResIntegerId(name));
+    }
+
     public void setAdapter() {
         PageSetAdapter pageSetAdapter = new PageSetAdapter();
         EmoticonPageSetEntity kaomojiPageSetEntity
                 = new EmoticonPageSetEntity.Builder()
-                .setLine(4)
-                .setRow(7)
+                .setLine(getResInteger("sobot_emotiocon_line"))
+                .setRow(getResInteger("sobot_emotiocon_row"))
                 .setEmoticonList(DisplayRules.getListAll(context))
                 .setIPageViewInstantiateItem(new PageViewInstantiateListener<EmoticonPageEntity>() {
                     //每个表情加载的回调
@@ -126,14 +141,20 @@ public class ChattingPanelEmoticonView extends BaseChattingPanelView implements 
     EmoticonClickListener emoticonClickListener = new EmoticonClickListener() {
         @Override
         public void onEmoticonClick(Object o, boolean isDelBtn) {
-            SobotChatActivity act = (SobotChatActivity)context;
-            if (isDelBtn) {
-                act.backspace();
-            } else {
-                act.inputEmoticon((Emojicon) o);
+            if (mListener != null) {
+                if (isDelBtn) {
+                    mListener.backspace();
+                } else {
+                    mListener.inputEmoticon((Emojicon) o);
+                }
             }
         }
     };
+
+    public interface SobotEmoticonClickListener extends SobotBasePanelListener {
+        void backspace();
+        void inputEmoticon(Emojicon item);
+    }
 
     @Override
     public void emoticonSetChanged(PageSetEntity pageSetEntity) {

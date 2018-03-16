@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.sobot.chat.activity.SobotChatActivity;
+import com.sobot.chat.adapter.base.SobotMsgAdapter;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.utils.CommonUtils;
 import com.sobot.chat.utils.HtmlTools;
@@ -45,7 +45,7 @@ public class TextMessageHolder extends MessageHolderBase {
                         msgStatus.setVisibility(View.VISIBLE);
                         msgProgressBar.setVisibility(View.GONE);
                         msgStatus.setOnClickListener(new ReSendTextLisenter(context,message
-                                .getId(), content,msgStatus));
+                                .getId(), content,msgStatus,msgCallBack));
                     } else if (message.getSendSuccessState() == ZhiChiConstant.MSG_SEND_STATUS_LOADING) {
                         frameLayout.setVisibility(View.VISIBLE);
                         msgProgressBar.setVisibility(View.VISIBLE);
@@ -76,11 +76,13 @@ public class TextMessageHolder extends MessageHolderBase {
         private String msgContext;
         private ImageView msgStatus;
         private Context context;
+        private SobotMsgAdapter.SobotMsgCallBack msgCallBack;
 
-        public ReSendTextLisenter(final Context context,String id, String msgContext,ImageView
-                msgStatus) {
+        public ReSendTextLisenter(final Context context, String id, String msgContext, ImageView
+                msgStatus, SobotMsgAdapter.SobotMsgCallBack msgCallBack) {
             super();
             this.context=context;
+            this.msgCallBack = msgCallBack;
             this.id = id;
             this.msgContext = msgContext;
             this.msgStatus = msgStatus;
@@ -93,26 +95,25 @@ public class TextMessageHolder extends MessageHolderBase {
             }
             showReSendTextDialog(context,id, msgContext,msgStatus);
         }
-    }
 
-    @SuppressWarnings("deprecation")
-    private static void showReSendTextDialog(final Context context,final String mid,
-                                             final String mmsgContext, final ImageView msgStatus) {
-        showReSendDialog(context,msgStatus,new ReSendListener(){
+        private void showReSendTextDialog(final Context context,final String mid,
+                                          final String mmsgContext, final ImageView msgStatus) {
+            showReSendDialog(context,msgStatus,new ReSendListener(){
 
-            @Override
-            public void onReSend() {
-                sendTextBrocast(context, mid, mmsgContext);
+                @Override
+                public void onReSend() {
+                    sendTextBrocast(context, mid, mmsgContext);
+                }
+            });
+        }
+
+        private void sendTextBrocast(Context context, String id, String msgContent) {
+            if (msgCallBack != null){
+                ZhiChiMessageBase msgObj = new ZhiChiMessageBase();
+                msgObj.setContent(msgContent);
+                msgObj.setId(id);
+                msgCallBack.sendMessageToRobot(msgObj,1, 0, "");
             }
-        });
-    }
-
-    public static void sendTextBrocast(Context context, String id, String msgContent) {
-        if (context != null){
-            ZhiChiMessageBase msgObj = new ZhiChiMessageBase();
-            msgObj.setContent(msgContent);
-            msgObj.setId(id);
-            ((SobotChatActivity) context).sendMessageToRobot(msgObj,1, 0, "");
         }
     }
 }

@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.sobot.chat.activity.SobotChatActivity;
+import com.sobot.chat.adapter.base.SobotMsgAdapter;
 import com.sobot.chat.api.model.SobotQuestionRecommend;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.utils.BitmapUtil;
@@ -62,7 +62,7 @@ public class RobotQRMessageHolder extends MessageHolderBase {
                         viewHolder = (QuestionRecommendViewHolder) convertView.getTag();
                     } else {
                         View view = View.inflate(context, ResourceUtils.getIdByName(context, "layout", "sobot_chat_msg_item_qr_item"), null);
-                        viewHolder = new QuestionRecommendViewHolder(context, view);
+                        viewHolder = new QuestionRecommendViewHolder(context, view,msgCallBack);
                         view.setTag(viewHolder);
                         sobot_horizontal_scrollview_layout.addView(view);
                     }
@@ -80,8 +80,10 @@ public class RobotQRMessageHolder extends MessageHolderBase {
         TextView sobotTitle;
         Context mContext;
         SobotQuestionRecommend.SobotQRMsgBean mQrMsgBean;
+        SobotMsgAdapter.SobotMsgCallBack msgCallBack;
 
-        private QuestionRecommendViewHolder(Context context, View convertView) {
+        private QuestionRecommendViewHolder(Context context, View convertView,SobotMsgAdapter.SobotMsgCallBack msgCallBack) {
+            this.msgCallBack = msgCallBack;
             sobotLayout = (LinearLayout) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_template1_item"));
             sobotThumbnail = (ImageView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_item_thumbnail"));
             sobotTitle = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_item_title"));
@@ -103,15 +105,13 @@ public class RobotQRMessageHolder extends MessageHolderBase {
 
         @Override
         public void onClick(View v) {
-            if (mContext == null || mQrMsgBean == null) {
+            if (msgCallBack == null || mQrMsgBean == null) {
                 return;
             }
             // 点击发出问题
-            if (mContext instanceof SobotChatActivity) {
-                ZhiChiMessageBase msgObj = new ZhiChiMessageBase();
-                msgObj.setContent(mQrMsgBean.getQuestion());
-                ((SobotChatActivity) mContext).sendMessageToRobot(msgObj, 0, 0, null);
-            }
+            ZhiChiMessageBase msgObj = new ZhiChiMessageBase();
+            msgObj.setContent(mQrMsgBean.getQuestion());
+            msgCallBack.sendMessageToRobot(msgObj, 0, 0, null);
         }
     }
 }

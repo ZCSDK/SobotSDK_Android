@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.sobot.chat.activity.SobotChatActivity;
 import com.sobot.chat.utils.SharedPreferencesUtil;
 import com.sobot.chat.utils.ZhiChiConstant;
 
@@ -22,6 +21,7 @@ public class ChattingPanelUploadView extends BaseChattingPanelView implements Vi
     private TextView sobot_btn_satisfaction;
     private TextView sobot_robot_btn_leavemsg;
     private TextView sobot_robot_btn_satisfaction;
+    private SobotPlusClickListener mListener;
 
     public ChattingPanelUploadView(Context context) {
         super(context);
@@ -50,6 +50,20 @@ public class ChattingPanelUploadView extends BaseChattingPanelView implements Vi
         sobot_robot_btn_satisfaction.setOnClickListener(this);
     }
 
+    public interface SobotPlusClickListener extends SobotBasePanelListener {
+        void btnPicture();
+        void btnCameraPicture();
+        void btnSatisfaction();
+        void startToPostMsgActivty(boolean flag);
+    }
+
+    @Override
+    public void setListener(SobotBasePanelListener listener) {
+        if (listener != null && listener instanceof SobotPlusClickListener) {
+            mListener = (SobotPlusClickListener) listener;
+        }
+    }
+
     @Override
     public String getRootViewTag() {
         return "ChattingPanelUploadView";
@@ -57,25 +71,26 @@ public class ChattingPanelUploadView extends BaseChattingPanelView implements Vi
 
     @Override
     public void onClick(View v) {
-        SobotChatActivity ac = (SobotChatActivity) context;
-        if (v.getId() == getResId("sobot_btn_picture")) {
-            //图库
-            ac.btnPicture();
-        }
+        if (mListener != null) {
+            if (v.getId() == getResId("sobot_btn_picture")) {
+                //图库
+                mListener.btnPicture();
+            }
 
-        if (v.getId() == getResId("sobot_btn_take_picture")) {
-            //拍照
-            ac.btnCameraPicture();
-        }
+            if (v.getId() == getResId("sobot_btn_take_picture")) {
+                //拍照
+                mListener.btnCameraPicture();
+            }
 
-        if (v.getId() == getResId("sobot_btn_satisfaction") || v.getId() == getResId("sobot_robot_btn_satisfaction")) {
-            //评价客服或机器人
-            ac.btnSatisfaction();
-        }
+            if (v.getId() == getResId("sobot_btn_satisfaction") || v.getId() == getResId("sobot_robot_btn_satisfaction")) {
+                //评价客服或机器人
+                mListener.btnSatisfaction();
+            }
 
-        if (v.getId() == getResId("sobot_robot_btn_leavemsg")) {
-            //留言
-            ac.startToPostMsgActivty(false);
+            if (v.getId() == getResId("sobot_robot_btn_leavemsg")) {
+                //留言
+                mListener.startToPostMsgActivty(false);
+            }
         }
     }
 

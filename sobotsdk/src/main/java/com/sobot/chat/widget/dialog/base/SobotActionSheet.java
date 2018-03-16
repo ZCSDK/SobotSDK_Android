@@ -11,12 +11,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.LinearLayout;
 
-import com.sobot.chat.activity.base.SobotBaseActivity;
 import com.sobot.chat.utils.ResourceUtils;
-import com.sobot.chat.widget.ClearHistoryDialog;
 
 /**
  * Created by jinxl on 2017/6/12.

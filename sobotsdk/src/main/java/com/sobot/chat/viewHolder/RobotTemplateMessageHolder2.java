@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import com.sobot.chat.activity.SobotChatActivity;
 import com.sobot.chat.activity.WebViewActivity;
 import com.sobot.chat.api.apiUtils.GsonUtil;
 import com.sobot.chat.api.model.SobotMultiDiaRespInfo;
@@ -105,7 +104,7 @@ public class RobotTemplateMessageHolder2 extends MessageHolderBase implements So
 
     private void sendMultiRoundQuestions(String labelText, SobotMultiDiaRespInfo multiDiaRespInfo) {
         String[] outputParam = multiDiaRespInfo.getOutPutParamList();
-        if (mContext != null && zhiChiMessageBase != null) {
+        if (msgCallBack != null && zhiChiMessageBase != null) {
             ZhiChiMessageBase msgObj = new ZhiChiMessageBase();
 
             Map<String, String> map = new HashMap<>();
@@ -119,7 +118,7 @@ public class RobotTemplateMessageHolder2 extends MessageHolderBase implements So
             }
             msgObj.setContent(GsonUtil.map2Str(map));
             msgObj.setId(System.currentTimeMillis() + "");
-            ((SobotChatActivity) mContext).sendMessageToRobot(msgObj, 4, 2, labelText, labelText);
+            msgCallBack.sendMessageToRobot(msgObj, 4, 2, labelText, labelText);
         }
     }
 }

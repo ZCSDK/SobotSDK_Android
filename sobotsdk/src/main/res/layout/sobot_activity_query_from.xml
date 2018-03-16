@@ -1,43 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/sobot_sv_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EFF3FA"
-    android:fillViewport="true">
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/sobot_ll_container"
+    <include layout="@layout/sobot_layout_titlebar1" />
+
+    <ScrollView
+        android:id="@+id/sobot_sv_root"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:focusable="true"
-        android:layout_marginBottom="10dp"
-        android:focusableInTouchMode="true"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:background="#EFF3FA"
+        android:fillViewport="true">
 
-        <TextView
-            android:id="@+id/sobot_tv_doc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:lineSpacingExtra="5dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:textColor="#8B98AD"
-            android:textSize="@dimen/sobot_listview_remind_text_size"
-            tools:text="您好！为了提供更优质的服务，咨询前，请先填写以下信息，帮助客服人员更快速数准的为您解答" />
-
-        <!--自定义字段布局-->
         <LinearLayout
-            android:id="@+id/sobot_container"
+            android:id="@+id/sobot_ll_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="#ffffff"
-            android:orientation="vertical"
-            android:paddingLeft="20dp" />
+            android:layout_marginBottom="10dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/sobot_tv_doc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:lineSpacingExtra="5dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:textColor="#8B98AD"
+                android:textSize="@dimen/sobot_listview_remind_text_size"
+                tools:text="您好！为了提供更优质的服务，咨询前，请先填写以下信息，帮助客服人员更快速数准的为您解答" />
 
-</ScrollView>
+            <!--自定义字段布局-->
+            <LinearLayout
+                android:id="@+id/sobot_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="#ffffff"
+                android:orientation="vertical"
+                android:paddingLeft="20dp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

@@ -1,10 +1,7 @@
 package com.sobot.chat.activity;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,7 +11,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -103,12 +99,160 @@ public class SobotPostMsgActivity extends SobotBaseActivity implements OnClickLi
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(ResourceUtils.getIdByName(this, "layout", "sobot_activity_post_msg"));
-        initBundleData(savedInstanceState);
-        initDate();
-        initView();
+    protected int getContentViewResId() {
+        return getResLayoutId("sobot_activity_post_msg");
+    }
+
+    protected void initBundleData(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            if (getIntent() != null) {
+                uid = getIntent().getStringExtra("uid");
+                companyId = getIntent().getStringExtra("companyId");
+                groupId = getIntent().getStringExtra("groupId");
+                flag_exit_type = getIntent().getIntExtra(ZhiChiConstant.FLAG_EXIT_TYPE, -1);
+                flag_exit_sdk = getIntent().getBooleanExtra(ZhiChiConstant.FLAG_EXIT_SDK, false);
+                msgTmp = getIntent().getStringExtra("msgTmp").replaceAll("\n", "<br/>");
+                msgTxt = getIntent().getStringExtra("msgTxt").replaceAll("\n", "<br/>");
+            }
+        } else {
+            uid = savedInstanceState.getString("uid");
+            companyId = savedInstanceState.getString("companyId");
+            groupId = savedInstanceState.getString("groupId");
+            flag_exit_type = savedInstanceState.getInt(ZhiChiConstant.FLAG_EXIT_TYPE, -1);
+            flag_exit_sdk = savedInstanceState.getBoolean(ZhiChiConstant.FLAG_EXIT_SDK, false);
+
+            msgTmp = savedInstanceState.getString("msgTmp");
+            msgTxt = savedInstanceState.getString("msgTxt");
+            if (!TextUtils.isEmpty(msgTmp)) {
+                msgTmp = msgTmp.replaceAll("\n", "<br/>");
+            }
+
+            if (!TextUtils.isEmpty(msgTxt)) {
+                msgTxt = msgTxt.replaceAll("\n", "<br/>");
+            }
+        }
+    }
+
+    @Override
+    protected void initView() {
+        sobot_post_phone = (EditText) findViewById(getResId("sobot_post_phone"));
+        sobot_post_email = (EditText) findViewById(getResId("sobot_post_email"));
+        sobot_frist_line = findViewById(getResId("sobot_frist_line"));
+        sobot_et_content = (EditText) findViewById(getResId("sobot_post_et_content"));
+        sobot_tv_post_msg = (TextView) findViewById(getResId("sobot_tv_post_msg"));
+        sobot_post_email_lable = (TextView) findViewById(getResId("sobot_post_email_lable"));
+        sobot_post_phone_lable = (TextView) findViewById(getResId("sobot_post_phone_lable"));
+        sobot_post_lable = (TextView) findViewById(getResId("sobot_post_question_lable"));
+        String test = "<font color='#8B98AD'>" + getResString("sobot_problem_types") + "</font>" + "<font color='#f9676f'>&#8201*</font>";
+        sobot_post_lable.setText(Html.fromHtml(test));
+        sobot_post_question_type = (TextView) findViewById(getResId("sobot_post_question_type"));
+        sobot_post_question_type.setOnClickListener(this);
+        sobot_post_msg_layout = (LinearLayout) findViewById(getResId("sobot_post_msg_layout"));
+        sobot_img_clear_email = (ImageView) findViewById(getResId("sobot_img_clear_email"));
+        sobot_img_clear_phone = (ImageView) findViewById(getResId("sobot_img_clear_phone"));
+        sobot_img_clear_phone.setOnClickListener(this);
+        sobot_img_clear_email.setOnClickListener(this);
+        sobot_enclosure_container = (LinearLayout) findViewById(getResId("sobot_enclosure_container"));
+        sobot_post_customer_field = (LinearLayout) findViewById(getResId("sobot_post_customer_field"));
+
+
+        sobot_post_email_rl = (RelativeLayout) findViewById(getResId("sobot_post_email_rl"));
+        sobot_post_phone_rl = (RelativeLayout) findViewById(getResId("sobot_post_phone_rl"));
+        sobot_post_question_rl = (RelativeLayout) findViewById(getResId("sobot_post_question_rl"));
+
+        sobot_post_customer_field.setVisibility(View.GONE);
+
+        showRightMenu(0, getResString("sobot_submit"), true);
+        showLeftMenu(getResDrawableId("sobot_btn_back_selector"),getResString("sobot_back"),true);
+
+        setTitle(getResString("sobot_str_bottom_message"));
+
+        //获取本地数据，赋值
+        telShowTvFlag = SharedPreferencesUtil.getBooleanData(this, ZhiChiConstant.SOBOT_POSTMSG_TELSHOWFLAG, false);//控制textView是否显示
+        telFlag = SharedPreferencesUtil.getBooleanData(this, ZhiChiConstant.SOBOT_POSTMSG_TELFLAG, false);//控制是否必填
+
+        emailShowTvFlag = SharedPreferencesUtil.getBooleanData(this, ZhiChiConstant.SOBOT_POSTMSG_EMAILSHOWFLAG, false);//控制textView是否显示
+        emailFlag = SharedPreferencesUtil.getBooleanData(this, ZhiChiConstant.SOBOT_POSTMSG_EMAILFLAG, false);//控制是否必填
+
+        enclosureShowFlag = SharedPreferencesUtil.getBooleanData(this, ZhiChiConstant.SOBOT_POSTMSG_ENCLOSURESHOWFLAG, false);//控制附件是否显示
+        enclosureFlag = SharedPreferencesUtil.getBooleanData(this, ZhiChiConstant.SOBOT_POSTMSG_ENCLOSUREFLAG, false);//控制附件是否必填
+
+
+        if (emailShowTvFlag) {
+            sobot_post_email_rl.setVisibility(View.VISIBLE);
+        } else {
+            sobot_post_email_rl.setVisibility(View.GONE);
+        }
+
+        if (telShowTvFlag) {
+            sobot_post_phone_rl.setVisibility(View.VISIBLE);
+        } else {
+            sobot_post_phone_rl.setVisibility(View.GONE);
+        }
+
+        if (emailShowTvFlag && telShowTvFlag) {
+            sobot_frist_line.setVisibility(View.VISIBLE);
+        } else {
+            sobot_frist_line.setVisibility(View.GONE);
+        }
+
+        if (telFlag) {
+            sobot_post_phone.setText(SharedPreferencesUtil.getStringData(this, "sobot_user_phone", ""));
+        }
+
+        if (emailFlag) {
+            sobot_post_email.setText(SharedPreferencesUtil.getStringData(this, "sobot_user_email", ""));
+        }
+
+        if (enclosureShowFlag) {
+            sobot_enclosure_container.setVisibility(View.VISIBLE);
+            initPicListView();
+        } else {
+            sobot_enclosure_container.setVisibility(View.GONE);
+        }
+
+    }
+
+    @Override
+    protected void initData() {
+        zhiChiApi.getLeaveMsgParam(SobotPostMsgActivity.this,uid, new ResultCallBack<SobotLeaveMsgParamModel>() {
+
+            @Override
+            public void onFailure(Exception e, String des) {
+                try {
+                    showHint(getString(ResourceUtils.getIdByName(getApplicationContext(), "string", "sobot_try_again")), false);
+                } catch (Exception e1) {
+
+                }
+            }
+
+            @Override
+            public void onLoading(long total, long current, boolean isUploading) {
+
+            }
+
+            @Override
+            public void onSuccess(SobotLeaveMsgParamModel result) {
+                if (result != null) {
+                    if (result.isTicketTypeFlag()) {
+                        sobot_post_question_rl.setVisibility(View.VISIBLE);
+                    } else {
+                        sobot_post_question_rl.setVisibility(View.GONE);
+                        sobot_post_question_type.setTag(result.getTicketTypeId());
+                    }
+
+                    if (result.getField() != null && result.getField().size() != 0) {
+                        field = result.getField();
+                        StCusFieldPresenter.addWorkOrderCusFields(SobotPostMsgActivity.this, field, sobot_post_customer_field,SobotPostMsgActivity.this);
+                    }
+
+                    if (result.getType() != null && result.getType().size() != 0) {
+                        types = result.getType();
+                    }
+                }
+            }
+        });
+
         msgFilter();
         editTextSetHint();
     }
@@ -200,7 +344,7 @@ public class SobotPostMsgActivity extends SobotBaseActivity implements OnClickLi
     }
 
     @Override
-    public void forwordMethod() {
+    protected void onRightMenuClick(View view) {
         setCusFieldValue();
     }
 
@@ -244,13 +388,6 @@ public class SobotPostMsgActivity extends SobotBaseActivity implements OnClickLi
 
     @Override
     public void onClick(View view) {
-        if (view == sobot_tv_left) {
-            if (flag_exit_type == 1 || flag_exit_type == 2) {
-                finishPageOrSDK(false);
-            } else {
-                finishPageOrSDK(flag_exit_sdk);
-            }
-        }
 
         if (view == sobot_img_clear_email) {
             sobot_post_email.setText("");
@@ -401,8 +538,7 @@ public class SobotPostMsgActivity extends SobotBaseActivity implements OnClickLi
         sobot_post_msg_layout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(sobot_post_msg_layout.getWindowToken(), 0); // 强制隐藏键盘
+                KeyboardUtil.hideKeyboard(sobot_post_msg_layout);
             }
         });
     }
@@ -472,137 +608,6 @@ public class SobotPostMsgActivity extends SobotBaseActivity implements OnClickLi
         return tmpStr;
     }
 
-    private void initBundleData(Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
-            if (getIntent() != null) {
-                uid = getIntent().getStringExtra("uid");
-                companyId = getIntent().getStringExtra("companyId");
-                groupId = getIntent().getStringExtra("groupId");
-                flag_exit_type = getIntent().getIntExtra(ZhiChiConstant.FLAG_EXIT_TYPE, -1);
-                flag_exit_sdk = getIntent().getBooleanExtra(ZhiChiConstant.FLAG_EXIT_SDK, false);
-                msgTmp = getIntent().getStringExtra("msgTmp").replaceAll("\n", "<br/>");
-                msgTxt = getIntent().getStringExtra("msgTxt").replaceAll("\n", "<br/>");
-            }
-        } else {
-            uid = savedInstanceState.getString("uid");
-            companyId = savedInstanceState.getString("companyId");
-            groupId = savedInstanceState.getString("groupId");
-            flag_exit_type = savedInstanceState.getInt(ZhiChiConstant.FLAG_EXIT_TYPE, -1);
-            flag_exit_sdk = savedInstanceState.getBoolean(ZhiChiConstant.FLAG_EXIT_SDK, false);
-
-            msgTmp = savedInstanceState.getString("msgTmp");
-            msgTxt = savedInstanceState.getString("msgTxt");
-            if (!TextUtils.isEmpty(msgTmp)) {
-                msgTmp = msgTmp.replaceAll("\n", "<br/>");
-            }
-
-            if (!TextUtils.isEmpty(msgTxt)) {
-                msgTxt = msgTxt.replaceAll("\n", "<br/>");
-            }
-        }
-    }
-
-    //初始化View
-    private void initView() {
-        sobot_post_phone = (EditText) findViewById(getResId("sobot_post_phone"));
-        sobot_post_email = (EditText) findViewById(getResId("sobot_post_email"));
-        sobot_frist_line = findViewById(getResId("sobot_frist_line"));
-        sobot_et_content = (EditText) findViewById(getResId("sobot_post_et_content"));
-        sobot_tv_post_msg = (TextView) findViewById(getResId("sobot_tv_post_msg"));
-        sobot_post_email_lable = (TextView) findViewById(getResId("sobot_post_email_lable"));
-        sobot_post_phone_lable = (TextView) findViewById(getResId("sobot_post_phone_lable"));
-        sobot_post_lable = (TextView) findViewById(getResId("sobot_post_question_lable"));
-        String test = "<font color='#8B98AD'>" + getResString("sobot_problem_types") + "</font>" + "<font color='#f9676f'>&#8201*</font>";
-        sobot_post_lable.setText(Html.fromHtml(test));
-        sobot_post_question_type = (TextView) findViewById(getResId("sobot_post_question_type"));
-        sobot_post_question_type.setOnClickListener(this);
-        sobot_post_msg_layout = (LinearLayout) findViewById(getResId("sobot_post_msg_layout"));
-        sobot_img_clear_email = (ImageView) findViewById(getResId("sobot_img_clear_email"));
-        sobot_img_clear_phone = (ImageView) findViewById(getResId("sobot_img_clear_phone"));
-        sobot_img_clear_phone.setOnClickListener(this);
-        sobot_img_clear_email.setOnClickListener(this);
-        sobot_enclosure_container = (LinearLayout) findViewById(getResId("sobot_enclosure_container"));
-        sobot_post_customer_field = (LinearLayout) findViewById(getResId("sobot_post_customer_field"));
-
-
-        sobot_post_email_rl = (RelativeLayout) findViewById(getResId("sobot_post_email_rl"));
-        sobot_post_phone_rl = (RelativeLayout) findViewById(getResId("sobot_post_phone_rl"));
-        sobot_post_question_rl = (RelativeLayout) findViewById(getResId("sobot_post_question_rl"));
-
-        sobot_post_customer_field.setVisibility(View.GONE);
-
-        if (emailShowTvFlag) {
-            sobot_post_email_rl.setVisibility(View.VISIBLE);
-        } else {
-            sobot_post_email_rl.setVisibility(View.GONE);
-        }
-
-        if (telShowTvFlag) {
-            sobot_post_phone_rl.setVisibility(View.VISIBLE);
-        } else {
-            sobot_post_phone_rl.setVisibility(View.GONE);
-        }
-
-        if (emailShowTvFlag && telShowTvFlag) {
-            sobot_frist_line.setVisibility(View.VISIBLE);
-        } else {
-            sobot_frist_line.setVisibility(View.GONE);
-        }
-
-        if (telFlag) {
-            sobot_post_phone.setText(SharedPreferencesUtil.getStringData(this, "sobot_user_phone", ""));
-        }
-
-        if (emailFlag) {
-            sobot_post_email.setText(SharedPreferencesUtil.getStringData(this, "sobot_user_email", ""));
-        }
-
-        if (enclosureShowFlag) {
-            sobot_enclosure_container.setVisibility(View.VISIBLE);
-            initPicListView();
-        } else {
-            sobot_enclosure_container.setVisibility(View.GONE);
-        }
-
-        zhiChiApi.getLeaveMsgParam(SobotPostMsgActivity.this,uid, new ResultCallBack<SobotLeaveMsgParamModel>() {
-
-            @Override
-            public void onFailure(Exception e, String des) {
-                try {
-                    showHint(getString(ResourceUtils.getIdByName(getApplicationContext(), "string", "sobot_try_again")), false);
-                } catch (Exception e1) {
-
-                }
-            }
-
-            @Override
-            public void onLoading(long total, long current, boolean isUploading) {
-
-            }
-
-            @Override
-            public void onSuccess(SobotLeaveMsgParamModel result) {
-                if (result != null) {
-                    if (result.isTicketTypeFlag()) {
-                        sobot_post_question_rl.setVisibility(View.VISIBLE);
-                    } else {
-                        sobot_post_question_rl.setVisibility(View.GONE);
-                        sobot_post_question_type.setTag(result.getTicketTypeId());
-                    }
-
-                    if (result.getField() != null && result.getField().size() != 0) {
-                        field = result.getField();
-                        StCusFieldPresenter.addWorkOrderCusFields(SobotPostMsgActivity.this, field, sobot_post_customer_field,SobotPostMsgActivity.this);
-                    }
-
-                    if (result.getType() != null && result.getType().size() != 0) {
-                        types = result.getType();
-                    }
-                }
-            }
-        });
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -649,30 +654,6 @@ public class SobotPostMsgActivity extends SobotBaseActivity implements OnClickLi
         }
     }
 
-    //根据初始化接口返回的数据，对一些view设置他们的图标颜色是否可以点击等等
-    private void initDate() {
-        showRightView(0, getResString("sobot_submit"), true);
-        Drawable drawable = getResources().getDrawable(getResDrawableId("sobot_btn_back_selector"));
-        if (drawable != null) {
-            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-        }
-        sobot_tv_left.setCompoundDrawables(drawable, null, null, null);
-        sobot_tv_left.setText(getResString("sobot_back"));
-        sobot_tv_left.setOnClickListener(this);
-
-        setTitle(getResString("sobot_str_bottom_message"));
-        setShowNetRemind(false);
-
-        //获取本地数据，赋值
-        telShowTvFlag = SharedPreferencesUtil.getBooleanData(this, ZhiChiConstant.SOBOT_POSTMSG_TELSHOWFLAG, false);//控制textView是否显示
-        telFlag = SharedPreferencesUtil.getBooleanData(this, ZhiChiConstant.SOBOT_POSTMSG_TELFLAG, false);//控制是否必填
-
-        emailShowTvFlag = SharedPreferencesUtil.getBooleanData(this, ZhiChiConstant.SOBOT_POSTMSG_EMAILSHOWFLAG, false);//控制textView是否显示
-        emailFlag = SharedPreferencesUtil.getBooleanData(this, ZhiChiConstant.SOBOT_POSTMSG_EMAILFLAG, false);//控制是否必填
-
-        enclosureShowFlag = SharedPreferencesUtil.getBooleanData(this, ZhiChiConstant.SOBOT_POSTMSG_ENCLOSURESHOWFLAG, false);//控制附件是否显示
-        enclosureFlag = SharedPreferencesUtil.getBooleanData(this, ZhiChiConstant.SOBOT_POSTMSG_ENCLOSUREFLAG, false);//控制附件是否必填
-    }
 
     // 为弹出窗口popupwindow实现监听类
     private View.OnClickListener itemsOnClick = new View.OnClickListener() {

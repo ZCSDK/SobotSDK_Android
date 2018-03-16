@@ -131,8 +131,11 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
     private String senderface;
     private String sendername;
 
-    public SobotMsgAdapter(Context context, List<ZhiChiMessageBase> list) {
+    private SobotMsgCallBack mMsgCallBack;
+
+    public SobotMsgAdapter(Context context, List<ZhiChiMessageBase> list,SobotMsgCallBack msgCallBack) {
         super(context, list);
+        mMsgCallBack = msgCallBack;
         senderface = SharedPreferencesUtil.getStringData(context, "sobot_current_sender_face", "");
         sendername = SharedPreferencesUtil.getStringData(context, "sobot_current_sender_name", "");
     }
@@ -327,6 +330,7 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
             int itemType = getItemViewType(position);
             convertView = initView(convertView, itemType, position, message);
             MessageHolderBase holder = (MessageHolderBase) convertView.getTag();
+            holder.setMsgCallBack(mMsgCallBack);
             handerRemindTiem(holder, position);
             holder.initNameAndFace(itemType, context, message, senderface, sendername);
             holder.bindData(context, message);
@@ -660,5 +664,16 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
                 }
             }
         }
+    }
+
+    public interface SobotMsgCallBack{
+        void sendConsultingContent();
+        void doEvaluate(final boolean evaluateFlag,final ZhiChiMessageBase message);
+        void sendMessageToRobot(ZhiChiMessageBase base,int type, int questionFlag, String docId);
+        void sendMessageToRobot(ZhiChiMessageBase base,int type, int questionFlag, String docId, String multiRoundMsg);
+        void doClickTransferBtn();
+        void hidePanelAndKeyboard();
+        void doRevaluate(final boolean revaluateFlag,final ZhiChiMessageBase message);
+        void clickAudioItem(ZhiChiMessageBase message);
     }
 }

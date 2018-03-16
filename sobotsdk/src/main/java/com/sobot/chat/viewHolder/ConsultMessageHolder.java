@@ -1,15 +1,12 @@
 package com.sobot.chat.viewHolder;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.sobot.chat.activity.SobotChatActivity;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.utils.BitmapUtil;
 import com.sobot.chat.utils.CommonUtils;
@@ -84,7 +81,9 @@ public class ConsultMessageHolder extends MessageHolderBase {
             @Override
             public void onClick(View v) {
                 LogUtils.i("发送连接---->" + url);
-                ((SobotChatActivity) context).sendConsultingContent();
+                if (msgCallBack != null) {
+                    msgCallBack.sendConsultingContent();
+                }
             }
         });
     }

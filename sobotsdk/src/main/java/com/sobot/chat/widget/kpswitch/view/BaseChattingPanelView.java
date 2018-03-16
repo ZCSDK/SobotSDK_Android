@@ -29,6 +29,8 @@ public abstract class BaseChattingPanelView {
      */
     public abstract void initData();
 
+    public abstract void setListener(SobotBasePanelListener listener);
+
     /**
      * 获取view
      *
@@ -60,4 +62,7 @@ public abstract class BaseChattingPanelView {
      * view的显示回调
      */
     public void onViewStart(Bundle bundle){}
+
+    public interface SobotBasePanelListener{
+    }
 }
