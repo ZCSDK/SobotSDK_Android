@@ -118,4 +118,9 @@
     <color name="sobot_lable_view_history_bg">#f2f2f2</color>
     <color name="sobot_lable_view_ing_bg">#ffffff</color>
 
+    <color name="sobot_auto_complete_press">#EFF3FA</color>
+    <color name="sobot_auto_complete">@android:color/white</color>
+    <!-- 通告布局背景颜色-->
+    <color name="sobot_announcement_bgcolor">#FFA500</color>
+
 </resources>

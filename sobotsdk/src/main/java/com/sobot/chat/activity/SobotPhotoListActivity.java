@@ -1,7 +1,6 @@
 package com.sobot.chat.activity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -9,8 +8,6 @@ import android.view.View;
 import com.sobot.chat.activity.base.SobotBaseActivity;
 import com.sobot.chat.adapter.base.SobotImageScaleAdapter;
 import com.sobot.chat.api.model.ZhiChiUploadAppFileModelResult;
-import com.sobot.chat.utils.ResourceUtils;
-import com.sobot.chat.utils.SharedPreferencesUtil;
 import com.sobot.chat.utils.ZhiChiConstant;
 import com.sobot.chat.widget.dialog.SobotDeleteWorkOrderDialog;
 import com.sobot.chat.widget.photoview.HackyViewPager;
@@ -30,20 +27,12 @@ public class SobotPhotoListActivity extends SobotBaseActivity {
     private SobotImageScaleAdapter adapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(ResourceUtils.getIdByName(getApplicationContext(), "layout", "sobot_activity_photo_list"));
+    protected int getContentViewResId() {
+        return getResLayoutId("sobot_activity_photo_list");
+    }
 
-        String bg_color = SharedPreferencesUtil.getStringData(this, "robot_current_themeColor", "");
-        if (bg_color != null && bg_color.trim().length() != 0) {
-            relative.setBackgroundColor(Color.parseColor(bg_color));
-        }
-
-        int robot_current_themeImg = SharedPreferencesUtil.getIntData(this, "robot_current_themeImg", 0);
-        if (robot_current_themeImg != 0) {
-            relative.setBackgroundResource(robot_current_themeImg);
-        }
-
+    @Override
+    protected void initBundleData(Bundle savedInstanceState) {
         if(savedInstanceState == null){
             Intent intent = getIntent();
             pic_list = (ArrayList<ZhiChiUploadAppFileModelResult>) intent.getSerializableExtra(ZhiChiConstant.SOBOT_KEYTYPE_PIC_LIST);
@@ -52,8 +41,6 @@ public class SobotPhotoListActivity extends SobotBaseActivity {
             pic_list = (ArrayList<ZhiChiUploadAppFileModelResult>) savedInstanceState.getSerializable(ZhiChiConstant.SOBOT_KEYTYPE_PIC_LIST);
             currentPic = savedInstanceState.getInt(ZhiChiConstant.SOBOT_KEYTYPE_PIC_LIST_CURRENT_ITEM);
         }
-        initData();
-        initTitle();
     }
 
     protected void onSaveInstanceState(Bundle outState) {
@@ -63,7 +50,8 @@ public class SobotPhotoListActivity extends SobotBaseActivity {
         super.onSaveInstanceState(outState);
     }
 
-    private void initData() {
+    @Override
+    protected void initData() {
 
         viewPager = (HackyViewPager) findViewById(getResId("sobot_viewPager"));
         //填充数据
@@ -90,13 +78,6 @@ public class SobotPhotoListActivity extends SobotBaseActivity {
         });
     }
 
-    private void initTitle() {
-        showRightView(getResDrawableId("sobot_pic_delete_selector"),"",true);
-        setTitlePageNum(currentPic);
-        sobot_tv_left.setOnClickListener(this);
-        showLeftView(getResString("sobot_back"),getResDrawableId("sobot_btn_back_selector"));
-    }
-
     public void setTitlePageNum(int currentPic) {
         setTitle((currentPic + 1) + "/" + pic_list.size());
     }
@@ -106,7 +87,12 @@ public class SobotPhotoListActivity extends SobotBaseActivity {
         super.onDestroy();
     }
 
-
+    @Override
+    protected void initView() {
+        showRightMenu(getResDrawableId("sobot_pic_delete_selector"), "", true);
+        setTitlePageNum(currentPic);
+        showLeftMenu(getResDrawableId("sobot_btn_back_selector"), getResString("sobot_back"), true);
+    }
 
     // 为弹出窗口popupwindow实现监听类
     private View.OnClickListener itemsOnClick = new View.OnClickListener() {
@@ -114,11 +100,9 @@ public class SobotPhotoListActivity extends SobotBaseActivity {
             seleteMenuWindow.dismiss();
             if(v.getId() == getResId("btn_pick_photo")){
                 //删除
-                int currentItem = viewPager.getCurrentItem();
-                String url = pic_list.get(currentItem).getFileUrl();
                 Intent intent = new Intent();
                 intent.putExtra(ZhiChiConstant.SOBOT_KEYTYPE_PIC_LIST,pic_list);
-                setResult(ZhiChiConstant.SOBOT_KEYTYPE_DELETE_FILE_SUCCESS,intent);
+                setResult(ZhiChiConstant.SOBOT_KEYTYPE_DELETE_FILE_SUCCESS, intent);
                 pic_list.remove(viewPager.getCurrentItem());
                 if (pic_list.size() == 0) {
                     finish();
@@ -131,15 +115,8 @@ public class SobotPhotoListActivity extends SobotBaseActivity {
     };
 
     @Override
-    public void forwordMethod() {
+    protected void onRightMenuClick(View view) {
         seleteMenuWindow = new SobotDeleteWorkOrderDialog(SobotPhotoListActivity.this,"要删除这张图片吗？", itemsOnClick);
         seleteMenuWindow.show();
-    }
-
-    @Override
-    public void onClick(View view) {
-        if (view == sobot_tv_left) {
-            finish();
-        }
     }
 }

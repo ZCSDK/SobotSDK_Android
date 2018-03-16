@@ -37,6 +37,10 @@ public abstract class SobotBaseAdapter<T> extends BaseAdapter {
 		return context.getResources().getString(getResStringId(name));
 	}
 
+	public List<T> getDatas(){
+		return list;
+	}
+
 	public int getResStringId(String name) {
 		return ResourceUtils.getIdByName(context, "string", name);
 	}

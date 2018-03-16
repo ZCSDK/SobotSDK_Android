@@ -25,6 +25,13 @@
     <dimen name="sobot_msg_voice_text_size">16sp</dimen>
     <dimen name="sobot_min_panel_height">220dp</dimen>
     <dimen name="sobot_max_panel_height">380dp</dimen>
+    <dimen name="sobot_min_keyboard_height">80dp</dimen>
 
     <dimen name="sobot_item_emoticon_size_default">32dp</dimen>
+
+    <dimen name="sobot_item_qr_divider">15dp</dimen>
+
+    <dimen name="sobot_emoticon_view_indicator_margin_t">25dp</dimen>
+    <dimen name="sobot_emoticon_view_indicator_height">45dp</dimen>
+    <dimen name="sobot_emoticon_view_indicator_padding_b">10dp</dimen>
 </resources>

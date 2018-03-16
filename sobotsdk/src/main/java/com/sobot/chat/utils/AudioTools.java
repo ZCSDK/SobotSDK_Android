@@ -23,6 +23,12 @@ public class AudioTools
 			}
 		}
 	}
+
+	public static void destory() {
+		stop();
+		instance = null;
+	}
+
 	// 判断是否正在播放
 	public static boolean getIsPlaying(){
 		if(instance!=null){

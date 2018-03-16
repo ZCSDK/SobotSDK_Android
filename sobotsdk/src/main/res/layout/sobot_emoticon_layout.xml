@@ -11,17 +11,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/view_eiv"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="@dimen/sobot_emoticon_view_indicator_margin_t"
         android:orientation="vertical"/>
 
 
     <com.sobot.chat.widget.kpswitch.view.emoticon.EmoticonsIndicatorView
         android:id="@+id/view_eiv"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="@dimen/sobot_emoticon_view_indicator_height"
         android:layout_alignParentBottom="true"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingBottom="10dp"/>
+        android:paddingBottom="@dimen/sobot_emoticon_view_indicator_padding_b"/>
 
 </RelativeLayout>
