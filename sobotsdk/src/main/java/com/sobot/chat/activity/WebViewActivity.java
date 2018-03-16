@@ -2,12 +2,11 @@ package com.sobot.chat.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -22,18 +21,15 @@ import android.widget.TextView;
 import com.sobot.chat.activity.base.SobotBaseActivity;
 import com.sobot.chat.utils.CommonUtils;
 import com.sobot.chat.utils.LogUtils;
-import com.sobot.chat.utils.ResourceUtils;
-import com.sobot.chat.utils.SharedPreferencesUtil;
 import com.sobot.chat.utils.ToastUtil;
 
 @SuppressLint("SetJavaScriptEnabled")
-public class WebViewActivity extends SobotBaseActivity {
+public class WebViewActivity extends SobotBaseActivity implements View.OnClickListener {
 
     private WebView mWebView;
     private ProgressBar mProgressBar;
     private RelativeLayout sobot_rl_net_error;
     private Button sobot_btn_reconnect;
-    @SuppressWarnings("unused")
     private TextView sobot_txt_loading;
     private String mUrl = "";
     private LinearLayout sobot_webview_toolsbar;
@@ -42,26 +38,26 @@ public class WebViewActivity extends SobotBaseActivity {
     private ImageView sobot_webview_reload;
     private ImageView sobot_webview_copy;
 
-
-    @SuppressWarnings("deprecation")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(ResourceUtils.getIdByName(this, "layout",
-                "sobot_activity_webview"));
-        String bg_color = SharedPreferencesUtil.getStringData(this, "robot_current_themeColor", "");
-        if (bg_color != null && bg_color.trim().length() != 0) {
-            relative.setBackgroundColor(Color.parseColor(bg_color));
-        }
+    protected int getContentViewResId() {
+        return getResLayoutId("sobot_activity_webview");
+    }
 
-        int robot_current_themeImg = SharedPreferencesUtil.getIntData(this, "robot_current_themeImg", 0);
-        if (robot_current_themeImg != 0) {
-            relative.setBackgroundResource(robot_current_themeImg);
+    @Override
+    protected void initBundleData(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            if (getIntent() != null && !TextUtils.isEmpty(getIntent().getStringExtra("url"))) {
+                mUrl = getIntent().getStringExtra("url");
+            }
+        } else {
+            mUrl = savedInstanceState.getString("url");
         }
-        Drawable drawable = getResources().getDrawable(ResourceUtils.getIdByName(this, "drawable", "sobot_btn_back_selector"));
-        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-        sobot_tv_left.setCompoundDrawables(drawable, null, null, null);
-        sobot_tv_left.setText(getResString("sobot_back"));
+    }
+
+    @Override
+    protected void initView() {
+        setTitle("");
+        showLeftMenu(getResDrawableId("sobot_btn_back_selector"), getResString("sobot_back"), true);
         mWebView = (WebView) findViewById(getResId("sobot_mWebView"));
         mProgressBar = (ProgressBar) findViewById(getResId("sobot_loadProgress"));
         sobot_rl_net_error = (RelativeLayout) findViewById(getResId("sobot_rl_net_error"));
@@ -79,34 +75,26 @@ public class WebViewActivity extends SobotBaseActivity {
         sobot_webview_copy.setOnClickListener(this);
         sobot_webview_goback.setEnabled(false);
         sobot_webview_forward.setEnabled(false);
-        sobot_tv_left.setOnClickListener(this);
-        setTitle("");
-        setShowNetRemind(false);
+
         resetViewDisplay();
         initWebView();
-        initBundleData(savedInstanceState);
         mWebView.loadUrl(mUrl);
         LogUtils.i("webViewActivity---" + mUrl);
     }
 
-    private void initBundleData(Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
-            if (getIntent() != null && !TextUtils.isEmpty(getIntent().getStringExtra("url"))) {
-                mUrl = getIntent().getStringExtra("url");
-            }
-        } else {
-            mUrl = savedInstanceState.getString("url");
-        }
+    @Override
+    protected void initData() {
+
     }
 
     @Override
-    public void forwordMethod() { }
+    protected void onLeftMenuClick(View view) {
+        finish();
+    }
 
     @Override
     public void onClick(View view) {
-        if (view == sobot_tv_left) {// 返回按钮
-            finish();
-        } else if (view == sobot_btn_reconnect) {
+        if (view == sobot_btn_reconnect) {
             if (!TextUtils.isEmpty(mUrl)) {
                 resetViewDisplay();
             }
@@ -114,19 +102,19 @@ public class WebViewActivity extends SobotBaseActivity {
             mWebView.goForward();
         } else if (view == sobot_webview_goback) {
             mWebView.goBack();
-        } else if(view == sobot_webview_reload){
+        } else if (view == sobot_webview_reload) {
             mWebView.reload();
-        } else if (view == sobot_webview_copy){
+        } else if (view == sobot_webview_copy) {
             copyUrl(mUrl);
         }
     }
 
-    private void copyUrl(String url){
-        if (TextUtils.isEmpty(url)){
+    private void copyUrl(String url) {
+        if (TextUtils.isEmpty(url)) {
             return;
         }
 
-        if (Build.VERSION.SDK_INT >= 11){
+        if (Build.VERSION.SDK_INT >= 11) {
             LogUtils.i("API是大于11");
             android.content.ClipboardManager cmb = (android.content.ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
             cmb.setText(url);
@@ -138,8 +126,9 @@ public class WebViewActivity extends SobotBaseActivity {
             cmb.getText();
         }
 
-        ToastUtil.showCustomToast(WebViewActivity.this,CommonUtils.getResString(WebViewActivity.this, "sobot_ctrl_v_success"), CommonUtils.getResDrawableId(WebViewActivity.this,"sobot_iv_login_right"));
+        ToastUtil.showToast(getApplicationContext(), CommonUtils.getResString(WebViewActivity.this, "sobot_ctrl_v_success"));
     }
+
     /**
      * 根据有无网络显示不同的View
      */
@@ -207,7 +196,7 @@ public class WebViewActivity extends SobotBaseActivity {
                 super.onPageFinished(view, url);
                 sobot_webview_goback.setEnabled(mWebView.canGoBack());
                 sobot_webview_forward.setEnabled(mWebView.canGoForward());
-                if(!mUrl.replace("http://","").replace("https://","").equals(view.getTitle())){
+                if (!mUrl.replace("http://", "").replace("https://", "").equals(view.getTitle())) {
                     setTitle(view.getTitle());
                 }
             }
@@ -219,7 +208,7 @@ public class WebViewActivity extends SobotBaseActivity {
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
                 LogUtils.i("网页--title---：" + title);
-                if(!mUrl.replace("http://","").replace("https://","").equals(title)){
+                if (!mUrl.replace("http://", "").replace("https://", "").equals(title)) {
                     setTitle(title);
                 }
             }
@@ -234,6 +223,35 @@ public class WebViewActivity extends SobotBaseActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mWebView != null) {
+            mWebView.onResume();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        if (mWebView != null) {
+            mWebView.onPause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mWebView != null) {
+            mWebView.removeAllViews();
+            final ViewGroup viewGroup = (ViewGroup) mWebView.getParent();
+            if (viewGroup != null) {
+                viewGroup.removeView(mWebView);
+            }
+            mWebView.destroy();
+        }
+        super.onDestroy();
     }
 
     @Override
