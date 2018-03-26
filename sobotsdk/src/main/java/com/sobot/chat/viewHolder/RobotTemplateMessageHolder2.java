@@ -21,20 +21,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RobotTemplateMessageHolder2 extends MessageHolderBase implements SobotLabelsView.OnLabelClickListener {
+public class RobotTemplateMessageHolder2 extends MessageHolderBase implements SobotLabelsView.OnLabelClickListener, View.OnClickListener {
     private Context mContext;
     // 聊天的消息内容
     private TextView tv_msg;
+    private TextView tv_more;
     // 标签页控件
     private SobotLabelsView slv_labels;
 
     private ZhiChiMessageBase zhiChiMessageBase;
 
+    private static final int PAGE_SIZE = 9;
+
     public RobotTemplateMessageHolder2(Context context, View convertView) {
         super(context, convertView);
         mContext = context;
         tv_msg = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_template2_msg"));
+        tv_more = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_tv_more"));
         slv_labels = (SobotLabelsView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_template2_labels"));
+        tv_more.setOnClickListener(this);
     }
 
     @Override
@@ -48,43 +53,94 @@ public class RobotTemplateMessageHolder2 extends MessageHolderBase implements So
                 String[] inputContent = multiDiaRespInfo.getInputContentList();
                 ArrayList<SobotLablesViewModel> label = new ArrayList<>();
                 if (interfaceRetList != null && interfaceRetList.size() > 0) {
-                    for (int i = 0; i < interfaceRetList.size(); i++) {
+                    for (int i = 0; i < getDisplayNum(multiDiaRespInfo, interfaceRetList.size()); i++) {
                         Map<String, String> interfaceRet = interfaceRetList.get(i);
                         SobotLablesViewModel lablesViewModel = new SobotLablesViewModel();
                         lablesViewModel.setTitle(interfaceRet.get("title"));
                         lablesViewModel.setAnchor(interfaceRet.get("anchor"));
                         label.add(lablesViewModel);
                     }
+                    // 显示更多
+                    showMoreBtn(multiDiaRespInfo, interfaceRetList.size());
                     slv_labels.setVisibility(View.VISIBLE);
                     slv_labels.setLabels(label);
                 } else if (inputContent != null && inputContent.length > 0) {
-                    for (String title:inputContent) {
+                    for (int i = 0; i < getDisplayNum(multiDiaRespInfo, inputContent.length); i++) {
                         SobotLablesViewModel lablesViewModel = new SobotLablesViewModel();
-                        lablesViewModel.setTitle(title);
+                        lablesViewModel.setTitle(inputContent[i]);
                         label.add(lablesViewModel);
                     }
+                    // 显示更多
+                    showMoreBtn(multiDiaRespInfo, inputContent.length);
                     slv_labels.setVisibility(View.VISIBLE);
                     slv_labels.setLabels(label);
                 } else {
+                    hideMoreBtn(multiDiaRespInfo);
                     slv_labels.setVisibility(View.GONE);
                 }
 
                 if (message.getSugguestionsFontColor() == 0) {
-                    slv_labels.setOnLabelClickListener(this);
-                    slv_labels.setTabEnable(true);
+                    if (message.getMultiDiaRespEnd() == 1) {
+                        if (multiDiaRespInfo.getEndFlag()) {
+                            slv_labels.setOnLabelClickListener(this);
+                            slv_labels.setTabEnable(true);
+                        } else {
+                            slv_labels.setOnLabelClickListener(null);
+                            slv_labels.setTabEnable(false);
+                        }
+                    } else {
+                        slv_labels.setOnLabelClickListener(this);
+                        slv_labels.setTabEnable(true);
+                    }
                 } else {
-                    if (multiDiaRespInfo.getEndFlag()){
+                    if (multiDiaRespInfo.getEndFlag()) {
                         slv_labels.setOnLabelClickListener(this);
                         slv_labels.setTabEnable(true);
                     } else {
                         slv_labels.setOnLabelClickListener(null);
                         slv_labels.setTabEnable(false);
+                        hideMoreBtn(multiDiaRespInfo);
                     }
                 }
             } else {
                 slv_labels.setVisibility(View.GONE);
+                hideMoreBtn(multiDiaRespInfo);
             }
         }
+    }
+
+    //更多按钮的显示
+    private void showMoreBtn(SobotMultiDiaRespInfo multiDiaRespInfo, int maxSize) {
+        if (multiDiaRespInfo == null || mContext == null) {
+            return;
+        }
+        tv_more.setVisibility(View.VISIBLE);
+        if (multiDiaRespInfo.getPageNum() == 1 && multiDiaRespInfo.getPageNum() * PAGE_SIZE >= maxSize) {
+            hideMoreBtn(multiDiaRespInfo);
+        } else if (multiDiaRespInfo.getPageNum() * PAGE_SIZE >= maxSize) {
+            //最后一页  收起全部
+            tv_more.setText(ResourceUtils.getIdByName(mContext, "string", "sobot_collapse"));
+            tv_more.setSelected(true);
+        } else {
+            //不是最后一页 展开更多
+            tv_more.setText(ResourceUtils.getIdByName(mContext, "string", "sobot_more"));
+            tv_more.setSelected(false);
+        }
+    }
+
+    private void hideMoreBtn(SobotMultiDiaRespInfo multiDiaRespInfo) {
+        if (multiDiaRespInfo != null) {
+            multiDiaRespInfo.setPageNum(1);
+        }
+        tv_more.setVisibility(View.GONE);
+
+    }
+
+    private int getDisplayNum(SobotMultiDiaRespInfo multiDiaRespInfo, int maxSize) {
+        if (multiDiaRespInfo == null) {
+            return 0;
+        }
+        return Math.min(multiDiaRespInfo.getPageNum() * PAGE_SIZE, maxSize);
     }
 
     @Override
@@ -119,6 +175,24 @@ public class RobotTemplateMessageHolder2 extends MessageHolderBase implements So
             msgObj.setContent(GsonUtil.map2Str(map));
             msgObj.setId(System.currentTimeMillis() + "");
             msgCallBack.sendMessageToRobot(msgObj, 4, 2, labelText, labelText);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == tv_more) {
+            if (zhiChiMessageBase != null && zhiChiMessageBase.getAnswer() != null) {
+                SobotMultiDiaRespInfo info = zhiChiMessageBase.getAnswer().getMultiDiaRespInfo();
+                if (info != null && "000000".equals(info.getRetCode())) {
+                    if (tv_more.isSelected()) {
+                        //最后一页
+                        info.setPageNum(1);
+                    } else {
+                        info.setPageNum((info.getPageNum() + 1));
+                    }
+                    bindData(mContext,zhiChiMessageBase);
+                }
+            }
         }
     }
 }

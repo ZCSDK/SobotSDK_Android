@@ -9,8 +9,6 @@
     <string name="sobot_button_send">发送</string>
     <string name="sobot_attach_take_pic">拍照</string>
     <string name="sobot_btn_submit_text">提交评价</string>
-    <string name="sobot_please">SOBOT SDK  2.4.3</string>
-    <string name="sobot_appkey">07a5ff1050c047c4b9d3c57eeb7ced29</string>
     <string name="sobot_move_up_to_cancel">手指上滑，取消发送</string>
     <string name="sobot_release_to_cancel">松开手指，取消发送</string>
     <string name="sobot_up_send_calcel">松开手指 取消发送</string>
@@ -118,4 +116,6 @@
     <string name="sobot_try_again">网络错误，请检查网络后重试</string>
     <string name="sobot_please_load">请上传附件</string>
     <string name="sobot_consultation_list">消息中心</string>
+    <string name="sobot_more">展开更多</string>
+    <string name="sobot_collapse">收起全部</string>
 </resources>

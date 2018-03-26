@@ -3160,7 +3160,7 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
             ZhiChiMessageBase data = messageList.get(i);
             if (data.getAnswer() != null && data.getAnswer().getMultiDiaRespInfo() != null
                     && !data.getAnswer().getMultiDiaRespInfo().getEndFlag()){
-                data.setSugguestionsFontColor(1);
+                data.setMultiDiaRespEnd(1);
             }
         }
         messageAdapter.notifyDataSetChanged();

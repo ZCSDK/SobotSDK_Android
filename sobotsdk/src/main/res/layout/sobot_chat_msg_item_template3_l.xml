@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -35,8 +36,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/sobot_name"
             android:layout_gravity="left"
-            android:layout_marginRight="80dp"
             android:layout_marginLeft="@dimen/sobot_DIMEN_13PX"
+            android:layout_marginRight="80dp"
             android:layout_toRightOf="@+id/sobot_imgHead"
             android:background="@drawable/sobot_chatfrom_bg_normal"
             android:orientation="vertical">
@@ -59,15 +60,21 @@
 
         <LinearLayout
             android:id="@+id/sobot_template3_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/sobot_ll_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
-            android:layout_below="@+id/sobot_ll_content"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:orientation="vertical" />
 
-        </LinearLayout>
+        <TextView
+            android:id="@+id/sobot_tv_more"
+            style="@style/sobot_tv_extend"
+            android:layout_below="@+id/sobot_template3_layout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            tools:visibility="visible" />
 
     </RelativeLayout>
 

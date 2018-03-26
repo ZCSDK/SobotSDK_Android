@@ -29,5 +29,5 @@ dependencies {
     provided 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     provided 'com.github.bumptech.glide:glide:3.8.0'
     provided 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.sobot.chat:sobotsupport-glidev4:1.0.1'
+    compile 'com.sobot.chat:sobotsupport-glidev4:1.0.2'
 }
