@@ -19,6 +19,7 @@ import com.sobot.chat.utils.ZhiChiConstant;
 import com.sobot.chat.viewHolder.ConsultMessageHolder;
 import com.sobot.chat.viewHolder.CusEvaluateMessageHolder;
 import com.sobot.chat.viewHolder.ImageMessageHolder;
+import com.sobot.chat.viewHolder.RetractedMessageHolder;
 import com.sobot.chat.viewHolder.RobotQRMessageHolder;
 import com.sobot.chat.viewHolder.RobotTemplateMessageHolder1;
 import com.sobot.chat.viewHolder.RemindMessageHolder;
@@ -57,6 +58,7 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
             "sobot_chat_msg_item_template4_l",//机器人  多轮会话模板 4
             "sobot_chat_msg_item_template5_l",//机器人  多轮会话模板 5
             "sobot_chat_msg_item_question_recommend",//热点问题列表
+            "sobot_chat_msg_item_retracted_msg",//消息撤回
     };
 
     /**
@@ -127,6 +129,10 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
      * 机器人热点问题引导
      */
     public static final int MSG_TYPE_ROBOT_QUESTION_RECOMMEND = 15;
+    /**
+     * 消息撤回
+     */
+    public static final int MSG_TYPE_RETRACTED_MSG = 16;
 
     private String senderface;
     private String sendername;
@@ -408,6 +414,9 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
                 case MSG_TYPE_ROBOT_QUESTION_RECOMMEND:
                     holder = new RobotQRMessageHolder(context, convertView);
                     break;
+                case MSG_TYPE_RETRACTED_MSG:
+                    holder = new RetractedMessageHolder(context, convertView);
+                    break;
                 default: {
                     holder = new TextMessageHolder(context, convertView);
                     break;
@@ -443,6 +452,8 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
             ZhiChiMessageBase message = getItem(position);
             if (message == null) {
                 return MSG_TYPE_ILLEGAL;
+            } else if (message.isRetractedMsg()) {
+                return MSG_TYPE_RETRACTED_MSG;
             }
             int senderType = Integer.parseInt(message.getSenderType());
             if (ZhiChiConstant.message_sender_type_customer == senderType
@@ -572,6 +583,9 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
             } else if (ZhiChiConstant.message_sender_type_questionRecommend == Integer
                     .parseInt(message.getSenderType())) {
                 return MSG_TYPE_ROBOT_QUESTION_RECOMMEND;
+            } else if (ZhiChiConstant.message_sender_type_robot_welcome_msg == Integer
+                    .parseInt(message.getSenderType())) {
+                return MSG_TYPE_RICH;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -591,6 +605,9 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
         ZhiChiMessageBase message = list.get(position);
 
         //时间提醒
+        if (baseHolder.reminde_time_Text == null) {
+            return;
+        }
         VersionUtils.setBackground(null, baseHolder.reminde_time_Text);
         baseHolder.reminde_time_Text.setTextColor(context.getResources()
                 .getColor(ResourceUtils.getIdByName(context, "color", "sobot_color_remind_bg")));

@@ -44,8 +44,10 @@
                 android:layout_marginRight="10dp"
                 android:layout_toLeftOf="@+id/sobot_announcement_right_icon"
                 android:layout_toRightOf="@+id/sobot_announcement_icon"
-                android:ellipsize="end"
-                android:maxLines="1"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:singleLine="true"
+                android:textColor="@color/sobot_announcement_title_color"
                 android:textSize="15sp" />
 
             <!--通告右边的箭头-->
@@ -70,6 +72,30 @@
             android:divider="@null"
             android:listSelector="@android:color/transparent"
             android:transcriptMode="normal" />
+
+        <!-- 切换机器人按钮 -->
+        <LinearLayout
+            android:id="@+id/sobot_ll_switch_robot"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_above="@+id/sobot_bar_bottom"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/sobot_ll_switch_robot_bg"
+            android:clickable="true"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="1dp"
+                android:drawableTop="@drawable/sobot_icon_switch_robot"
+                android:gravity="center_horizontal"
+                android:text="@string/sobot_switch_business"
+                android:textColor="#858f90"
+                android:textSize="9sp" />
+        </LinearLayout>
 
         <!-- 语音功能布局 -->
         <LinearLayout

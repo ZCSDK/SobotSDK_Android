@@ -76,10 +76,17 @@ public abstract class SobotBaseFragment extends Fragment {
         return ResourceUtils.getIdByName(getContext(), "string", name);
     }
 
+    public int getResDimenId(String name) {
+        return ResourceUtils.getIdByName(getContext(), "dimen", name);
+    }
+
     public String getResString(String name) {
         return getResources().getString(getResStringId(name));
     }
 
+    public float getDimens(){
+        return getResources().getDimension(getResDimenId("sobot_layout_lable_margin_right"));
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -246,5 +253,4 @@ public abstract class SobotBaseFragment extends Fragment {
         }
         ChatUtils.openSelectPic(getActivity(),SobotBaseFragment.this);
     }
-
 }

@@ -188,8 +188,7 @@ public enum DisplayRules {
                 int drawableId = ResourceUtils.getIdByName(context, "drawable",
                         data.getResName());
                 if(drawableId != 0){
-                    sEmojiMap.put(data.getEmojiStr(), ResourceUtils.getIdByName(context, "drawable",
-                            data.getResName()));
+                    sEmojiMap.put(data.getEmojiStr(), drawableId);
                 }
             }
         }
@@ -204,7 +203,7 @@ public enum DisplayRules {
                     data.getResName());
             if(drawableId != 0){
                 sEmojiList.add(new Emojicon(data.getResName(),data.getValue(),data.getEmojiStr(),data
-                        .getRemote(),ResourceUtils.getIdByName(context, "drawable", data.getResName())));
+                        .getRemote(),drawableId));
             }
         }
         return sEmojiList;

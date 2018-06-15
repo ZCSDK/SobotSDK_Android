@@ -1,9 +1,14 @@
 buildscript {
     repositories {
         jcenter()
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.2'
+        classpath 'com.android.tools.build:gradle:2.3.3'
         /* 第 1 步：添加必要的插件,
           * 为了在 Android Studio 里与 Bintray 交互，你应该把 Bintray 插件引入到
           * 项目的 build.gradle 文件的 dependencies 里,注意是项目的build.gradle
@@ -19,6 +24,10 @@ allprojects {
     repositories {
         jcenter()
         maven { url 'https://maven.google.com' }
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
     }
 }
 

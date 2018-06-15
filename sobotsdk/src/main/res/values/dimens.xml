@@ -34,4 +34,5 @@
     <dimen name="sobot_emoticon_view_indicator_margin_t">25dp</dimen>
     <dimen name="sobot_emoticon_view_indicator_height">45dp</dimen>
     <dimen name="sobot_emoticon_view_indicator_padding_b">10dp</dimen>
+    <dimen name="sobot_layout_lable_margin_right">15dp</dimen>
 </resources>

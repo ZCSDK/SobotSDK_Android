@@ -791,7 +791,7 @@ public abstract class SobotChatBaseFragment extends SobotBaseFragment implements
      * @return
      */
     protected boolean isUserBlack(){
-        if("1".equals(initModel.getIsblack())){
+        if(initModel != null && "1".equals(initModel.getIsblack())){
             return true;
         }
         return false;
@@ -884,7 +884,7 @@ public abstract class SobotChatBaseFragment extends SobotBaseFragment implements
                 robot.setAnswer(reply);
                 robot.setSenderFace(initModel.getRobotLogo());
                 robot.setSender(initModel.getRobotName());
-                robot.setSenderType(ZhiChiConstant.message_sender_type_robot + "");
+                robot.setSenderType(ZhiChiConstant.message_sender_type_robot_welcome_msg + "");
                 robot.setSenderName(initModel.getRobotName());
                 Message message = handler.obtainMessage();
                 message.what = ZhiChiConstant.hander_robot_message;

@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sobot.chat.api.model.SobotMsgCenterModel;
-import com.sobot.chat.utils.BitmapUtil;
+import com.sobot.chat.utils.SobotBitmapUtil;
 import com.sobot.chat.utils.ResourceUtils;
 
 import java.util.List;
@@ -65,7 +65,7 @@ public class SobotMsgCenterAdapter extends SobotBaseAdapter<SobotMsgCenterModel>
                 return;
             }
             this.data = model;
-            BitmapUtil.display(context, model.getFace(), sobot_iv_face);
+            SobotBitmapUtil.display(context, model.getFace(), sobot_iv_face);
             sobot_tv_title.setText(model.getName());
             sobot_tv_content.setText(TextUtils.isEmpty(model.getLastMsg())?"":Html.fromHtml(model.getLastMsg()).toString());
             sobot_tv_date.setText(model.getLastDate());

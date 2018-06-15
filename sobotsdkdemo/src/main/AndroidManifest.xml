@@ -3,6 +3,7 @@
     package="com.sobot.demo">
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@drawable/sobot_demo_icon"
         android:label="@string/sobot_demo_app_name"

@@ -14,7 +14,7 @@ import com.sobot.chat.activity.WebViewActivity;
 import com.sobot.chat.adapter.base.SobotMsgAdapter;
 import com.sobot.chat.api.model.SobotMultiDiaRespInfo;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
-import com.sobot.chat.utils.BitmapUtil;
+import com.sobot.chat.utils.SobotBitmapUtil;
 import com.sobot.chat.utils.ChatUtils;
 import com.sobot.chat.utils.ResourceUtils;
 import com.sobot.chat.viewHolder.base.MessageHolderBase;
@@ -93,7 +93,7 @@ public class RobotTemplateMessageHolder1 extends MessageHolderBase {
             mInterfaceRet = interfaceRet;
             mMultiDiaRespInfo = multiDiaRespInfo;
             if (interfaceRet != null && interfaceRet.size() > 0) {
-                BitmapUtil.display(context, interfaceRet.get("thumbnail"), sobotThumbnail, 0, 0);
+                SobotBitmapUtil.display(context, interfaceRet.get("thumbnail"), sobotThumbnail, 0, 0);
                 sobotTitle.setText(interfaceRet.get("title"));
                 sobotSummary.setText(interfaceRet.get("summary"));
                 sobotLable.setText(interfaceRet.get("label"));

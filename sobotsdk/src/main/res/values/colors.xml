@@ -48,8 +48,12 @@
     <!-- 头部开始 -->
     <!-- 头部背景 -->
     <color name="sobot_color_title_bar_bg">#2fb9c3</color>
+    <!-- 状态栏的颜色设置 -->
+    <!--<color name="sobot_status_bar_color">@color/sobot_color_title_bar_bg</color>-->
     <!-- 头部中间昵称颜色 -->
     <color name="sobot_color_title_bar_title">#ffffffff</color>
+    <!-- 头部菜单字体颜色 -->
+    <color name="sobot_color_title_bar_menu_text">#ffffffff</color>
 
     <!-- 中间 -->
     <!-- 聊天背景 -->
@@ -88,6 +92,9 @@
     <!-- button字体 -->
     <drawable name="sobot_color_drawable_text_black">#000000</drawable>
     <drawable name="sobot_color_drawbale_text_white">#ffffff</drawable>
+    <!-- 聊天界面发送按钮的背景颜色 -->
+    <color name="sobot_btn_bg_send">#09aeb0</color>
+    <color name="sobot_btn_bg_send_pressed">#b309aeb0</color>
     <!-- 底部 -->
     <!-- 底部背景 -->
     <color name="sobot_color_bottom_bg">#fafcfc</color>
@@ -99,13 +106,15 @@
 
     
     <!-- skill activity -->
-    <drawable name="sobot_btn_skill_normal">#09aeb0</drawable>
+    <drawable name="sobot_btn_skill_normal">#666666</drawable>
     <drawable name="sobot_btn_skill_pressed">#676f6f</drawable>
     <color name="sobot_item_skill_pressed">#f0f0f0</color>
     <color name="sobot_color_item_skill_post_msg">#f1a058</color>
     <color name="sobot_color_item_skill_online">#09aeb0</color>
     <color name="sobot_color_item_skill_offline">#b5b5b5</color>
     <color name="sobot_color_item_skill_offline_status">#cccccc</color>
+    <color name="sobot_color_skill_cancel_bg">#ffffff</color>
+    <color name="sobot_color_skill_grid_view_bg">#F5F5F5</color>
     <!-- post_msg activity -->
     <color name="sobot_color_post_msg_text_color">#BDC3D1</color>
 
@@ -122,5 +131,16 @@
     <color name="sobot_auto_complete">@android:color/white</color>
     <!-- 通告布局背景颜色-->
     <color name="sobot_announcement_bgcolor">#FFA500</color>
+    <!-- 通告标题字体颜色-->
+    <color name="sobot_announcement_title_color">#000000</color>
 
+    <!-- 机器人切换列表的已选中背景色 -->
+    <color name="sobot_robot_list_selected_color">#09aeb0</color>
+
+    <!--自定义标签背景颜色-->
+    <color name="sobot_lable_bg_color">#f9fbfa</color>
+    <!--自定义标签选中背景颜色-->
+    <color name="sobot_lable_press_bg_color">#ffffff</color>
+    <!--自定义标签字体颜色-->
+    <color name="sobot_lable_text_color">#3D4966</color>
 </resources>

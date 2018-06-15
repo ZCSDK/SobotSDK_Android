@@ -10,6 +10,6 @@
         android:width="0.5dip"
         android:color="#2fb9c3" />
     <!-- corners 圆角 android:radius为角的弧度，值越大角越圆。 -->
-    <corners android:radius="6dip" />
+    <corners android:radius="6dp" />
 
 </shape>

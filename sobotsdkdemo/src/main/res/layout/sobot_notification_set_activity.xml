@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/sobot_list_item_padding_top"
         android:paddingTop="@dimen/sobot_list_item_padding_top"
-        android:visibility="visible" >
+        android:visibility="gone" >
 
         <TextView
             android:id="@+id/tv_newmsg_notify"

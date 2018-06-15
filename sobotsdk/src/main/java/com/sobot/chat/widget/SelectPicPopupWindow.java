@@ -18,7 +18,7 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.PopupWindow;
 
-import com.sobot.chat.utils.BitmapUtil;
+import com.sobot.chat.utils.SobotBitmapUtil;
 import com.sobot.chat.utils.CustomToast;
 import com.sobot.chat.utils.LogUtils;
 import com.sobot.chat.utils.ResourceUtils;
@@ -113,7 +113,7 @@ public class SelectPicPopupWindow extends PopupWindow {
 				if (type.equals("gif")){
 					saveImageToGallery(context,imgUrl);
 				}else{
-					Bitmap bitmap = BitmapUtil.compress(imgUrl,context);
+					Bitmap bitmap = SobotBitmapUtil.compress(imgUrl,context);
 					saveImageToGallery(context, bitmap);
 				}
 			}

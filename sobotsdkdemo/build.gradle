@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 26
+    buildToolsVersion "27.0.3"
     // 签名配置
     signingConfigs {
 
@@ -12,7 +12,7 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 11
+        minSdkVersion 14
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -31,7 +31,7 @@ dependencies {
 
     //以下两者必选一
     compile project(':sobotsdk')
-//    compile 'com.sobot.chat:sobotsdk:2.4.4'
+//    implementation 'com.sobot.chat:sobotsdk:2.6.0'
 
 	//必须有
     compile 'com.squareup.okhttp3:okhttp:3.7.0'
@@ -45,5 +45,5 @@ dependencies {
     compile('com.lzy.widget:view-core:0.1.5') {
         exclude group: 'com.android.support'
     }
-    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:appcompat-v7:26.1.0'
 }

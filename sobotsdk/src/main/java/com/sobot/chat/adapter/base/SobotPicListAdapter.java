@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.sobot.chat.api.model.ZhiChiUploadAppFileModelResult;
-import com.sobot.chat.utils.BitmapUtil;
+import com.sobot.chat.utils.SobotBitmapUtil;
 import com.sobot.chat.utils.ResourceUtils;
 
 import java.util.ArrayList;
@@ -125,7 +125,7 @@ public class SobotPicListAdapter extends SobotBaseAdapter<ZhiChiUploadAppFileMod
             }else{
                 sobot_iv_pic.setVisibility(View.VISIBLE);
                 sobot_iv_pic_add.setVisibility(View.GONE);
-                BitmapUtil.display(mContext, message.getFileLocalPath(), sobot_iv_pic, ResourceUtils
+                SobotBitmapUtil.display(mContext, message.getFileLocalPath(), sobot_iv_pic, ResourceUtils
                         .getIdByName(mContext, "drawable", "sobot_default_pic"), ResourceUtils
                         .getIdByName(mContext, "drawable", "sobot_default_pic_err"));
             }

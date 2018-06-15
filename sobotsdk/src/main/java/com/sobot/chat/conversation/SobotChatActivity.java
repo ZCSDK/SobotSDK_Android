@@ -46,7 +46,7 @@ public class SobotChatActivity extends SobotBaseActivity {
     public static void addFragmentToActivity(FragmentManager fragmentManager,
                                              Fragment fragment, int frameId) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(frameId, fragment);
+        transaction.replace(frameId, fragment);
         transaction.commit();
     }
 

@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.sobot.chat.adapter.base.SobotMsgAdapter;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
-import com.sobot.chat.utils.BitmapUtil;
+import com.sobot.chat.utils.SobotBitmapUtil;
 import com.sobot.chat.utils.ResourceUtils;
 import com.sobot.chat.utils.ZhiChiConstant;
 import com.sobot.chat.viewHolder.base.MessageHolderBase;
@@ -84,7 +84,7 @@ public class ImageMessageHolder extends MessageHolderBase {
         }else{
             isGif.setVisibility(View.GONE);
         }
-        BitmapUtil.display(context, message.getAnswer().getMsg(), image);
+        SobotBitmapUtil.display(context, message.getAnswer().getMsg(), image);
         image.setOnClickListener(new ImageClickLisenter(context,message.getAnswer().getMsg(), isRight));
     }
 

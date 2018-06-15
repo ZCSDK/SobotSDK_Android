@@ -34,6 +34,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by jinxl on 2016/9/13.
@@ -125,6 +126,7 @@ public class SobotSessionServer extends Service {
                 .getType()) {// 接收到新的消息
             if (config.getInitModel() != null) {
                 if (config.customerState == CustomerState.Online) {
+                    base.setMsgId(pushMessage.getMsgId());
                     base.setSender(pushMessage.getAname());
                     base.setSenderName(pushMessage.getAname());
                     base.setSenderFace(pushMessage.getAface());
@@ -208,6 +210,22 @@ public class SobotSessionServer extends Service {
                 config.adminFace = pushMessage.getFace();
                 config.currentUserName = pushMessage.getName();
             }
+        }  else if (ZhiChiConstant.push_message_retracted == pushMessage.getType()) {
+            if (config.getInitModel() != null) {
+                if (!TextUtils.isEmpty(pushMessage.getRevokeMsgId())) {
+                    List<ZhiChiMessageBase> datas = config.getMessageList();
+                    if (datas != null && datas.size() > 0) {
+                        for (int i = datas.size() - 1; i >= 0; i--) {
+                            ZhiChiMessageBase msgData = datas.get(i);
+                            if (pushMessage.getRevokeMsgId().equals(msgData.getMsgId())) {
+                                msgData.setRetractedMsg(true);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
         }
     }
 
@@ -340,6 +358,7 @@ public class SobotSessionServer extends Service {
 
     private boolean isNeedShowMessage(String appkey) {
         String currentAppid = SharedPreferencesUtil.getStringData(getApplicationContext(), ZhiChiConstant.SOBOT_CURRENT_IM_APPID, "");
-        return !currentAppid.equals(appkey);
+        return !currentAppid.equals(appkey) || (!CommonUtils.getRunningActivityName(getApplicationContext()).contains(
+                "SobotChatActivity")|| !CommonUtils.isBackground(getApplicationContext()) || CommonUtils.isScreenLock(getApplicationContext()));
     }
 }

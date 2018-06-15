@@ -4,16 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sobot.chat.activity.WebViewActivity;
 import com.sobot.chat.api.model.SobotMultiDiaRespInfo;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
-import com.sobot.chat.utils.BitmapUtil;
-import com.sobot.chat.utils.ChatUtils;
+import com.sobot.chat.utils.SobotBitmapUtil;
 import com.sobot.chat.utils.ResourceUtils;
 import com.sobot.chat.viewHolder.base.MessageHolderBase;
 
@@ -46,7 +43,7 @@ public class RobotTemplateMessageHolder4 extends MessageHolderBase {
                     if (interfaceRet != null && interfaceRet.size() > 0) {
                         setSuccessView();
                         sobot_template4_title.setText(interfaceRet.get("title"));
-                        BitmapUtil.display(context, interfaceRet.get("thumbnail"), sobot_template4_thumbnail, ResourceUtils.getIdByName(context, "drawable", "sobot_logo_icon"), ResourceUtils.getIdByName(context, "drawable", "sobot_logo_icon"));
+                        SobotBitmapUtil.display(context, interfaceRet.get("thumbnail"), sobot_template4_thumbnail, ResourceUtils.getIdByName(context, "drawable", "sobot_logo_icon"), ResourceUtils.getIdByName(context, "drawable", "sobot_logo_icon"));
                         sobot_template4_summary.setText(interfaceRet.get("summary"));
 
                         if (multiDiaRespInfo.getEndFlag() && interfaceRet.get("anchor") != null) {

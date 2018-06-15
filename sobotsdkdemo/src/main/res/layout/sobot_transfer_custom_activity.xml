@@ -58,7 +58,7 @@
         android:layout_height="35dp"
         android:layout_marginTop="20dp"
         android:background="@color/sobot_btn_text_color"
-        android:hint="智能转人工关键字"
+        android:hint="智能转人工关键字,多个请用逗号分隔"
         android:inputType="text"
         android:paddingLeft="20dp"
         android:text=""

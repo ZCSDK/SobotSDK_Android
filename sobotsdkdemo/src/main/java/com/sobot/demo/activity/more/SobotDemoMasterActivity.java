@@ -22,6 +22,7 @@ public class SobotDemoMasterActivity extends AppCompatActivity implements View.O
 
     private EditText sobot_appkey;//appkey
     private EditText sobot_partnerId;//partnerId唯一标识用户
+    private EditText ed_hot_question;;//
     private RelativeLayout rl_;
     private ImageView sobot_tv_left;
 
@@ -42,6 +43,7 @@ public class SobotDemoMasterActivity extends AppCompatActivity implements View.O
         sobot_text_title.setText("基本设置");
         sobot_appkey = (EditText) findViewById(R.id.sobot_demo_appkey);
         sobot_partnerId = (EditText) findViewById(R.id.sobot_partnerId);
+        ed_hot_question = (EditText) findViewById(R.id.ed_hot_question);
         rl_ = (RelativeLayout) findViewById(R.id.rl_);
         rl_.setOnClickListener(this);
         getSobotStartSet();
@@ -56,6 +58,7 @@ public class SobotDemoMasterActivity extends AppCompatActivity implements View.O
     private void saveSobotStartSet() {
         SobotSPUtil.saveStringData(this, "sobot_appkey", sobot_appkey.getText().toString());
         SobotSPUtil.saveStringData(this, "sobot_partnerId", sobot_partnerId.getText().toString());
+        SobotSPUtil.saveStringData(this, "ed_hot_question_value", ed_hot_question.getText().toString());
     }
 
     private void getSobotStartSet() {
@@ -66,6 +69,10 @@ public class SobotDemoMasterActivity extends AppCompatActivity implements View.O
         String sobot_value_partnerId = SobotSPUtil.getStringData(this, "sobot_partnerId", "");
         if (!TextUtils.isEmpty(sobot_value_partnerId)) {
             sobot_partnerId.setText(sobot_value_partnerId);
+        }
+        String ed_hot_question_value = SobotSPUtil.getStringData(this, "ed_hot_question_value", "");
+        if (!TextUtils.isEmpty(ed_hot_question_value)) {
+            ed_hot_question.setText(ed_hot_question_value);
         }
     }
 

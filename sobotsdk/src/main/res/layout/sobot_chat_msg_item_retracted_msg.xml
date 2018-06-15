@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sobot_real_ll_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/sobot_list_divider_height"
+    android:layout_marginRight="@dimen/sobot_DIMEN_48PX"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/sobot_reminde_time_Text"
+        style="@style/sobot_center_remind_time"
+        android:layout_marginTop="10dp" />
+
+    <!--<TextView
+        android:id="@+id/sobot_center_Remind_note"
+        style="@style/sobot_center_remind_note" />
+
+    <TextView
+        android:id="@+id/sobot_center_Remind_note1"
+        style="@style/sobot_center_remind_note"
+        android:layout_marginBottom="@dimen/sobot_list_divider_height"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/transparent"
+        android:textColor="@color/sobot_color_remind_bg" />-->
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/sobot_list_divider_height"
+        android:layout_marginTop="0dp">
+
+        <TextView
+            android:id="@+id/sobot_tv_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sobot_DIMEN_36PX"
+            android:layout_toRightOf="@+id/view1"
+            android:textColor="#999999"
+            android:textSize="@dimen/sobot_listview_remind_text_size"
+            tools:text="消息撤回" />
+
+    </RelativeLayout>
+
+</LinearLayout>

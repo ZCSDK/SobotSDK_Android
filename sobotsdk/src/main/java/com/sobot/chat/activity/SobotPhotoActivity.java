@@ -10,13 +10,12 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.sobot.chat.application.MyApplication;
 import com.sobot.chat.core.HttpUtils;
 import com.sobot.chat.core.HttpUtils.FileCallBack;
-import com.sobot.chat.utils.BitmapUtil;
+import com.sobot.chat.utils.SobotBitmapUtil;
 import com.sobot.chat.utils.LogUtils;
 import com.sobot.chat.utils.MD5Util;
 import com.sobot.chat.utils.ResourceUtils;
@@ -108,7 +107,7 @@ public class SobotPhotoActivity extends Activity implements View.OnLongClickList
 					&& (imageUrL.endsWith(".gif") || imageUrL.endsWith(".GIF"))) {
 				showGif(savePath);
 			} else {
-				bitmap = BitmapUtil.compress(savePath, getApplicationContext());
+				bitmap = SobotBitmapUtil.compress(savePath, getApplicationContext());
 				big_photo.setImageBitmap(bitmap);
 				mAttacher = new PhotoViewAttacher(big_photo);
 				mAttacher
@@ -170,8 +169,13 @@ public class SobotPhotoActivity extends Activity implements View.OnLongClickList
 			public boolean onLongClick(View v) {
 				if (!TextUtils.isEmpty(sdCardPath) && new File(sdCardPath).exists()){
 					menuWindow = new SelectPicPopupWindow(SobotPhotoActivity.this,sdCardPath,"gif");
-					menuWindow.showAtLocation(sobot_rl_gif, Gravity.BOTTOM
-							| Gravity.CENTER_HORIZONTAL, 0, 0); // 设置layout在PopupWindow中显示的位置
+					try {
+						menuWindow.showAtLocation(sobot_rl_gif, Gravity.BOTTOM
+                                | Gravity.CENTER_HORIZONTAL, 0, 0); // 设置layout在PopupWindow中显示的位置
+					} catch (Exception e) {
+						menuWindow = null;
+//						e.printStackTrace();
+					}
 				}
 				return false;
 			}
@@ -230,6 +234,15 @@ public class SobotPhotoActivity extends Activity implements View.OnLongClickList
 			bitmap.recycle();
 			System.gc();
 		}
+		if (menuWindow != null && menuWindow.isShowing()){
+			try {
+				menuWindow.dismiss();
+			} catch (Exception e) {
+//				e.printStackTrace();
+			}
+			menuWindow = null;
+		}
+
 		MyApplication.getInstance().deleteActivity(SobotPhotoActivity.this);
 		super.onDestroy();
 	}
@@ -238,8 +251,13 @@ public class SobotPhotoActivity extends Activity implements View.OnLongClickList
 	public boolean onLongClick(View v) {
 		if (!TextUtils.isEmpty(sdCardPath) && new File(sdCardPath).exists()){
 			menuWindow = new SelectPicPopupWindow(SobotPhotoActivity.this,sdCardPath,"jpg/png");
-			menuWindow.showAtLocation(sobot_rl_gif, Gravity.BOTTOM
-					| Gravity.CENTER_HORIZONTAL, 0, 0); // 设置layout在PopupWindow中显示的位置
+			try {
+				menuWindow.showAtLocation(sobot_rl_gif, Gravity.BOTTOM
+                        | Gravity.CENTER_HORIZONTAL, 0, 0); // 设置layout在PopupWindow中显示的位置
+			} catch (Exception e) {
+//				e.printStackTrace();
+				menuWindow = null;
+			}
 		}
 		return false;
 	}

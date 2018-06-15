@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.sobot.chat.utils.BitmapUtil;
+import com.sobot.chat.utils.SobotBitmapUtil;
 import com.sobot.chat.utils.ResourceUtils;
 import com.sobot.chat.widget.emoji.DisplayRules;
 import com.sobot.chat.widget.emoji.Emojicon;
@@ -118,7 +118,7 @@ public class ChattingPanelEmoticonView extends BaseChattingPanelView implements 
                     viewHolder.iv_emoticon.setImageResource(getResDrawableId
                             ("sobot_emoticon_del_selector"));
                 } else {
-                    BitmapUtil.display(context,emoticonEntity.getResId(), viewHolder.iv_emoticon);
+                    SobotBitmapUtil.display(context,emoticonEntity.getResId(), viewHolder.iv_emoticon);
                 }
 
                 viewHolder.rootView.setOnClickListener(new View.OnClickListener() {

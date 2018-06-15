@@ -2,11 +2,14 @@ package com.sobot.chat.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.DownloadListener;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -153,6 +156,18 @@ public class WebViewActivity extends SobotBaseActivity implements View.OnClickLi
                 //ignor
             }
         }
+        mWebView.setDownloadListener(new DownloadListener() {
+            @Override
+            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
+                //检测到下载文件就打开系统浏览器
+                Intent intent = new Intent();
+                intent.setAction("android.intent.action.VIEW");
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Uri content = Uri.parse(url);
+                intent.setData(content);
+                startActivity(intent);
+            }
+        });
         mWebView.removeJavascriptInterface("searchBoxJavaBridge_");
         mWebView.getSettings().setDefaultFontSize(16);
         mWebView.getSettings().setTextZoom(100);

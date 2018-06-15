@@ -16,7 +16,7 @@ import com.sobot.chat.api.model.Suggestions;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.api.model.ZhiChiReplyAnswer;
 import com.sobot.chat.listener.NoDoubleClickListener;
-import com.sobot.chat.utils.BitmapUtil;
+import com.sobot.chat.utils.SobotBitmapUtil;
 import com.sobot.chat.utils.CommonUtils;
 import com.sobot.chat.utils.HtmlTools;
 import com.sobot.chat.utils.ResourceUtils;
@@ -127,7 +127,7 @@ public class RichTextMessageHolder extends MessageHolderBase {
                     }else{
                         isGif.setVisibility(View.GONE);
                     }
-                    BitmapUtil.display(context, CommonUtils.encode(message.getAnswer().getMsg()), simple_picture);
+                    SobotBitmapUtil.display(context, CommonUtils.encode(message.getAnswer().getMsg()), simple_picture);
                     simple_picture.setOnClickListener(new ImageClickLisenter(context,
                             message.getAnswer().getMsg()));
                 } else {
@@ -169,7 +169,7 @@ public class RichTextMessageHolder extends MessageHolderBase {
 
                 if (message.getAnswer().getRichpricurl() != null) {
                     bigPicImage.setVisibility(View.VISIBLE);
-                    BitmapUtil.display(context, CommonUtils.encode(message.getAnswer()
+                    SobotBitmapUtil.display(context, CommonUtils.encode(message.getAnswer()
                             .getRichpricurl()), bigPicImage);
                     // 点击大图 查看大图的内容
                     bigPicImage.setOnClickListener(new ImageClickLisenter(context,message
@@ -207,7 +207,7 @@ public class RichTextMessageHolder extends MessageHolderBase {
 
                     if (msgAnswer != null && !TextUtils.isEmpty(msgAnswer.getRichpricurl())) {
                         bigPicImage.setVisibility(View.VISIBLE);
-                        BitmapUtil.display(context, CommonUtils.encode(msgAnswer
+                        SobotBitmapUtil.display(context, CommonUtils.encode(msgAnswer
                                 .getRichpricurl()), bigPicImage);
                         // 点击大图 查看大图的内容
                         bigPicImage.setOnClickListener(new ImageClickLisenter(context, msgAnswer.getRichpricurl()));
@@ -254,7 +254,7 @@ public class RichTextMessageHolder extends MessageHolderBase {
             } else if ("1".equals(message.getRictype())) {
                 bigPicImage.setVisibility(View.VISIBLE);
                 rendAllText.setVisibility(View.VISIBLE);
-                BitmapUtil.display(context, CommonUtils.encode(message.getPicurl()), bigPicImage);
+                SobotBitmapUtil.display(context, CommonUtils.encode(message.getPicurl()), bigPicImage);
                 rendAllText.setVisibility(View.VISIBLE);
                 rendAllText.setOnClickListener(new ReadAllTextLisenter(context,message
                         .getAnswer().getRichmoreurl()));

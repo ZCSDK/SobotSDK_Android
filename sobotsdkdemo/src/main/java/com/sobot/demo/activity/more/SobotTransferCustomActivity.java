@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.sobot.demo.SobotSPUtil;
 import com.sobot.demo.R;
+import com.sobot.demo.SobotUtils;
 
 /**
  * Created by Administrator on 2017/11/21.
@@ -20,6 +21,7 @@ import com.sobot.demo.R;
 public class SobotTransferCustomActivity extends AppCompatActivity implements View.OnClickListener{
 
     private EditText sobot_isArtificialIntelligence_num;//如果是只能转人工，需要设置当应到问题出现几次以后显示转人工按钮
+    private EditText sobot_demo_transferKeyWord;//转人工关键字
     private RelativeLayout sobot_isArtificialIntelligence;//是否智能转人工,如果是，需要设置setArtificialIntelligenceNum为大于等于1的数字，默认是1
     private ImageView sobot_tv_left;
     private boolean isUseVoice = false;//是否显示咨询信息，默认不显示
@@ -41,6 +43,7 @@ public class SobotTransferCustomActivity extends AppCompatActivity implements Vi
         TextView sobot_text_title = (TextView) findViewById(R.id.sobot_demo_tv_title);
         sobot_text_title.setText("转人工设置");
         sobot_isArtificialIntelligence_num = (EditText) findViewById(R.id.sobot_isArtificialIntelligence_num);
+        sobot_demo_transferKeyWord = (EditText) findViewById(R.id.sobot_demo_transferKeyWord);
         sobot_isArtificialIntelligence = (RelativeLayout) findViewById(R.id.sobot_isArtificialIntelligence);
         imgOpenVoice = (ImageView) findViewById(R.id.img_open_notify);
         sobot_isArtificialIntelligence.setOnClickListener(this);
@@ -56,11 +59,17 @@ public class SobotTransferCustomActivity extends AppCompatActivity implements Vi
 
         boolean sobot_bool_isArtificialIntelligence = SobotSPUtil.getBooleanData(this, "sobot_isArtificialIntelligence", false);
         setVoice(sobot_bool_isArtificialIntelligence);
+
+        String sobot_demo_transferKeyWord_value = SobotSPUtil.getStringData(this, "sobot_transferKeyWord", "");
+        if (!TextUtils.isEmpty(sobot_demo_transferKeyWord_value)) {
+            sobot_demo_transferKeyWord.setText(sobot_demo_transferKeyWord_value);
+        }
     }
 
     private void saveSobotStartSet() {
         SobotSPUtil.saveBooleanData(this, "sobot_isArtificialIntelligence", isUseVoice);
         SobotSPUtil.saveStringData(this,"sobot_isArtificialIntelligence_num_value",sobot_isArtificialIntelligence_num.getText().toString());
+        SobotSPUtil.saveStringData(this, "sobot_transferKeyWord", sobot_demo_transferKeyWord.getText().toString());
     }
 
     @Override

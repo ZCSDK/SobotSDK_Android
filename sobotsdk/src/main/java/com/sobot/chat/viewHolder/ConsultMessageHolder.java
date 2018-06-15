@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sobot.chat.api.model.ZhiChiMessageBase;
-import com.sobot.chat.utils.BitmapUtil;
+import com.sobot.chat.utils.SobotBitmapUtil;
 import com.sobot.chat.utils.CommonUtils;
 import com.sobot.chat.utils.LogUtils;
 import com.sobot.chat.utils.ResourceUtils;
@@ -51,7 +51,7 @@ public class ConsultMessageHolder extends MessageHolderBase {
             iv_pic.setVisibility(View.VISIBLE);
             int drawable = ResourceUtils.getIdByName(context, "drawable",
                     "sobot_icon_consulting_default_pic");
-            BitmapUtil.display(context, CommonUtils.encode(picurl), iv_pic, drawable, drawable);
+            SobotBitmapUtil.display(context, CommonUtils.encode(picurl), iv_pic, drawable, drawable);
         } else {
             iv_pic.setVisibility(View.GONE);
             iv_pic.setImageResource(ResourceUtils.getIdByName(context, "drawable",

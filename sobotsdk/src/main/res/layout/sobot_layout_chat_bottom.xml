@@ -4,16 +4,35 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <HorizontalScrollView
+        android:id="@+id/sobot_custom_menu"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="15dp"
+        android:background="@color/sobot_lable_bg_color"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/sobot_custom_menu_linearlayout"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginBottom="7dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal" />
+
+    </HorizontalScrollView>
+
     <TextView
         android:id="@+id/send_voice_robot_hint"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="#a1a6b3"
         android:gravity="center"
         android:text="@string/sobot_robot_voice_hint"
         android:textColor="#ffffff"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/sobot_ll_bottom"
@@ -92,10 +111,10 @@
                 android:layout_toLeftOf="@+id/sobot_btn_ll_emoticon_view"
                 android:background="@drawable/sobot_chatting_edit_bg"
                 android:gravity="center_vertical|left"
+                android:imeOptions="actionDone"
                 android:maxLines="3"
                 android:minHeight="@dimen/sobot_DIMEN_96PX"
                 android:padding="5dp"
-                android:imeOptions="actionDone"
                 android:textSize="16sp"
                 android:visibility="visible" />
 
@@ -132,6 +151,9 @@
                 android:layout_width="40dp"
                 android:layout_height="28dp"
                 android:background="@drawable/sobot_btn_sendmsg_selector"
+                android:text="@string/sobot_button_send"
+                android:textColor="@color/sobot_white"
+                android:textSize="12sp"
                 android:visibility="gone" />
 
             <!-- 加号按钮 -->

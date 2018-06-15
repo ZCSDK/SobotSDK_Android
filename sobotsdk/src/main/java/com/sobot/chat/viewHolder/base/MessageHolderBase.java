@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.sobot.chat.activity.SobotPhotoActivity;
 import com.sobot.chat.adapter.base.SobotMsgAdapter;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
-import com.sobot.chat.utils.BitmapUtil;
+import com.sobot.chat.utils.SobotBitmapUtil;
 import com.sobot.chat.utils.CommonUtils;
 import com.sobot.chat.utils.ResourceUtils;
 import com.sobot.chat.utils.ToastUtil;
@@ -65,9 +65,9 @@ public abstract class MessageHolderBase {
                 int defId = ResourceUtils.getIdByName(context, "drawable", "sobot_chatting_default_head");
                 imgHead.setVisibility(View.VISIBLE);
                 if (TextUtils.isEmpty(senderface)) {
-                    BitmapUtil.displayRound(context, defId, imgHead, defId);
+                    SobotBitmapUtil.displayRound(context, defId, imgHead, defId);
                 } else {
-                    BitmapUtil.displayRound(context, CommonUtils.encode(senderface), imgHead, defId);
+                    SobotBitmapUtil.displayRound(context, CommonUtils.encode(senderface), imgHead, defId);
                 }
 
                 name.setVisibility(TextUtils.isEmpty(sendername) ? View.GONE : View.VISIBLE);
@@ -86,7 +86,7 @@ public abstract class MessageHolderBase {
                 //昵称、头像显示
                 name.setVisibility(TextUtils.isEmpty(message.getSenderName()) ? View.GONE : View.VISIBLE);
                 name.setText(message.getSenderName());
-                BitmapUtil.displayRound(context, CommonUtils.encode(message.getSenderFace()),
+                SobotBitmapUtil.displayRound(context, CommonUtils.encode(message.getSenderFace()),
                         imgHead, ResourceUtils.getIdByName(context, "drawable", "sobot_avatar_robot"));
                 break;
             default:

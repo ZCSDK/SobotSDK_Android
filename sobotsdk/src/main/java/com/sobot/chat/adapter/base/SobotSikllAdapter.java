@@ -18,9 +18,10 @@ import java.util.List;
 @SuppressWarnings({"rawtypes"})
 public class SobotSikllAdapter extends SobotBaseAdapter {
     private LayoutInflater mInflater;
-    public TextView sobot_tv_skill_name;
-    public TextView sobot_tv_status;
-    public LinearLayout sobot_ll_skill;
+    private TextView sobot_tv_skill_name;
+    private TextView sobot_tv_status;
+    private LinearLayout sobot_ll_skill;
+    private View sobot_divider_top;
     private int msgFlag = 0;
 
     @SuppressWarnings("unchecked")
@@ -42,6 +43,10 @@ public class SobotSikllAdapter extends SobotBaseAdapter {
                 .getIdByName(context, "id", "sobot_tv_skill_name"));
         sobot_tv_status = (TextView) convertView.findViewById(ResourceUtils
                 .getIdByName(context, "id", "sobot_tv_status"));
+        sobot_divider_top = convertView.findViewById(ResourceUtils
+                .getIdByName(context, "id", "sobot_divider_top"));
+        sobot_divider_top.setVisibility(position < 2 ? View.VISIBLE : View.GONE);
+
         ZhiChiGroupBase zhiChiSkillIModel = (ZhiChiGroupBase) list.get(position);
         if (zhiChiSkillIModel != null && !TextUtils.isEmpty(zhiChiSkillIModel.getGroupName())) {
             sobot_ll_skill.setVisibility(View.VISIBLE);

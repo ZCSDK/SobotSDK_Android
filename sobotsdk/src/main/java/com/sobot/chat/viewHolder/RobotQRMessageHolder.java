@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.sobot.chat.adapter.base.SobotMsgAdapter;
 import com.sobot.chat.api.model.SobotQuestionRecommend;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
-import com.sobot.chat.utils.BitmapUtil;
+import com.sobot.chat.utils.SobotBitmapUtil;
 import com.sobot.chat.utils.CommonUtils;
 import com.sobot.chat.utils.ResourceUtils;
 import com.sobot.chat.viewHolder.base.MessageHolderBase;
@@ -93,7 +93,7 @@ public class RobotQRMessageHolder extends MessageHolderBase {
             mContext = context;
             mQrMsgBean = qrMsgBean;
             if (qrMsgBean != null) {
-                BitmapUtil.display(context, qrMsgBean.getIcon(), sobotThumbnail, 0, 0);
+                SobotBitmapUtil.display(context, qrMsgBean.getIcon(), sobotThumbnail, 0, 0);
                 sobotTitle.setText(TextUtils.isEmpty(qrMsgBean.getTitle()) ? qrMsgBean.getQuestion() : qrMsgBean.getTitle());
                 sobotLayout.setOnClickListener(this);
                 LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) sobotLayout.getLayoutParams();

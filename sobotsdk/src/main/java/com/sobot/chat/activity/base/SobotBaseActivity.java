@@ -27,6 +27,7 @@ import com.sobot.chat.utils.ResourceUtils;
 import com.sobot.chat.utils.SharedPreferencesUtil;
 import com.sobot.chat.utils.ToastUtil;
 import com.sobot.chat.utils.ZhiChiConstant;
+import com.sobot.chat.widget.statusbar.StatusBarCompat;
 
 import java.io.File;
 
@@ -45,6 +46,14 @@ public abstract class SobotBaseActivity extends FragmentActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(getContentViewResId());
+        int sobot_status_bar_color = getResColor("sobot_status_bar_color");
+        if (sobot_status_bar_color != 0) {
+            try {
+                StatusBarCompat.setStatusBarColor(this, sobot_status_bar_color);
+            } catch (Exception e) {
+                //请传入正确的颜色值
+            }
+        }
         setUpToolBar();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         zhiChiApi = SobotMsgManager.getInstance(getApplicationContext()).getZhiChiApi();
@@ -242,6 +251,10 @@ public abstract class SobotBaseActivity extends FragmentActivity {
         return ResourceUtils.getIdByName(SobotBaseActivity.this, "layout", name);
     }
 
+    public int getResColorId(String name) {
+        return ResourceUtils.getIdByName(SobotBaseActivity.this, "color", name);
+    }
+
     public int getResStringId(String name) {
         return ResourceUtils.getIdByName(SobotBaseActivity.this, "string", name);
     }
@@ -250,6 +263,13 @@ public abstract class SobotBaseActivity extends FragmentActivity {
         return getResources().getString(getResStringId(name));
     }
 
+    public int getResColor(String name) {
+        int resColorId = getResColorId(name);
+        if (resColorId != 0) {
+            return getResources().getColor(resColorId);
+        }
+        return 0;
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {

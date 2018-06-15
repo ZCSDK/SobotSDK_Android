@@ -13,13 +13,13 @@ import com.sobot.chat.imageloader.SobotImageLoader;
 import com.sobot.chat.imageloader.SobotPicassoImageLoader;
 import com.sobot.chat.imageloader.SobotUILImageLoader;
 
-public class BitmapUtil {
+public class SobotBitmapUtil {
 
     private static SobotImageLoader sImageLoader;
 
     private static final SobotImageLoader getImageLoader() {
         if (sImageLoader == null) {
-            synchronized (BitmapUtil.class) {
+            synchronized (SobotBitmapUtil.class) {
                 if (sImageLoader == null) {
                     if (isClassExists("com.bumptech.glide.request.RequestOptions")){
                         sImageLoader = new SobotGlideV4ImageLoader();
@@ -47,8 +47,17 @@ public class BitmapUtil {
         }
     }
 
+    public static void setImageLoader(SobotImageLoader imageLoader) {
+        sImageLoader = imageLoader;
+    }
+
     public static void display(Context context, String url,
                                ImageView imageView, int defaultPic, int error) {
+
+        if (!TextUtils.isEmpty(url) && !url.startsWith("http")) {
+            url = "file://" + url;
+        }
+
         getImageLoader().displayImage(context, imageView, url, defaultPic, error, imageView.getWidth(), imageView.getHeight(), null);
     }
 

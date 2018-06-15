@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.sobot.chat.activity.WebViewActivity;
 import com.sobot.chat.api.model.SobotMultiDiaRespInfo;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
-import com.sobot.chat.utils.BitmapUtil;
+import com.sobot.chat.utils.SobotBitmapUtil;
 import com.sobot.chat.utils.ChatUtils;
 import com.sobot.chat.utils.ResourceUtils;
 import com.sobot.chat.viewHolder.base.MessageHolderBase;
@@ -67,7 +67,7 @@ public class RobotTemplateMessageHolder3 extends MessageHolderBase implements Vi
 
                             if (!TextUtils.isEmpty(interfaceRet.get("thumbnail"))) {
                                 sobot_template3_thumbrail.setVisibility(View.VISIBLE);
-                                BitmapUtil.display(context, interfaceRet.get("thumbnail"), sobot_template3_thumbrail, ResourceUtils.getIdByName(context, "drawable", "sobot_logo_icon"), ResourceUtils.getIdByName(context, "drawable", "sobot_logo_icon"));
+                                SobotBitmapUtil.display(context, interfaceRet.get("thumbnail"), sobot_template3_thumbrail, ResourceUtils.getIdByName(context, "drawable", "sobot_logo_icon"), ResourceUtils.getIdByName(context, "drawable", "sobot_logo_icon"));
                             } else {
                                 sobot_template3_thumbrail.setVisibility(View.GONE);
                             }

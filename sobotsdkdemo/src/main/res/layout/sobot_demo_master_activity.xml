@@ -52,6 +52,26 @@
         android:textColorHint="#888888"
         android:visibility="visible" />
 
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="35dp"
+        android:background="@color/sobot_btn_text_color"
+        android:gravity="center_vertical"
+        android:paddingLeft="16sp"
+        android:text="设置热点问题"
+        android:textColor="@color/sobot_edittext_text_color"
+        android:textColorHint="#888888" />
+
+    <EditText
+        android:id="@+id/ed_hot_question"
+        android:layout_width="fill_parent"
+        android:layout_height="35dp"
+        android:textColor="@color/sobot_edittext_text_color"
+        android:background="@color/sobot_btn_text_color"
+        android:textColorHint="#888888"
+        android:layout_marginLeft="10dp"
+        android:hint="热点问题设置"/>
+
     <RelativeLayout
         android:id="@+id/rl_"
         android:layout_width="fill_parent"
