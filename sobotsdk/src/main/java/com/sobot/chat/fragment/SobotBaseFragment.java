@@ -84,8 +84,8 @@ public abstract class SobotBaseFragment extends Fragment {
         return getResources().getString(getResStringId(name));
     }
 
-    public float getDimens(){
-        return getResources().getDimension(getResDimenId("sobot_layout_lable_margin_right"));
+    public float getDimens(String name){
+        return getResources().getDimension(getResDimenId(name));
     }
 
     @Override

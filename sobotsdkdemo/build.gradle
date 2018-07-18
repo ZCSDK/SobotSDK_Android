@@ -31,7 +31,7 @@ dependencies {
 
     //以下两者必选一
     compile project(':sobotsdk')
-//    implementation 'com.sobot.chat:sobotsdk:2.6.0'
+//    compile 'com.sobot.chat:sobotsdk:2.6.1'
 
 	//必须有
     compile 'com.squareup.okhttp3:okhttp:3.7.0'

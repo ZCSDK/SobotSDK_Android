@@ -11,8 +11,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.sobot.chat.activity.SobotQueryFromActivity;
+import com.sobot.chat.activity.WebViewActivity;
 import com.sobot.chat.adapter.base.SobotMsgAdapter;
 import com.sobot.chat.api.ResultCallBack;
 import com.sobot.chat.api.enumtype.CustomerState;
@@ -34,6 +36,7 @@ import com.sobot.chat.utils.CommonUtils;
 import com.sobot.chat.utils.LogUtils;
 import com.sobot.chat.utils.NotificationUtils;
 import com.sobot.chat.utils.SharedPreferencesUtil;
+import com.sobot.chat.utils.SobotOption;
 import com.sobot.chat.utils.ToastUtil;
 import com.sobot.chat.utils.ZhiChiConstant;
 
@@ -946,9 +949,26 @@ public abstract class SobotChatBaseFragment extends SobotBaseFragment implements
         });
     }
 
+    protected View.OnClickListener mLableClickListener =  new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (SobotOption.hyperlinkListener != null) {
+                SobotOption.hyperlinkListener.onUrlClick(v.getTag()+"");
+                return;
+            }
+
+            Intent intent = new Intent(getContext(), WebViewActivity.class);
+            intent.putExtra("url", v.getTag()+"");
+            getActivity().startActivity(intent);
+        }
+    };
+
     //-------------以下由子类实现-----------------------
     protected abstract String getSendMessageStr();
-    protected void connectCustomerService(String groupId,String groupName){}
+    protected void connectCustomerService(String groupId,String groupName){
+        connectCustomerService(groupId, groupName, null, null, true);
+    }
+    protected void connectCustomerService(String groupId,String groupName, String keyword, String keywordId, boolean isShowTips){}
 
     protected void customerServiceOffline(ZhiChiInitModeBase initModel, int outLineType){}
 }

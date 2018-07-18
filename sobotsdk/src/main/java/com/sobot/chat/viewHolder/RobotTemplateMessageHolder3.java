@@ -23,6 +23,7 @@ public class RobotTemplateMessageHolder3 extends MessageHolderBase implements Vi
     private Context mContext;
     private TextView sobot_msg;
     private TextView tv_more;
+    private LinearLayout sobot_ll_content;
     private LinearLayout sobot_template3_layout;
     private ZhiChiMessageBase zhiChiMessageBase;
 
@@ -34,6 +35,7 @@ public class RobotTemplateMessageHolder3 extends MessageHolderBase implements Vi
         sobot_msg = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_template3_msg"));
         sobot_template3_layout = (LinearLayout) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_template3_layout"));
         tv_more = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_tv_more"));
+        sobot_ll_content = (LinearLayout) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_ll_content"));
         tv_more.setOnClickListener(this);
     }
 
@@ -42,7 +44,13 @@ public class RobotTemplateMessageHolder3 extends MessageHolderBase implements Vi
         zhiChiMessageBase = message;
         if (message.getAnswer() != null && message.getAnswer().getMultiDiaRespInfo() != null) {
             final SobotMultiDiaRespInfo multiDiaRespInfo = message.getAnswer().getMultiDiaRespInfo();
-            sobot_msg.setText(ChatUtils.getMultiMsgTitle(multiDiaRespInfo));
+            String msgStr = ChatUtils.getMultiMsgTitle(multiDiaRespInfo);
+            if (!TextUtils.isEmpty(msgStr)){
+                sobot_msg.setText(msgStr);
+                sobot_ll_content.setVisibility(View.VISIBLE);
+            } else {
+                sobot_ll_content.setVisibility(View.INVISIBLE);
+            }
             if ("000000".equals(multiDiaRespInfo.getRetCode())) {
                 final List<Map<String, String>> interfaceRetList = multiDiaRespInfo.getInterfaceRetList();
                 if (interfaceRetList != null && interfaceRetList.size() > 0) {

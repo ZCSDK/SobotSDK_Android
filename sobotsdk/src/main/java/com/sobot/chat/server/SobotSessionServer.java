@@ -244,8 +244,10 @@ public class SobotSessionServer extends Service {
             }
             int type = Integer.parseInt(initModel.getType());
             config.queueNum = Integer.parseInt(num);
-            //显示当前排队的位置
-            config.addMessage(ChatUtils.getInLineHint(getApplicationContext(),config.queueNum));
+            if (config.isShowQueueTip) {
+                //显示当前排队的位置
+                config.addMessage(ChatUtils.getInLineHint(getApplicationContext(),config.queueNum));
+            }
 
             if (type == ZhiChiConstant.type_custom_only) {
                 //显示标题

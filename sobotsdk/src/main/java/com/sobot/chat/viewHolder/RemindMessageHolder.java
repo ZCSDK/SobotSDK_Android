@@ -80,7 +80,7 @@ public class RemindMessageHolder extends MessageHolderBase {
                     //结束了本次会话  有事离开 超时下线 ....的提醒
                     HtmlTools.getInstance(context).setRichText(center_Remind_Info,message
                             .getAnswer().getMsg(), ResourceUtils.getIdByName(context, "color","sobot_color_link_remind"));
-                } else if(remindType == ZhiChiConstant.sobot_remind_type_evaluate ||remindType == ZhiChiConstant.sobot_remind_type_accept_request){
+                } else if(remindType == ZhiChiConstant.sobot_remind_type_tip ||remindType == ZhiChiConstant.sobot_remind_type_accept_request){
                     center_Remind_Info.setText(message.getAnswer().getMsg());
                 }
             }

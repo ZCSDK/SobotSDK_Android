@@ -25,6 +25,7 @@ import java.util.Map;
 public class RobotTemplateMessageHolder1 extends MessageHolderBase {
 
     private TextView tv_title;
+    private LinearLayout sobot_ll_content;
     private LinearLayout sobot_horizontal_scrollview_layout;
     private HorizontalScrollView sobot_horizontal_scrollview;
 
@@ -33,13 +34,20 @@ public class RobotTemplateMessageHolder1 extends MessageHolderBase {
         tv_title = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot__template1_msg"));
         sobot_horizontal_scrollview_layout = (LinearLayout) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_template1_horizontal_scrollview_layout"));
         sobot_horizontal_scrollview = (HorizontalScrollView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_template1_horizontal_scrollview"));
+        sobot_ll_content = (LinearLayout) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_ll_content"));
     }
 
     @Override
     public void bindData(final Context context, final ZhiChiMessageBase message) {
         if (message.getAnswer() != null && message.getAnswer().getMultiDiaRespInfo() != null) {
             final SobotMultiDiaRespInfo multiDiaRespInfo = message.getAnswer().getMultiDiaRespInfo();
-            tv_title.setText(ChatUtils.getMultiMsgTitle(multiDiaRespInfo));
+            String msgStr = ChatUtils.getMultiMsgTitle(multiDiaRespInfo);
+            if (!TextUtils.isEmpty(msgStr)){
+                tv_title.setText(msgStr);
+                sobot_ll_content.setVisibility(View.VISIBLE);
+            } else {
+                sobot_ll_content.setVisibility(View.INVISIBLE);
+            }
             final List<Map<String, String>> interfaceRetList = multiDiaRespInfo.getInterfaceRetList();
             if ("000000".equals(multiDiaRespInfo.getRetCode()) && interfaceRetList != null && interfaceRetList.size() > 0) {
                 sobot_horizontal_scrollview.setVisibility(View.VISIBLE);

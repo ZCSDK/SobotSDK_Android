@@ -60,7 +60,7 @@ public class SelectPicPopupWindow extends PopupWindow {
 	private void initView(){
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		mView = inflater.inflate(ResourceUtils.getIdByName(context,"layout","sobot_picture_popup"), null);
+		mView = inflater.inflate(ResourceUtils.getIdByName(context,"layout","sobot_clear_history_dialog"), null);
 		sobot_btn_take_photo = (Button) mView.findViewById(ResourceUtils.getIdByName(context,"id","sobot_btn_take_photo"));
 		sobot_btn_cancel = (Button) mView.findViewById(ResourceUtils.getIdByName(context,"id","sobot_btn_cancel"));
 

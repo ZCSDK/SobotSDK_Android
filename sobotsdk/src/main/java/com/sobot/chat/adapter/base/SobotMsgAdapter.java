@@ -12,6 +12,7 @@ import com.sobot.chat.api.model.SobotMultiDiaRespInfo;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.api.model.ZhiChiReplyAnswer;
 import com.sobot.chat.utils.DateUtil;
+import com.sobot.chat.utils.LogUtils;
 import com.sobot.chat.utils.ResourceUtils;
 import com.sobot.chat.utils.SharedPreferencesUtil;
 import com.sobot.chat.utils.VersionUtils;
@@ -20,6 +21,8 @@ import com.sobot.chat.viewHolder.ConsultMessageHolder;
 import com.sobot.chat.viewHolder.CusEvaluateMessageHolder;
 import com.sobot.chat.viewHolder.ImageMessageHolder;
 import com.sobot.chat.viewHolder.RetractedMessageHolder;
+import com.sobot.chat.viewHolder.RobotAnswerItemsMsgHolder;
+import com.sobot.chat.viewHolder.RobotKeyWordMessageHolder;
 import com.sobot.chat.viewHolder.RobotQRMessageHolder;
 import com.sobot.chat.viewHolder.RobotTemplateMessageHolder1;
 import com.sobot.chat.viewHolder.RemindMessageHolder;
@@ -59,6 +62,8 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
             "sobot_chat_msg_item_template5_l",//机器人  多轮会话模板 5
             "sobot_chat_msg_item_question_recommend",//热点问题列表
             "sobot_chat_msg_item_retracted_msg",//消息撤回
+            "sobot_chat_msg_item_robot_answer_items_l",//多轮会话模板 1511类型  显示的view
+            "sobot_chat_msg_item_robot_keyword_items_l",//机器人关键字转人工 布局
     };
 
     /**
@@ -133,6 +138,14 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
      * 消息撤回
      */
     public static final int MSG_TYPE_RETRACTED_MSG = 16;
+    /**
+     * 机器人  多轮会话模板 1511类型  显示的view
+     */
+    public static final int MSG_TYPE_ROBOT_ANSWER_ITEMS = 17;
+    /**
+     * 机器人关键字转人工 布局类型
+     */
+    public static final int MSG_TYPE_ROBOT_KEYWORD_ITEMS = 18;
 
     private String senderface;
     private String sendername;
@@ -197,6 +210,10 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
             }
         }
 
+        justAddData(message);
+    }
+
+    public void justAddData(ZhiChiMessageBase message) {
         String lastCid = SharedPreferencesUtil.getStringData(context, "lastCid", "");
         setDefaultCid(lastCid, message);
 
@@ -408,6 +425,12 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
                 case MSG_TYPE_ROBOT_TEMPLATE5:
                     holder = new RobotTemplateMessageHolder5(context, convertView);
                     break;
+                case MSG_TYPE_ROBOT_KEYWORD_ITEMS:
+                    holder = new RobotKeyWordMessageHolder(context, convertView);
+                    break;
+                case MSG_TYPE_ROBOT_ANSWER_ITEMS:
+                    holder = new RobotAnswerItemsMsgHolder(context, convertView);
+                    break;
                 case MSG_TYPE_MULTI_ROUND_R:
                     holder = new SobotChatMsgItemSDKHistoryR(context, convertView);
                     break;
@@ -531,11 +554,19 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
                         }
                     } else if (Integer.parseInt(message.getAnswer().getMsgType()) == ZhiChiConstant.message_type_reply) {
                         return MSG_TYPE_RICH;
+                    } else if (Integer.parseInt(message.getAnswer().getMsgType()) == ZhiChiConstant.message_type_reply_multi_round) {
+                        return MSG_TYPE_RICH;
                     } else if (ZhiChiConstant.message_type_history_custom.equals(message.getAnswer().getMsgType())) {
                         return MSG_TYPE_MULTI_ROUND_R;
                     } else if (ZhiChiConstant.message_type_history_robot.equals(message.getAnswer().getMsgType())) {
                         if (GsonUtil.isMultiRoundSession(message) && message.getAnswer().getMultiDiaRespInfo() != null) {
                             SobotMultiDiaRespInfo multiDiaRespInfo = message.getAnswer().getMultiDiaRespInfo();
+                            if ("1511".equals(message.getAnswerType())){
+                                return MSG_TYPE_ROBOT_ANSWER_ITEMS;
+                            }
+                            if (multiDiaRespInfo.getInputContentList() != null && multiDiaRespInfo.getInputContentList().length > 0) {
+                                return MSG_TYPE_ROBOT_TEMPLATE2;
+                            }
                             if (!TextUtils.isEmpty(multiDiaRespInfo.getTemplate())) {
                                 if ("0".equals(multiDiaRespInfo.getTemplate())) {
                                     return MSG_TYPE_ROBOT_TEMPLATE1;
@@ -586,6 +617,9 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
             } else if (ZhiChiConstant.message_sender_type_robot_welcome_msg == Integer
                     .parseInt(message.getSenderType())) {
                 return MSG_TYPE_RICH;
+            } else if (ZhiChiConstant.message_sender_type_robot_keyword_msg == Integer
+                    .parseInt(message.getSenderType())){
+                return MSG_TYPE_ROBOT_KEYWORD_ITEMS;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -680,6 +714,22 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
                     break;
                 }
             }
+        }
+    }
+
+    public void removeKeyWordTranferItem(){
+
+        try{
+            List<ZhiChiMessageBase> listData = getDatas();
+            for (int i = listData.size() - 1; i >= 0 ; i--) {
+                if (ZhiChiConstant.message_sender_type_robot_keyword_msg == Integer
+                        .parseInt(listData.get(i).getSenderType())){
+                    listData.remove(i);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            LogUtils.i("error : removeKeyWordTranferItem()");
         }
     }
 

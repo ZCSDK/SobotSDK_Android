@@ -56,7 +56,7 @@
     <string name="sobot_voice_can_not_be_less_than_one_second">说话时间过短</string>
     <string name="sobot_count_down">倒计时：</string>
     <string name="sobot_reunicon">点击重新连接</string>
-    <string name="sobot_read_all">阅读全文>></string>
+    <string name="sobot_read_all">查看详情>></string>
     <string name="sobot_ctrl_v_success">复制成功！</string>
     <string name="sobot_ctrl_copy">复制</string>
     <string name="sobot_network_unavailable">当前网络不可用，请检查您的网络设置</string>

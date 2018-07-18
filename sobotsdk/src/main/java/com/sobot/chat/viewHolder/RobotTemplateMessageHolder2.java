@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sobot.chat.activity.WebViewActivity;
@@ -11,6 +12,7 @@ import com.sobot.chat.api.apiUtils.GsonUtil;
 import com.sobot.chat.api.model.SobotMultiDiaRespInfo;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.utils.ChatUtils;
+import com.sobot.chat.utils.HtmlTools;
 import com.sobot.chat.utils.ResourceUtils;
 import com.sobot.chat.viewHolder.base.MessageHolderBase;
 import com.sobot.chat.widget.lablesview.SobotLabelsView;
@@ -26,6 +28,7 @@ public class RobotTemplateMessageHolder2 extends MessageHolderBase implements So
     // 聊天的消息内容
     private TextView tv_msg;
     private TextView tv_more;
+    private LinearLayout sobot_ll_content;
     // 标签页控件
     private SobotLabelsView slv_labels;
 
@@ -39,6 +42,7 @@ public class RobotTemplateMessageHolder2 extends MessageHolderBase implements So
         tv_msg = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_template2_msg"));
         tv_more = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_tv_more"));
         slv_labels = (SobotLabelsView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_template2_labels"));
+        sobot_ll_content = (LinearLayout) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_ll_content"));
         tv_more.setOnClickListener(this);
     }
 
@@ -47,7 +51,14 @@ public class RobotTemplateMessageHolder2 extends MessageHolderBase implements So
         zhiChiMessageBase = message;
         if (message.getAnswer() != null && message.getAnswer().getMultiDiaRespInfo() != null) {
             final SobotMultiDiaRespInfo multiDiaRespInfo = message.getAnswer().getMultiDiaRespInfo();
-            tv_msg.setText(ChatUtils.getMultiMsgTitle(multiDiaRespInfo));
+            String msgStr = ChatUtils.getMultiMsgTitle(multiDiaRespInfo);
+            if (!TextUtils.isEmpty(msgStr)){
+                HtmlTools.getInstance(context).setRichText(tv_msg, msgStr, ResourceUtils.getIdByName(context, "color", "sobot_color_link"));
+                sobot_ll_content.setVisibility(View.VISIBLE);
+            } else {
+                sobot_ll_content.setVisibility(View.INVISIBLE);
+            }
+
             if ("000000".equals(multiDiaRespInfo.getRetCode())) {
                 List<Map<String, String>> interfaceRetList = multiDiaRespInfo.getInterfaceRetList();
                 String[] inputContent = multiDiaRespInfo.getInputContentList();
@@ -154,11 +165,15 @@ public class RobotTemplateMessageHolder2 extends MessageHolderBase implements So
             intent.putExtra("url", data.getAnchor());
             mContext.startActivity(intent);
         } else {
-            sendMultiRoundQuestions(data.getTitle(), multiDiaRespInfo);
+            sendMultiRoundQuestions(data, multiDiaRespInfo);
         }
     }
 
-    private void sendMultiRoundQuestions(String labelText, SobotMultiDiaRespInfo multiDiaRespInfo) {
+    private void sendMultiRoundQuestions(SobotLablesViewModel data, SobotMultiDiaRespInfo multiDiaRespInfo) {
+        if (multiDiaRespInfo == null) {
+            return;
+        }
+        String labelText = data.getTitle();
         String[] outputParam = multiDiaRespInfo.getOutPutParamList();
         if (msgCallBack != null && zhiChiMessageBase != null) {
             ZhiChiMessageBase msgObj = new ZhiChiMessageBase();
@@ -190,7 +205,7 @@ public class RobotTemplateMessageHolder2 extends MessageHolderBase implements So
                     } else {
                         info.setPageNum((info.getPageNum() + 1));
                     }
-                    bindData(mContext,zhiChiMessageBase);
+                    bindData(mContext, zhiChiMessageBase);
                 }
             }
         }

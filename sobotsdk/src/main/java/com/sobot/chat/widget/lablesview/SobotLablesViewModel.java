@@ -10,6 +10,15 @@ public class SobotLablesViewModel implements Serializable{
 
     private String title;
     private String anchor;
+    private Object data;
+
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
+    }
 
     public String getTitle() {
         return title;

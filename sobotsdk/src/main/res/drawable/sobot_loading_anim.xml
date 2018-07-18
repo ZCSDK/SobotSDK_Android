@@ -3,7 +3,7 @@
 
     <item>
         <rotate
-            android:drawable="@drawable/sobot_loading_01"
+            android:drawable="@drawable/sobot_loading_img"
             android:fromDegrees="0.0"
             android:pivotX="50.0%"
             android:pivotY="50.0%"

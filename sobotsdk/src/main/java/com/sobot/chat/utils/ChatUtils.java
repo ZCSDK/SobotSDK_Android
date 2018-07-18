@@ -16,6 +16,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.sobot.chat.SobotApi;
 import com.sobot.chat.adapter.base.SobotMsgAdapter;
@@ -711,7 +712,9 @@ public class ChatUtils {
 			String lastMsg = "";
 			for (int i = messageList.size() -1; i >= 0; i--) {
 				ZhiChiMessageBase tempMsg = messageList.get(i);
-				lastMsg = tempMsg.getAnswer().getMsg();
+				if (tempMsg.getAnswer() != null){
+					lastMsg = tempMsg.getAnswer().getMsg();
+				}
 				break;
 			}
 			sobotMsgCenterModel.setLastMsg(lastMsg);
@@ -758,7 +761,7 @@ public class ChatUtils {
 		}
 		if ("000000".equals(multiDiaRespInfo.getRetCode())) {
 			if (multiDiaRespInfo.getEndFlag()) {
-				return multiDiaRespInfo.getAnswerStrip();
+				return !TextUtils.isEmpty(multiDiaRespInfo.getAnswerStrip()) ? multiDiaRespInfo.getAnswerStrip() : multiDiaRespInfo.getAnswer();
 			} else {
 				return multiDiaRespInfo.getRemindQuestion();
 			}
@@ -781,5 +784,42 @@ public class ChatUtils {
 		robot.setSender(initModel.getRobotName());
 		robot.setSenderName(initModel.getRobotName());
 		return robot;
+	}
+
+	public static ZhiChiMessageBase getTipByText(String content){
+		ZhiChiMessageBase data = new ZhiChiMessageBase();
+		data.setSenderType(ZhiChiConstant.message_sender_type_remide_info + "");
+
+		ZhiChiReplyAnswer reply = new ZhiChiReplyAnswer();
+		reply.setMsg(content);
+		reply.setRemindType(ZhiChiConstant.sobot_remind_type_tip);
+		data.setAnswer(reply);
+		return data;
+	}
+
+	public static void msgLogicalProcess(ZhiChiInitModeBase initModel,SobotMsgAdapter messageAdapter,ZhiChiPushMessage pushMessage){
+		if (initModel != null && ChatUtils.isNeedWarning(pushMessage.getContent(),initModel.getAccountStatus())) {
+			messageAdapter.justAddData(ChatUtils.getTipByText("温馨提示：从正规网站按照正常操作进行交易，不要轻易提供验证码、账号等隐私信息，谨防被骗！"));
+		}
+	}
+
+	private static boolean isNeedWarning(String content,int accountStatus){
+		return !TextUtils.isEmpty(content) && (accountStatus == ZhiChiConstant.SOBOT_ACCOUNTSTATUS_FREE_EDITION
+				|| accountStatus == ZhiChiConstant.SOBOT_ACCOUNTSTATUS_TRIAL_EDITION)
+				&& content.contains("验证码");
+	}
+
+	/**
+	 * 获取引导问题中的问题选项view
+	 * @param context
+	 */
+	public static TextView initAnswerItemTextView(Context context,boolean isHistoryMsg) {
+		TextView answer = new TextView(context);
+		answer.setTextSize(16);
+		answer.setLineSpacing(2f, 1f);
+		// 设置字体的颜色的样式
+		answer.setTextColor(context.getResources().getColor(ResourceUtils.getIdByName(context,
+				"color",isHistoryMsg?"sobot_color_suggestion_history":"sobot_color_link")));
+		return answer;
 	}
 }
