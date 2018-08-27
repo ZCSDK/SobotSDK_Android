@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import com.sobot.chat.activity.base.SobotBaseActivity;
+import com.sobot.chat.utils.ZhiChiConstant;
 
 public class SobotChatActivity extends SobotBaseActivity {
 
@@ -19,15 +20,15 @@ public class SobotChatActivity extends SobotBaseActivity {
 
     protected void initBundleData(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
-            informationBundle = getIntent().getBundleExtra("informationBundle");
+            informationBundle = getIntent().getBundleExtra(ZhiChiConstant.SOBOT_BUNDLE_INFORMATION);
         } else {
-            informationBundle = savedInstanceState.getBundle("informationBundle");
+            informationBundle = savedInstanceState.getBundle(ZhiChiConstant.SOBOT_BUNDLE_INFORMATION);
         }
     }
 
     protected void onSaveInstanceState(Bundle outState) {
         //销毁前缓存数据
-        outState.putBundle("informationBundle", informationBundle);
+        outState.putBundle(ZhiChiConstant.SOBOT_BUNDLE_INFORMATION, informationBundle);
         super.onSaveInstanceState(outState);
     }
 

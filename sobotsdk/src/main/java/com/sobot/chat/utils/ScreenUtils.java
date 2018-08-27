@@ -2,7 +2,12 @@ package com.sobot.chat.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.annotation.ColorRes;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.view.WindowManager;
 
 import java.util.regex.Matcher;
@@ -162,4 +167,36 @@ public class ScreenUtils {
     public static float dpToPixel(Context context,float dp) {
         return dp * (getDisplayMetrics(context).densityDpi / 160F);
     }
+
+
+	public static void setBubbleBackGroud(Context context, View view, int coumterResId){
+		if (view == null){
+			return;
+		}
+
+		Drawable tintDrawable = tintDrawable(context, view.getBackground(), coumterResId);
+		setBackground(view, tintDrawable);
+	}
+
+    public static Drawable tintDrawable(Context context, Drawable drawable, @ColorRes int color) {
+		if (drawable == null) {
+			return null;
+		}
+
+		final Drawable wrappedDrawable = DrawableCompat.wrap(drawable);
+		DrawableCompat.setTint(wrappedDrawable, context.getResources().getColor(color));
+		return wrappedDrawable;
+	}
+
+	private static void setBackground(View v, Drawable bgDrawable) {
+		if (v == null){
+			return;
+		}
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+			v.setBackground(bgDrawable);
+		} else {
+			v.setBackgroundDrawable(bgDrawable);
+		}
+	}
 }

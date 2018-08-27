@@ -31,8 +31,11 @@ public class TextMessageHolder extends MessageHolderBase {
         if (message.getAnswer() != null && (!TextUtils.isEmpty(message.getAnswer().getMsg()) || !TextUtils.isEmpty(message.getAnswer().getMsgTransfer()))) {// 纯文本消息
             String content = !TextUtils.isEmpty(message.getAnswer().getMsgTransfer())?message.getAnswer().getMsgTransfer():message.getAnswer().getMsg();
             msg.setVisibility(View.VISIBLE);
-            HtmlTools.getInstance(context).setRichText(msg, content,
-                    isRight ? ResourceUtils.getIdByName(context, "color","sobot_color_rlink") : ResourceUtils.getIdByName(context, "color","sobot_color_link"));
+
+            HtmlTools.getInstance(context).setRichText(msg, content, isRight ? getLinkTextColor() : getLinkTextColor());
+
+            applyTextViewUIConfig(msg);
+
             if(isRight){
                 try {
                     msgStatus.setClickable(true);

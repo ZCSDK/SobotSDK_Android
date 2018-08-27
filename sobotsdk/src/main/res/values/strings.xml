@@ -120,5 +120,6 @@
     <string name="sobot_collapse">收起全部</string>
     <string name="sobot_switch_business">切换业务</string>
     <string name="sobot_switch_robot_title">选择要咨询的业务</string>
+    <string name="sobot_connecting_customer_service">正在连接人工客服</string>
     <string name="sobot_retracted_msg_tip">客服 %1$s 撤回了一条消息</string>
 </resources>

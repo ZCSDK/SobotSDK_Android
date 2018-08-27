@@ -86,14 +86,11 @@
     <style name="sobot_chatting_panel_upload">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">10dp</item>
-        <item name="android:layout_marginLeft">27dp</item>
-        <item name="android:drawablePadding">10dp</item>
-        <item name="android:gravity">center</item>
+        <item name="android:drawablePadding">5dp</item>
+        <item name="android:gravity">center_horizontal</item>
         <item name="android:textColor">@color/sobot_color_bottom_upload_btn_color</item>
-        <item name="android:textSize">@dimen/sobot_text_font_small</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:visibility">visible</item>
-        <item name="android:layout_weight">1</item>
     </style>
 
     <style name="sobot_chatting_nickname">

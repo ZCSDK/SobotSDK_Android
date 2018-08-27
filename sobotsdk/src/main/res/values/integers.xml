@@ -2,4 +2,6 @@
 <resources>
     <integer name="sobot_emotiocon_line">4</integer>
     <integer name="sobot_emotiocon_row">7</integer>
+    <integer name="sobot_plus_menu_line">2</integer>
+    <integer name="sobot_plus_menu_row">4</integer>
 </resources>

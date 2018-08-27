@@ -12,7 +12,6 @@ import com.sobot.chat.utils.ToastUtil;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Administrator on 2017/12/12.
@@ -108,7 +107,6 @@ public class SobotUtils {
         if (!TextUtils.isEmpty(SobotSPUtil.getStringData(context, "sobot_show_history_ruler", ""))) {
             sobot_show_history_ruler = Long.parseLong(SobotSPUtil.getStringData(context, "sobot_show_history_ruler", ""));
         }
-
         String transferKey = SobotSPUtil.getStringData(context, "sobot_transferKeyWord", "");
         if (!TextUtils.isEmpty(transferKey)) {
             String[] transferKeys =  transferKey.split(",");

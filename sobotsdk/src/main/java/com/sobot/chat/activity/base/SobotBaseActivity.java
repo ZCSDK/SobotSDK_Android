@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sobot.chat.SobotUIConfig;
 import com.sobot.chat.api.ZhiChiApi;
 import com.sobot.chat.application.MyApplication;
 import com.sobot.chat.core.channel.SobotMsgManager;
@@ -24,6 +25,7 @@ import com.sobot.chat.core.http.OkHttpUtils;
 import com.sobot.chat.utils.ChatUtils;
 import com.sobot.chat.utils.CommonUtils;
 import com.sobot.chat.utils.ResourceUtils;
+import com.sobot.chat.utils.ScreenUtils;
 import com.sobot.chat.utils.SharedPreferencesUtil;
 import com.sobot.chat.utils.ToastUtil;
 import com.sobot.chat.utils.ZhiChiConstant;
@@ -69,6 +71,7 @@ public abstract class SobotBaseActivity extends FragmentActivity {
         if (toolBar != null) {
             if (getLeftMenu() != null) {
                 //找到 Toolbar 的返回按钮,并且设置点击事件,点击关闭这个 Activity
+                applyTitleUIConfig(getLeftMenu());
                 getLeftMenu().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -79,6 +82,7 @@ public abstract class SobotBaseActivity extends FragmentActivity {
 
             if (getRightMenu() != null) {
                 //找到 Toolbar 的返回按钮,并且设置点击事件,点击关闭这个 Activity
+                applyTitleUIConfig(getRightMenu());
                 getRightMenu().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -94,9 +98,14 @@ public abstract class SobotBaseActivity extends FragmentActivity {
         if (toolBar == null) {
             return;
         }
+
         String bg_color = SharedPreferencesUtil.getStringData(this, "robot_current_themeColor", "");
         if (!TextUtils.isEmpty(bg_color)) {
             toolBar.setBackgroundColor(Color.parseColor(bg_color));
+        }
+
+        if (SobotUIConfig.DEFAULT != SobotUIConfig.sobot_titleBgColor ) {
+            toolBar.setBackgroundColor(getResources().getColor(SobotUIConfig.sobot_titleBgColor));
         }
 
         int robot_current_themeImg = SharedPreferencesUtil.getIntData(this, "robot_current_themeImg", 0);
@@ -109,11 +118,11 @@ public abstract class SobotBaseActivity extends FragmentActivity {
         return findViewById(getResId("sobot_layout_titlebar"));
     }
 
-    protected View getLeftMenu() {
+    protected TextView getLeftMenu() {
         return findViewById(getResId("sobot_tv_left"));
     }
 
-    protected View getRightMenu() {
+    protected TextView getRightMenu() {
         return findViewById(getResId("sobot_tv_right"));
     }
 
@@ -172,6 +181,9 @@ public abstract class SobotBaseActivity extends FragmentActivity {
 
         if (resourceId != 0) {
             Drawable img = getResources().getDrawable(resourceId);
+            if (SobotUIConfig.DEFAULT != SobotUIConfig.sobot_titleTextColor){
+                img = ScreenUtils.tintDrawable(getApplicationContext(), img, SobotUIConfig.sobot_titleTextColor);
+            }
             img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
             leftMenu.setCompoundDrawables(img, null, null, null);
         } else {
@@ -218,6 +230,7 @@ public abstract class SobotBaseActivity extends FragmentActivity {
         }
         TextView tvTitle = (TextView) tmpMenu;
         tvTitle.setText(title);
+        applyTitleUIConfig(tvTitle);
     }
 
     public void setTitle(int title) {
@@ -386,4 +399,9 @@ public abstract class SobotBaseActivity extends FragmentActivity {
         ChatUtils.openSelectPic(this);
     }
 
+    private void applyTitleUIConfig(TextView view){
+        if (SobotUIConfig.DEFAULT != SobotUIConfig.sobot_titleTextColor){
+            view.setTextColor(getResources().getColor(SobotUIConfig.sobot_titleTextColor));
+        }
+    }
 }

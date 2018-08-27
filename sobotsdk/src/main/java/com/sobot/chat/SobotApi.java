@@ -45,12 +45,18 @@ public class SobotApi {
 	 * @param appkey  用户的appkey  必填 如果是平台用户需要传总公司的appkey
 	 * @param uid     用户的唯一标识不能传一样的值
 	 */
-	public static void initSobotSDK(Context context,String appkey,String uid){
+	public static void initSobotSDK(final Context context,final String appkey,final String uid){
 		if (context == null || TextUtils.isEmpty(appkey)) {
 			Log.e(Tag,"initSobotSDK  参数为空 context:" + context + "  appkey:" + appkey);
 			return;
 		}
-		SobotMsgManager.getInstance(context).initSobotSDK(context,appkey,uid);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				SobotMsgManager.getInstance(context).initSobotSDK(context,appkey,uid);
+			}
+		}).start();
+
 	}
 
 	/**
@@ -83,8 +89,8 @@ public class SobotApi {
 		}
 		Intent intent = new Intent(context, SobotChatActivity.class);
 		Bundle bundle = new Bundle();
-		bundle.putSerializable("info", information);
-		intent.putExtra("informationBundle", bundle);
+		bundle.putSerializable(ZhiChiConstant.SOBOT_BUNDLE_INFO, information);
+		intent.putExtra(ZhiChiConstant.SOBOT_BUNDLE_INFORMATION, bundle);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		context.startActivity(intent);
 	}

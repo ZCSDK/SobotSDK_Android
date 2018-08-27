@@ -1,5 +1,6 @@
 package com.sobot.demo;
 
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.lzy.widget.AlphaIndicator;
 import com.sobot.chat.utils.LogUtils;
+import com.sobot.chat.utils.ZhiChiConstant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,9 @@ import java.util.List;
  */
 
 public class SobotDemoNewActivity extends AppCompatActivity {
+
+    private SobotNotificationClickReceiver nClickReceiver;//点击通知以后发出的广播接收者
+    private SobotUnReadMsgReceiver unReadMsgReceiver;//获取未读消息数的广播接收者
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,6 +37,7 @@ public class SobotDemoNewActivity extends AppCompatActivity {
         viewPager.setAdapter(new MainAdapter(getSupportFragmentManager()));
         AlphaIndicator alphaIndicator = (AlphaIndicator) findViewById(R.id.alphaIndicator);
         alphaIndicator.setViewPager(viewPager);
+        regReceiver();
     }
 
     private class MainAdapter extends FragmentPagerAdapter {
@@ -53,5 +59,37 @@ public class SobotDemoNewActivity extends AppCompatActivity {
         public int getCount() {
             return fragments.size();
         }
+    }
+
+    private void regReceiver(){
+        IntentFilter filter = new IntentFilter();
+        if (nClickReceiver == null){
+            nClickReceiver = new SobotNotificationClickReceiver();
+        }
+        filter.addAction(ZhiChiConstant.SOBOT_NOTIFICATION_CLICK);
+        registerReceiver(nClickReceiver, filter);
+
+        if (unReadMsgReceiver == null){
+            unReadMsgReceiver = new SobotUnReadMsgReceiver();
+        }
+        filter.addAction(ZhiChiConstant.sobot_unreadCountBrocast);
+        registerReceiver(unReadMsgReceiver, filter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        try {
+            if (nClickReceiver != null){
+                unregisterReceiver(nClickReceiver);
+            }
+
+            if (unReadMsgReceiver != null){
+                unregisterReceiver(unReadMsgReceiver);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        super.onDestroy();
     }
 }

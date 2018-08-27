@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.sobot.chat.SobotUIConfig;
 import com.sobot.chat.utils.ResourceUtils;
 
 import java.util.ArrayList;
@@ -350,7 +351,11 @@ public class SobotLabelsView extends ViewGroup implements View.OnClickListener {
         final TextView label = new TextView(mContext);
         label.setPadding(mTextPaddingLeft, mTextPaddingTop, mTextPaddingRight, mTextPaddingBottom);
         label.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize);
-        label.setTextColor(mTextColor != null ? mTextColor : ColorStateList.valueOf(0xFF000000));
+        if (SobotUIConfig.DEFAULT != SobotUIConfig.sobot_chat_left_textColor ){
+            label.setTextColor(label.getContext().getResources().getColor(SobotUIConfig.sobot_chat_left_textColor));
+        } else {
+            label.setTextColor(mTextColor != null ? mTextColor : ColorStateList.valueOf(0xFF000000));
+        }
         label.setSingleLine(true);
         label.setEllipsize(TextUtils.TruncateAt.END);
         label.setText(data.getTitle());

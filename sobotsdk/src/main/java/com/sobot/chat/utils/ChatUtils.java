@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sobot.chat.SobotApi;
+import com.sobot.chat.SobotUIConfig;
 import com.sobot.chat.adapter.base.SobotMsgAdapter;
 import com.sobot.chat.api.ResultCallBack;
 import com.sobot.chat.api.ZhiChiApi;
@@ -818,8 +819,15 @@ public class ChatUtils {
 		answer.setTextSize(16);
 		answer.setLineSpacing(2f, 1f);
 		// 设置字体的颜色的样式
-		answer.setTextColor(context.getResources().getColor(ResourceUtils.getIdByName(context,
-				"color",isHistoryMsg?"sobot_color_suggestion_history":"sobot_color_link")));
+		int colorId = 0;
+        if (isHistoryMsg){
+			colorId = SobotUIConfig.DEFAULT != SobotUIConfig.sobot_chat_left_textColor ? SobotUIConfig.sobot_chat_left_textColor :
+                    ResourceUtils.getIdByName(context, "color", "sobot_color_suggestion_history");
+        } else {
+			colorId = SobotUIConfig.DEFAULT != SobotUIConfig.sobot_chat_left_link_textColor ? SobotUIConfig.sobot_chat_left_link_textColor :
+                    ResourceUtils.getIdByName(context, "color", "sobot_color_link");
+        }
+		answer.setTextColor(context.getResources().getColor(colorId));
 		return answer;
 	}
 }

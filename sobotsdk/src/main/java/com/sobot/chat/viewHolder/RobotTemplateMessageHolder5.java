@@ -29,6 +29,7 @@ public class RobotTemplateMessageHolder5 extends MessageHolderBase {
         if (message.getAnswer() != null && message.getAnswer().getMultiDiaRespInfo() != null) {
             final SobotMultiDiaRespInfo multiDiaRespInfo = message.getAnswer().getMultiDiaRespInfo();
             sobot_template5_msg.setText(ChatUtils.getMultiMsgTitle(multiDiaRespInfo));
+            applyTextViewUIConfig(sobot_template5_msg);
             final List<Map<String, String>> interfaceRetList = multiDiaRespInfo.getInterfaceRetList();
             if ("000000".equals(multiDiaRespInfo.getRetCode()) && interfaceRetList != null && interfaceRetList.size() > 0) {
                 final Map<String, String> interfaceRet = interfaceRetList.get(0);

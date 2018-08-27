@@ -120,5 +120,6 @@
     <string name="sobot_collapse">Collapse</string>
     <string name="sobot_switch_business">Switch business</string>
     <string name="sobot_switch_robot_title">Select the business to consult</string>
+    <string name="sobot_connecting_customer_service">connecting</string>
     <string name="sobot_retracted_msg_tip">Customer service %1$s withdrew a message</string>
 </resources>

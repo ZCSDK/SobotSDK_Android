@@ -35,6 +35,7 @@ public class RobotKeyWordMessageHolder extends MessageHolderBase {
             SobotKeyWordTransfer sobotKeyWordTransfer = message.getSobotKeyWordTransfer();
             if (sobotKeyWordTransfer != null) {
                 if (sobotKeyWordTransfer.getTipsMessage() != null) {
+                    applyTextViewUIConfig(tv_title);
                     tv_title.setText(sobotKeyWordTransfer.getTipsMessage());
                 }
 

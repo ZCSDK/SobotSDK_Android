@@ -14,12 +14,14 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sobot.chat.SobotUIConfig;
 import com.sobot.chat.api.ZhiChiApi;
 import com.sobot.chat.core.channel.SobotMsgManager;
 import com.sobot.chat.core.http.OkHttpUtils;
 import com.sobot.chat.utils.ChatUtils;
 import com.sobot.chat.utils.CommonUtils;
 import com.sobot.chat.utils.ResourceUtils;
+import com.sobot.chat.utils.ScreenUtils;
 import com.sobot.chat.utils.ToastUtil;
 import com.sobot.chat.utils.ZhiChiConstant;
 
@@ -156,12 +158,16 @@ public abstract class SobotBaseFragment extends Fragment {
 
         if (resourceId != 0) {
             Drawable img = getResources().getDrawable(resourceId);
+            if (SobotUIConfig.DEFAULT != SobotUIConfig.sobot_titleTextColor){
+                img = ScreenUtils.tintDrawable(getContext(), img, SobotUIConfig.sobot_titleTextColor);
+            }
             img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
             leftMenu.setCompoundDrawables(img, null, null, null);
         } else {
             leftMenu.setCompoundDrawables(null, null, null, null);
         }
 
+        applyTitleTextColor(leftMenu);
     }
 
     /**
@@ -252,5 +258,15 @@ public abstract class SobotBaseFragment extends Fragment {
             return;
         }
         ChatUtils.openSelectPic(getActivity(),SobotBaseFragment.this);
+    }
+
+    protected void applyTitleTextColor(TextView view){
+        if (view == null){
+            return;
+        }
+
+        if (SobotUIConfig.DEFAULT != SobotUIConfig.sobot_titleTextColor ){
+            view.setTextColor(getResources().getColor(SobotUIConfig.sobot_titleTextColor));
+        }
     }
 }

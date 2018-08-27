@@ -356,6 +356,7 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
             holder.setMsgCallBack(mMsgCallBack);
             handerRemindTiem(holder, position);
             holder.initNameAndFace(itemType, context, message, senderface, sendername);
+            holder.applyCustomUI();//设置UI
             holder.bindData(context, message);
         }
         return convertView;

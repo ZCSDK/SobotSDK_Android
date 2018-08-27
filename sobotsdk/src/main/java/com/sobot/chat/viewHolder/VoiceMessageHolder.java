@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.sobot.chat.SobotUIConfig;
 import com.sobot.chat.adapter.base.SobotMsgAdapter;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.api.model.ZhiChiReplyAnswer;
@@ -43,6 +44,10 @@ public class VoiceMessageHolder extends MessageHolderBase {
                 .findViewById(ResourceUtils.getIdByName(context, "id",
                         "sobot_ll_voice_layout"));
 
+        if (ll_voice_layout != null && SobotUIConfig.DEFAULT != SobotUIConfig.sobot_chat_right_bgColor){
+            ScreenUtils.setBubbleBackGroud(mContext, ll_voice_layout, SobotUIConfig.sobot_chat_right_bgColor);
+        }
+
         msgProgressBar = (ProgressBar) convertView
                 .findViewById(ResourceUtils.getIdByName(context, "id",
                         "sobot_msgProgressBar"));
@@ -54,6 +59,7 @@ public class VoiceMessageHolder extends MessageHolderBase {
         voiceTimeLong.setText(message.getAnswer().getDuration() == null ?
                 "00:00" : (DateUtil.stringToLongMs(message.getAnswer().getDuration()) + "″"));
 
+        applyTextViewUIConfig(voiceTimeLong);
         checkBackground();
         ll_voice_layout.setOnClickListener(new View.OnClickListener() {
 

@@ -75,6 +75,8 @@ public abstract class SobotChatBaseFragment extends SobotBaseFragment implements
     //
     //防止询前表单接口重复执行
     private boolean isQueryFroming = false;
+    //防止重复弹出询前表单
+    protected boolean isHasRequestQueryFrom = false;
 
     //定时器
     protected boolean customTimeTask = false;
@@ -121,9 +123,7 @@ public abstract class SobotChatBaseFragment extends SobotBaseFragment implements
         NotificationUtils.cancleAllNotification(mAppContext);
         //重新恢复连接
         if(customerState == CustomerState.Online || customerState == CustomerState.Queuing){
-            if(CommonUtils.isNetWorkConnected(mAppContext)){
-                zhiChiApi.reconnectChannel();
-            }
+            zhiChiApi.reconnectChannel();
         }
 
         if (_sensorManager != null){
@@ -814,14 +814,15 @@ public abstract class SobotChatBaseFragment extends SobotBaseFragment implements
      * @param groupName
      */
     protected void requestQueryFrom(final String groupId, final String groupName){
-        if (customerState == CustomerState.Queuing) {
-            //如果在排队中就不需要填写询前表单
+        if (customerState == CustomerState.Queuing || isHasRequestQueryFrom) {
+            //如果在排队中就不需要填写询前表单 、或者之前弹过询前表单
             connectCustomerService(groupId, groupName);
             return;
         }
         if (isQueryFroming) {
             return;
         }
+        isHasRequestQueryFrom = true;
         isQueryFroming = true;
         zhiChiApi.queryFormConfig(SobotChatBaseFragment.this,initModel.getUid(), new StringResultCallBack<SobotQueryFormModel>() {
             @Override

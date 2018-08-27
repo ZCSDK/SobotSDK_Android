@@ -74,6 +74,7 @@ public class RobotTemplateMessageHolder1 extends MessageHolderBase {
                 sobot_horizontal_scrollview.setVisibility(View.GONE);
             }
         }
+        applyTextViewUIConfig(tv_title);
     }
 
     public static class Template1ViewHolder implements OnClickListener{

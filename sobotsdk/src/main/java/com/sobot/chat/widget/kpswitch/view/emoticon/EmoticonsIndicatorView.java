@@ -98,11 +98,19 @@ public class EmoticonsIndicatorView extends LinearLayout {
                 mImageViews.add(imageView);
             }
         }
-        for (int i = 0; i < mImageViews.size(); i++) {
-            if (i >= count) {
+
+        //如果只有一页不显示indicator
+        if (count == 1) {
+            for (int i = 0; i < mImageViews.size(); i++) {
                 mImageViews.get(i).setVisibility(GONE);
-            } else {
-                mImageViews.get(i).setVisibility(VISIBLE);
+            }
+        } else {
+            for (int i = 0; i < mImageViews.size(); i++) {
+                if (i >= count) {
+                    mImageViews.get(i).setVisibility(GONE);
+                } else {
+                    mImageViews.get(i).setVisibility(VISIBLE);
+                }
             }
         }
     }

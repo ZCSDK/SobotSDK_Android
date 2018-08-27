@@ -25,7 +25,7 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/sobot_bg_title_custom_dialog"
+        android:background="@drawable/sobot_bg_title_custom_dialog1"
         android:gravity="center" >
 
         <Button

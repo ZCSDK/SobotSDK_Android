@@ -39,6 +39,25 @@
         <activity android:name=".activity.product.SobotDemoCustomActivity" />
         <activity android:name=".activity.product.SobotDemoCloudCallActivity" />
         <activity android:name=".activity.product.SobotDemoWorkOrderActivity"/>
+
+        <!-- 获取未读消息的广播接收者  推荐动态注册，安卓8.0以后不支持静态注册 -->
+        <!--
+        <receiver android:name="com.sobot.demo.SobotUnReadMsgReceiver" >
+            <intent-filter>
+                <action android:name="sobot_unreadCountBrocast" />
+            </intent-filter>
+        </receiver>
+        -->
+
+        <!--点击通知以后发出的广播接收者  推荐动态注册，安卓8.0以后不支持静态注册 -->
+        <!--
+        <receiver android:name="com.sobot.demo.SobotNotificationClickReceiver" >
+            <intent-filter>
+                <action android:name="sobot_notification_click" />
+            </intent-filter>
+        </receiver>
+        -->
+
     </application>
 
 </manifest>

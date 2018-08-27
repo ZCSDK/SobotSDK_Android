@@ -142,7 +142,7 @@ public class RichTextMessageHolder extends MessageHolderBase {
         if (!TextUtils.isEmpty(stripeContent)) {
             // 设置提醒的内容
             stripe.setVisibility(View.VISIBLE);
-            HtmlTools.getInstance(context).setRichText(stripe,stripeContent, ResourceUtils.getIdByName(context, "color","sobot_color_link"));
+            HtmlTools.getInstance(context).setRichText(stripe, stripeContent, getLinkTextColor());
         } else {
             stripe.setText(null);
             stripe.setVisibility(View.GONE);
@@ -190,6 +190,8 @@ public class RichTextMessageHolder extends MessageHolderBase {
                 return false;
             }
         });
+
+        applyTextViewUIConfig(msg);
     }
 
     private void checkShowTransferBtn(){
@@ -383,7 +385,7 @@ public class RichTextMessageHolder extends MessageHolderBase {
         if ( message.getAnswer() != null && !TextUtils.isEmpty(message.getAnswer().getMsg())) {
             msg.setVisibility(View.VISIBLE);
             String robotAnswer = message.getAnswer().getMsg();
-            HtmlTools.getInstance(context).setRichText(msg,robotAnswer.replaceAll("\n", "<br/>"), ResourceUtils.getIdByName(context, "color","sobot_color_link"));
+            HtmlTools.getInstance(context).setRichText(msg, robotAnswer.replaceAll("\n", "<br/>"), getLinkTextColor());
         } else {
             msg.setVisibility(View.GONE);
         }
@@ -396,6 +398,4 @@ public class RichTextMessageHolder extends MessageHolderBase {
         }
         return num + "、";
     }
-
-
 }

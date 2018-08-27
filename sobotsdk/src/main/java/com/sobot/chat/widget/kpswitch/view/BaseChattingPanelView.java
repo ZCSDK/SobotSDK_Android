@@ -40,16 +40,32 @@ public abstract class BaseChattingPanelView {
         return rootView;
     }
 
-    public int getResId(String name) {
+    protected int getResId(String name) {
         return ResourceUtils.getIdByName(context, "id", name);
     }
 
-    public int getResLayoutId(String name) {
+    protected int getResLayoutId(String name) {
         return ResourceUtils.getIdByName(context, "layout", name);
     }
 
-    public int getResDrawableId(String name) {
+    protected int getResDrawableId(String name) {
         return ResourceUtils.getIdByName(context, "drawable", name);
+    }
+
+    protected int getResIntegerId(String name) {
+        return ResourceUtils.getIdByName(context, "integer", name);
+    }
+
+    protected int getResInteger(String name) {
+        return context.getResources().getInteger(getResIntegerId(name));
+    }
+
+    protected int getResStringId(String name) {
+        return ResourceUtils.getIdByName(context, "string", name);
+    }
+
+    protected String getResString(String name) {
+        return context.getResources().getString(getResStringId(name));
     }
 
     /**

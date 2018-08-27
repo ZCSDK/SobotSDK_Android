@@ -1,26 +1,49 @@
 package com.sobot.chat.widget.kpswitch.view;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.view.ViewGroup;
 
+import com.sobot.chat.SobotUIConfig;
 import com.sobot.chat.utils.SharedPreferencesUtil;
 import com.sobot.chat.utils.ZhiChiConstant;
+import com.sobot.chat.widget.kpswitch.view.emoticon.EmoticonsFuncView;
+import com.sobot.chat.widget.kpswitch.view.emoticon.EmoticonsIndicatorView;
+import com.sobot.chat.widget.kpswitch.view.plus.SobotPlusPageView;
+import com.sobot.chat.widget.kpswitch.widget.adpater.PageSetAdapter;
+import com.sobot.chat.widget.kpswitch.widget.adpater.PlusAdapter;
+import com.sobot.chat.widget.kpswitch.widget.data.PageSetEntity;
+import com.sobot.chat.widget.kpswitch.widget.data.PlusPageEntity;
+import com.sobot.chat.widget.kpswitch.widget.data.PlusPageSetEntity;
+import com.sobot.chat.widget.kpswitch.widget.interfaces.PageViewInstantiateListener;
+import com.sobot.chat.widget.kpswitch.widget.interfaces.PlusDisplayListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * 聊天面板   上传
+ * 聊天面板   更多菜单
+ *
+ * @author Created by jinxl on 2018/7/31.
  */
-public class ChattingPanelUploadView extends BaseChattingPanelView implements View.OnClickListener {
+public class ChattingPanelUploadView extends BaseChattingPanelView implements View.OnClickListener, EmoticonsFuncView.OnEmoticonsPageViewListener {
 
-    private LinearLayout sobot_custom_bottom;
-    private LinearLayout sobot_robot_bottom;
-    private TextView sobot_btn_picture;
-    private TextView sobot_btn_take_picture;
-    private TextView sobot_btn_satisfaction;
-    private TextView sobot_robot_btn_leavemsg;
-    private TextView sobot_robot_btn_satisfaction;
+    private static final String ACTION_SATISFACTION = "sobot_action_satisfaction";
+    private static final String ACTION_LEAVEMSG = "sobot_action_leavemsg";
+    private static final String ACTION_PIC = "sobot_action_pic";
+    private static final String ACTION_CAMERA = "sobot_action_camera";
+
+
+    private List<SobotPlusEntity> robotList = new ArrayList<>();
+    private List<SobotPlusEntity> operatorList = new ArrayList<>();
+
+    //当前接待模式
+    private int mCurrentClientMode = -1;
+    private EmoticonsFuncView mEmoticonsFuncView;
+    private EmoticonsIndicatorView mEmoticonsIndicatorView;
+    private PageSetAdapter pageSetAdapter;
     private SobotPlusClickListener mListener;
 
     public ChattingPanelUploadView(Context context) {
@@ -34,33 +57,141 @@ public class ChattingPanelUploadView extends BaseChattingPanelView implements Vi
 
     @Override
     public void initData() {
-        sobot_custom_bottom = (LinearLayout) getRootView().findViewById(getResId("sobot_custom_bottom"));
-        sobot_robot_bottom = (LinearLayout) getRootView().findViewById(getResId("sobot_robot_bottom"));
-        sobot_btn_picture = (TextView) getRootView().findViewById(getResId("sobot_btn_picture"));
-        sobot_btn_take_picture = (TextView) getRootView().findViewById(getResId("sobot_btn_take_picture"));
-        sobot_btn_satisfaction = (TextView) getRootView().findViewById(getResId("sobot_btn_satisfaction"));
-        sobot_robot_btn_leavemsg = (TextView) getRootView().findViewById(getResId("sobot_robot_btn_leavemsg"));
-        sobot_robot_btn_satisfaction = (TextView) getRootView().findViewById(getResId("sobot_robot_btn_satisfaction"));
-        int leaveMsg = SharedPreferencesUtil.getIntData(context, ZhiChiConstant.sobot_msg_flag,ZhiChiConstant.sobot_msg_flag_open);
-        sobot_robot_btn_leavemsg.setVisibility(leaveMsg == ZhiChiConstant.sobot_msg_flag_close?View.INVISIBLE:View.VISIBLE);
-        sobot_btn_picture.setOnClickListener(this);
-        sobot_btn_take_picture.setOnClickListener(this);
-        sobot_btn_satisfaction.setOnClickListener(this);
-        sobot_robot_btn_leavemsg.setOnClickListener(this);
-        sobot_robot_btn_satisfaction.setOnClickListener(this);
+
+        int leaveMsg = SharedPreferencesUtil.getIntData(context, ZhiChiConstant.sobot_msg_flag, ZhiChiConstant.sobot_msg_flag_open);
+        mEmoticonsFuncView = (EmoticonsFuncView) getRootView().findViewById(getResId("view_epv"));
+        mEmoticonsIndicatorView = ((EmoticonsIndicatorView) getRootView().findViewById(getResId("view_eiv")));
+        mEmoticonsFuncView.setOnIndicatorListener(this);
+
+        //评价
+        SobotPlusEntity satisfactionEntity = new SobotPlusEntity(getResDrawableId("sobot_picture_satisfaction_selector"), getResString("sobot_str_bottom_satisfaction"), ACTION_SATISFACTION);
+        //留言
+        SobotPlusEntity leavemsgEntity = new SobotPlusEntity(getResDrawableId("sobot_leavemsg_selector"), getResString("sobot_str_bottom_message"), ACTION_LEAVEMSG);
+        //图片
+        SobotPlusEntity picEntity = new SobotPlusEntity(getResDrawableId("sobot_tack_picture_button_selector"), getResString("sobot_upload"), ACTION_PIC);
+        //拍照
+        SobotPlusEntity cameraEntity = new SobotPlusEntity(getResDrawableId("sobot_camera_picture_button_selector"), getResString("sobot_attach_take_pic"), ACTION_CAMERA);
+
+        robotList.clear();
+        robotList.add(satisfactionEntity);
+        if (leaveMsg == ZhiChiConstant.sobot_msg_flag_open) {
+            robotList.add(leavemsgEntity);
+        }
+
+        operatorList.clear();
+        operatorList.add(picEntity);
+        operatorList.add(cameraEntity);
+        operatorList.add(satisfactionEntity);
+
+    }
+
+    public static class SobotPlusEntity {
+        public int iconResId;
+        public String name;
+        public String action;
+
+        public SobotPlusEntity(int iconResId, String name, String action) {
+            this.iconResId = iconResId;
+            this.name = name;
+            this.action = action;
+        }
+    }
+
+    private void setAdapter(List<SobotPlusEntity> datas) {
+        if (pageSetAdapter == null) {
+            pageSetAdapter = new PageSetAdapter();
+        } else {
+            pageSetAdapter.getPageSetEntityList().clear();
+        }
+
+        PlusPageSetEntity pageSetEntity
+                = new PlusPageSetEntity.Builder()
+                .setLine(getResInteger("sobot_plus_menu_line"))
+                .setRow(getResInteger("sobot_plus_menu_row"))
+                .setDataList(datas)
+                .setIPageViewInstantiateItem(new PageViewInstantiateListener<PlusPageEntity>() {
+                    @Override
+                    public View instantiateItem(ViewGroup container, int position, PlusPageEntity pageEntity) {
+                        if (pageEntity.getRootView() == null) {
+                            //下面这个view  就是一个gridview
+                            SobotPlusPageView pageView = new SobotPlusPageView(container.getContext());
+                            pageView.setNumColumns(pageEntity.getRow());
+                            pageEntity.setRootView(pageView);
+                            try {
+                                PlusAdapter adapter = new PlusAdapter(container.getContext(), pageEntity, mListener);
+//                                adapter.setItemHeightMaxRatio(1.8);
+                                adapter.setOnDisPlayListener(getPlusItemDisplayListener(mListener));
+                                pageView.getGridView().setAdapter(adapter);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        return pageEntity.getRootView();
+                    }
+                })
+                .build();
+        pageSetAdapter.add(pageSetEntity);
+        mEmoticonsFuncView.setAdapter(pageSetAdapter);
+    }
+
+    /**
+     * 这个是adapter里面的bindview回调
+     * 作用就是绑定数据用的
+     *
+     * @param plusClickListener 点击表情的回调
+     * @return
+     */
+    public PlusDisplayListener<Object> getPlusItemDisplayListener(final ChattingPanelUploadView.SobotPlusClickListener plusClickListener) {
+        return new PlusDisplayListener<Object>() {
+            @Override
+            public void onBindView(int position, ViewGroup parent, PlusAdapter.ViewHolder viewHolder, Object object) {
+                final SobotPlusEntity plusEntity = (SobotPlusEntity) object;
+                if (plusEntity == null) {
+                    return;
+                }
+                // 显示菜单
+                viewHolder.ly_root.setBackgroundResource(getResDrawableId("sobot_bg_emoticon"));
+                viewHolder.mMenu.setText(plusEntity.name);
+                Drawable drawable = context.getResources().getDrawable(plusEntity.iconResId);
+                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                viewHolder.mMenu.setCompoundDrawables(null, drawable, null, null);
+                viewHolder.mMenu.setTag(plusEntity.action);
+
+
+                viewHolder.rootView.setOnClickListener(ChattingPanelUploadView.this);
+            }
+        };
+    }
+
+    @Override
+    public void emoticonSetChanged(PageSetEntity pageSetEntity) {
+
+    }
+
+    @Override
+    public void playTo(int position, PageSetEntity pageSetEntity) {
+        mEmoticonsIndicatorView.playTo(position, pageSetEntity);
+    }
+
+    @Override
+    public void playBy(int oldPosition, int newPosition, PageSetEntity pageSetEntity) {
+        mEmoticonsIndicatorView.playBy(oldPosition, newPosition, pageSetEntity);
     }
 
     public interface SobotPlusClickListener extends SobotBasePanelListener {
         void btnPicture();
+
         void btnCameraPicture();
+
         void btnSatisfaction();
+
         void startToPostMsgActivty(boolean flag);
     }
 
     @Override
     public void setListener(SobotBasePanelListener listener) {
-        if (listener != null && listener instanceof SobotPlusClickListener) {
-            mListener = (SobotPlusClickListener) listener;
+        if (listener != null && listener instanceof ChattingPanelUploadView.SobotPlusClickListener) {
+            mListener = (ChattingPanelUploadView.SobotPlusClickListener) listener;
         }
     }
 
@@ -72,36 +203,45 @@ public class ChattingPanelUploadView extends BaseChattingPanelView implements Vi
     @Override
     public void onClick(View v) {
         if (mListener != null) {
-            if (v.getId() == getResId("sobot_btn_picture")) {
-                //图库
-                mListener.btnPicture();
-            }
-
-            if (v.getId() == getResId("sobot_btn_take_picture")) {
-                //拍照
-                mListener.btnCameraPicture();
-            }
-
-            if (v.getId() == getResId("sobot_btn_satisfaction") || v.getId() == getResId("sobot_robot_btn_satisfaction")) {
+            View sobot_plus_menu = v.findViewById(getResId("sobot_plus_menu"));
+            String action = (String) sobot_plus_menu.getTag();
+            if (ACTION_SATISFACTION.equals(action)) {
                 //评价客服或机器人
                 mListener.btnSatisfaction();
-            }
-
-            if (v.getId() == getResId("sobot_robot_btn_leavemsg")) {
+            } else if (ACTION_LEAVEMSG.equals(action)) {
                 //留言
                 mListener.startToPostMsgActivty(false);
+            } else if (ACTION_PIC.equals(action)) {
+                //图库
+                mListener.btnPicture();
+            } else if (ACTION_CAMERA.equals(action)) {
+                //拍照
+                mListener.btnCameraPicture();
+            } else {
+                if (SobotUIConfig.pulsMenu.sSobotPlusMenuListener != null) {
+                    SobotUIConfig.pulsMenu.sSobotPlusMenuListener.onClick(v, action);
+                }
             }
         }
     }
 
     @Override
-    public void onViewStart(Bundle bundle){
-        if (bundle.getInt("current_client_model") == ZhiChiConstant.client_model_robot){
-            sobot_robot_bottom.setVisibility(View.VISIBLE);
-            sobot_custom_bottom.setVisibility(View.GONE);
-        } else {
-            sobot_robot_bottom.setVisibility(View.GONE);
-            sobot_custom_bottom.setVisibility(View.VISIBLE);
+    public void onViewStart(Bundle bundle) {
+        int tmpClientMode = bundle.getInt("current_client_model");
+        if (mCurrentClientMode == -1 || mCurrentClientMode != tmpClientMode) {
+            //在初次调用或者接待模式改变时修改view
+            List<SobotPlusEntity> tmpList = new ArrayList<>();
+            if (bundle.getInt("current_client_model") == ZhiChiConstant.client_model_robot) {
+                tmpList.addAll(robotList);
+            } else {
+                tmpList.addAll(operatorList);
+            }
+            if (SobotUIConfig.pulsMenu.menus != null) {
+                tmpList.addAll(SobotUIConfig.pulsMenu.menus);
+            }
+            setAdapter(tmpList);
         }
+
+        mCurrentClientMode = tmpClientMode;
     }
 }

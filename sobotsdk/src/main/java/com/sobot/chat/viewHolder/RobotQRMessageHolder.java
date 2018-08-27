@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.sobot.chat.adapter.base.SobotMsgAdapter;
 import com.sobot.chat.api.model.SobotQuestionRecommend;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
+import com.sobot.chat.utils.HtmlTools;
 import com.sobot.chat.utils.SobotBitmapUtil;
 import com.sobot.chat.utils.CommonUtils;
 import com.sobot.chat.utils.ResourceUtils;
@@ -43,7 +44,8 @@ public class RobotQRMessageHolder extends MessageHolderBase {
             if (TextUtils.isEmpty(recommend.getGuide())) {
                 tv_title.setVisibility(View.GONE);
             } else {
-                tv_title.setText(recommend.getGuide());
+                HtmlTools.getInstance(context).setRichText(tv_title, recommend.getGuide(), getLinkTextColor());
+                applyTextViewUIConfig(tv_title);
                 tv_title.setVisibility(View.VISIBLE);
             }
             List<SobotQuestionRecommend.SobotQRMsgBean> msgResult = recommend.getMsg();
@@ -55,7 +57,7 @@ public class RobotQRMessageHolder extends MessageHolderBase {
                 }
                 for (int i = 0; i < msgResult.size(); i++) {
                     final SobotQuestionRecommend.SobotQRMsgBean qrMsgBean = msgResult.get(i);
-                    QuestionRecommendViewHolder viewHolder = null;
+                    QuestionRecommendViewHolder viewHolder;
                     if (i < childCount) {
                         View convertView = sobot_horizontal_scrollview_layout.getChildAt(i);
                         convertView.setVisibility(View.VISIBLE);
@@ -100,7 +102,6 @@ public class RobotQRMessageHolder extends MessageHolderBase {
                 layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, isLast ? (int) CommonUtils.getDimensPix(context, "sobot_item_qr_divider") : 0, layoutParams.bottomMargin);
                 sobotLayout.setLayoutParams(layoutParams);
             }
-
         }
 
         @Override

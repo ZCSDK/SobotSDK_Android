@@ -48,6 +48,7 @@ public class RobotTemplateMessageHolder3 extends MessageHolderBase implements Vi
             if (!TextUtils.isEmpty(msgStr)){
                 sobot_msg.setText(msgStr);
                 sobot_ll_content.setVisibility(View.VISIBLE);
+                applyTextViewUIConfig(sobot_msg);
             } else {
                 sobot_ll_content.setVisibility(View.INVISIBLE);
             }

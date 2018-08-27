@@ -53,7 +53,8 @@ public class RobotTemplateMessageHolder2 extends MessageHolderBase implements So
             final SobotMultiDiaRespInfo multiDiaRespInfo = message.getAnswer().getMultiDiaRespInfo();
             String msgStr = ChatUtils.getMultiMsgTitle(multiDiaRespInfo);
             if (!TextUtils.isEmpty(msgStr)){
-                HtmlTools.getInstance(context).setRichText(tv_msg, msgStr, ResourceUtils.getIdByName(context, "color", "sobot_color_link"));
+                applyTextViewUIConfig(tv_msg);
+                HtmlTools.getInstance(context).setRichText(tv_msg, msgStr, getLinkTextColor());
                 sobot_ll_content.setVisibility(View.VISIBLE);
             } else {
                 sobot_ll_content.setVisibility(View.INVISIBLE);

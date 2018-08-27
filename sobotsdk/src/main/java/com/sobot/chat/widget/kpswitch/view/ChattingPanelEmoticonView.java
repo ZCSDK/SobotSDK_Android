@@ -54,13 +54,7 @@ public class ChattingPanelEmoticonView extends BaseChattingPanelView implements 
         }
     }
 
-    private int getResIntegerId(String name) {
-        return ResourceUtils.getIdByName(context, "integer", name);
-    }
 
-    private int getResInteger(String name) {
-        return context.getResources().getInteger(getResIntegerId(name));
-    }
 
     public void setAdapter() {
         PageSetAdapter pageSetAdapter = new PageSetAdapter();

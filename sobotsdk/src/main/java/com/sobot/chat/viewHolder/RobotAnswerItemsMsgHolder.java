@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 public class RobotAnswerItemsMsgHolder extends MessageHolderBase implements View.OnClickListener {
-    private Context mContext;
     // 聊天的消息内容
     private TextView tv_msg;
     private LinearLayout answersListView;
@@ -29,7 +28,6 @@ public class RobotAnswerItemsMsgHolder extends MessageHolderBase implements View
 
     public RobotAnswerItemsMsgHolder(Context context, View convertView) {
         super(context, convertView);
-        mContext = context;
         tv_msg = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_template2_msg"));
         answersListView = (LinearLayout) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_answersList"));
     }
@@ -39,7 +37,7 @@ public class RobotAnswerItemsMsgHolder extends MessageHolderBase implements View
         zhiChiMessageBase = message;
         if (message.getAnswer() != null && message.getAnswer().getMultiDiaRespInfo() != null) {
             final SobotMultiDiaRespInfo multiDiaRespInfo = message.getAnswer().getMultiDiaRespInfo();
-            HtmlTools.getInstance(context).setRichText(tv_msg, ChatUtils.getMultiMsgTitle(multiDiaRespInfo), ResourceUtils.getIdByName(context, "color", "sobot_color_link"));
+            HtmlTools.getInstance(context).setRichText(tv_msg, ChatUtils.getMultiMsgTitle(multiDiaRespInfo), getLinkTextColor());
             if ("000000".equals(multiDiaRespInfo.getRetCode())) {
                 List<Map<String, String>> icLists = multiDiaRespInfo.getIcLists();
                 if (icLists != null && icLists.size() > 0) {
