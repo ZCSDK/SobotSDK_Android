@@ -47,6 +47,7 @@ import com.sobot.chat.widget.dialog.SobotRobotListDialog;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -309,7 +310,7 @@ public class ChatUtils {
 		if (1 == type) {// 管理员下线
 			return resources.getString(ResourceUtils.getIdByName(context, "string", "sobot_outline_leverByManager"));
 		} else if (2 == type) { // 被管理员移除结束会话
-			return resources.getString(ResourceUtils.getIdByName(context, "string", "sobot_outline_leverByManager"));
+            return initModel.isServiceEndPushFlag() && !TextUtils.isEmpty(initModel.getServiceEndPushMsg())? initModel.getServiceEndPushMsg() : "";
 		} else if (3 == type) { // 被加入黑名单
 			return resources.getString(ResourceUtils.getIdByName(context, "string", "sobot_outline_leverByManager"));
 		} else if (4 == type) { // 超时下线
@@ -560,13 +561,13 @@ public class ChatUtils {
 	 *
 	 * @return
      */
-	public static ZhiChiMessageBase getInLineHint(Context context,int num){
+	public static ZhiChiMessageBase getInLineHint(String queueDoc){
 		ZhiChiMessageBase paiduizhichiMessageBase = new ZhiChiMessageBase();
 		paiduizhichiMessageBase.setSenderType(ZhiChiConstant.message_sender_type_remide_info + "");
 		paiduizhichiMessageBase.setAction(ZhiChiConstant.action_remind_info_paidui);
 
 		ZhiChiReplyAnswer reply_paidui = new ZhiChiReplyAnswer();
-		reply_paidui.setMsg(String.format(ChatUtils.getResString(context,"sobot_in_line_position"), num + ""));
+		reply_paidui.setMsg(queueDoc);
 		reply_paidui.setRemindType(ZhiChiConstant.sobot_remind_type_paidui_status);
 		paiduizhichiMessageBase.setAnswer(reply_paidui);
 		return paiduizhichiMessageBase;
@@ -695,14 +696,8 @@ public class ChatUtils {
 	 */
 	public static void saveLastMsgInfo(Context context,Information info,String appkey,ZhiChiInitModeBase initModel,List<ZhiChiMessageBase> messageList) {
 		SobotCache sobotCache = SobotCache.get(context);
-		HashMap<String,SobotMsgCenterModel> msg_center_list = (HashMap<String, SobotMsgCenterModel>) sobotCache.getAsObject(info.getUid()+"sobot_msg_center_list");
-		if (msg_center_list == null) {
-			msg_center_list = new HashMap<>();
-		}
-		SobotMsgCenterModel sobotMsgCenterModel = msg_center_list.get(appkey);
-		if (sobotMsgCenterModel==null) {
-			sobotMsgCenterModel = new SobotMsgCenterModel();
-		}
+
+		SobotMsgCenterModel sobotMsgCenterModel = new SobotMsgCenterModel();
 		sobotMsgCenterModel.setInfo(info);
 		sobotMsgCenterModel.setFace(initModel.getCompanyLogo());
 		sobotMsgCenterModel.setName(initModel.getCompanyName());
@@ -720,8 +715,16 @@ public class ChatUtils {
 			}
 			sobotMsgCenterModel.setLastMsg(lastMsg);
 		}
-		msg_center_list.put(appkey, sobotMsgCenterModel);
-		sobotCache.put(info.getUid()+"sobot_msg_center_list",msg_center_list);
+		sobotCache.put(SobotMsgManager.getMsgCenterDataKey(appkey,info.getUid()),sobotMsgCenterModel);
+
+		ArrayList<String> msgDatas = (ArrayList<String>) sobotCache.getAsObject(SobotMsgManager.getMsgCenterListKey(info.getUid()));
+		if (msgDatas == null) {
+			msgDatas = new ArrayList<String>();
+		}
+		if (!msgDatas.contains(appkey)) {
+			msgDatas.add(appkey);
+			sobotCache.put(SobotMsgManager.getMsgCenterListKey(info.getUid()),msgDatas);
+		}
 		SharedPreferencesUtil.removeKey(context, ZhiChiConstant.SOBOT_CURRENT_IM_APPID);
 		Intent lastMsgIntent = new Intent(ZhiChiConstant.SOBOT_ACTION_UPDATE_LAST_MSG);
 		lastMsgIntent.putExtra("lastMsg", sobotMsgCenterModel);

@@ -195,7 +195,7 @@ public class SobotSessionServer extends Service {
         } else if (ZhiChiConstant.push_message_paidui == pushMessage.getType()) {
             // 排队的消息类型
             if (config.getInitModel() != null) {
-                createCustomerQueue(pushMessage.getAppId(),pushMessage.getCount());
+                createCustomerQueue(pushMessage.getAppId(),pushMessage.getCount(),pushMessage.getQueueDoc());
             }
         } else if (ZhiChiConstant.push_message_outLine == pushMessage.getType()) {// 用户被下线
             // 发送用户被下线的广播
@@ -233,8 +233,9 @@ public class SobotSessionServer extends Service {
      * 连接客服时，需要排队
      * 显示排队的处理逻辑
      * @param num 当前排队的位置
+     * @param queueDoc  需要显示的排队提示语
      */
-    private void createCustomerQueue(String appId,String num){
+    private void createCustomerQueue(String appId,String num,String queueDoc){
         ZhiChiConfig config = SobotMsgManager.getInstance(getApplication()).getConfig(appId);
         if (config.customerState == CustomerState.Queuing && !TextUtils
                 .isEmpty(num) && Integer.parseInt(num) > 0) {
@@ -246,7 +247,9 @@ public class SobotSessionServer extends Service {
             config.queueNum = Integer.parseInt(num);
             if (config.isShowQueueTip) {
                 //显示当前排队的位置
-                config.addMessage(ChatUtils.getInLineHint(getApplicationContext(),config.queueNum));
+                if (!TextUtils.isEmpty(queueDoc)) {
+                    config.addMessage(ChatUtils.getInLineHint(queueDoc));
+                }
             }
 
             if (type == ZhiChiConstant.type_custom_only) {
@@ -284,15 +287,15 @@ public class SobotSessionServer extends Service {
         //显示被xx客服接入
         config.addMessage(ChatUtils.getServiceAcceptTip(getApplicationContext(),name));
 
-
         //显示人工欢迎语
-        String adminHolloWord = SharedPreferencesUtil.getStringData(getApplicationContext(),ZhiChiConstant.SOBOT_CUSTOMADMINHELLOWORD,"");
-        if (!TextUtils.isEmpty(adminHolloWord)){
-            config.addMessage(ChatUtils.getServiceHelloTip(name,face,adminHolloWord));
-        } else {
-            config.addMessage(ChatUtils.getServiceHelloTip(name,face,initModel.getAdminHelloWord()));
+        if (initModel.isAdminHelloWordFlag()) {
+            String adminHolloWord = SharedPreferencesUtil.getStringData(getApplicationContext(),ZhiChiConstant.SOBOT_CUSTOMADMINHELLOWORD,"");
+            if (!TextUtils.isEmpty(adminHolloWord)){
+                config.addMessage(ChatUtils.getServiceHelloTip(name,face,adminHolloWord));
+            } else {
+                config.addMessage(ChatUtils.getServiceHelloTip(name,face,initModel.getAdminHelloWord()));
+            }
         }
-
         //显示标题
         config.activityTitle = ChatUtils.getLogicTitle(getApplicationContext(),false, name,
                 initModel.getCompanyName());
@@ -302,6 +305,7 @@ public class SobotSessionServer extends Service {
         // 启动计时任务
         config.userInfoTimeTask = true;
         config.customTimeTask = false;
+        config.isProcessAutoSendMsg = true;
 
         // 把机器人回答中的转人工按钮都隐藏掉
         config.hideItemTransferBtn();

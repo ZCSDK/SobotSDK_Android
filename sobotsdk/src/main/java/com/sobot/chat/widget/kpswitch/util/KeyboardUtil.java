@@ -53,6 +53,9 @@ public class KeyboardUtil {
     }
 
     public static void hideKeyboard(final View view) {
+        if (view == null) {
+            return;
+        }
         InputMethodManager imm =
                 (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         if(imm != null){

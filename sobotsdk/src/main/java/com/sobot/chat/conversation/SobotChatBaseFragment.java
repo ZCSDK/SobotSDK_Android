@@ -18,6 +18,7 @@ import com.sobot.chat.activity.WebViewActivity;
 import com.sobot.chat.adapter.base.SobotMsgAdapter;
 import com.sobot.chat.api.ResultCallBack;
 import com.sobot.chat.api.enumtype.CustomerState;
+import com.sobot.chat.api.enumtype.SobotAutoSendMsgMode;
 import com.sobot.chat.api.model.CommonModel;
 import com.sobot.chat.api.model.CommonModelBase;
 import com.sobot.chat.api.model.Information;
@@ -869,31 +870,33 @@ public abstract class SobotChatBaseFragment extends SobotBaseFragment implements
             ZhiChiMessageBase robot = new ZhiChiMessageBase();
             ZhiChiReplyAnswer reply = new ZhiChiReplyAnswer();
 
-            String robotHolloWord = SharedPreferencesUtil.getStringData(mAppContext, ZhiChiConstant.SOBOT_CUSTOMROBOTHELLOWORD, "");
-            if (!TextUtils.isEmpty(robotHolloWord) || !TextUtils.isEmpty(initModel.getRobotHelloWord())) {
-                if (!TextUtils.isEmpty(robotHolloWord)) {
-                    reply.setMsg(robotHolloWord);
-                } else {
-                    String msgHint = initModel.getRobotHelloWord().replace("\n", "<br/>");
-                    if (msgHint.startsWith("<br/>")) {
-                        msgHint = msgHint.substring(5, msgHint.length());
-                    }
+            if (initModel.isRobotHelloWordFlag()) {
+                String robotHolloWord = SharedPreferencesUtil.getStringData(mAppContext, ZhiChiConstant.SOBOT_CUSTOMROBOTHELLOWORD, "");
+                if (!TextUtils.isEmpty(robotHolloWord) || !TextUtils.isEmpty(initModel.getRobotHelloWord())) {
+                    if (!TextUtils.isEmpty(robotHolloWord)) {
+                        reply.setMsg(robotHolloWord);
+                    } else {
+                        String msgHint = initModel.getRobotHelloWord().replace("\n", "<br/>");
+                        if (msgHint.startsWith("<br/>")) {
+                            msgHint = msgHint.substring(5, msgHint.length());
+                        }
 
-                    if (msgHint.endsWith("<br/>")) {
-                        msgHint = msgHint.substring(0, msgHint.length() - 5);
+                        if (msgHint.endsWith("<br/>")) {
+                            msgHint = msgHint.substring(0, msgHint.length() - 5);
+                        }
+                        reply.setMsg(msgHint);
                     }
-                    reply.setMsg(msgHint);
+                    reply.setMsgType(ZhiChiConstant.message_type_text + "");
+                    robot.setAnswer(reply);
+                    robot.setSenderFace(initModel.getRobotLogo());
+                    robot.setSender(initModel.getRobotName());
+                    robot.setSenderType(ZhiChiConstant.message_sender_type_robot_welcome_msg + "");
+                    robot.setSenderName(initModel.getRobotName());
+                    Message message = handler.obtainMessage();
+                    message.what = ZhiChiConstant.hander_robot_message;
+                    message.obj = robot;
+                    handler.sendMessage(message);
                 }
-                reply.setMsgType(ZhiChiConstant.message_type_text + "");
-                robot.setAnswer(reply);
-                robot.setSenderFace(initModel.getRobotLogo());
-                robot.setSender(initModel.getRobotName());
-                robot.setSenderType(ZhiChiConstant.message_sender_type_robot_welcome_msg + "");
-                robot.setSenderName(initModel.getRobotName());
-                Message message = handler.obtainMessage();
-                message.what = ZhiChiConstant.hander_robot_message;
-                message.obj = robot;
-                handler.sendMessage(message);
             }
             //获取机器人带引导与的欢迎语
             if (1 == initModel.getGuideFlag()) {
@@ -914,6 +917,7 @@ public abstract class SobotChatBaseFragment extends SobotBaseFragment implements
                                     handler.sendMessage(message);
 
                                     questionRecommend(handler, initModel,info);
+                                    processAutoSendMsg(info);
 
                                 }
                             }
@@ -924,11 +928,33 @@ public abstract class SobotChatBaseFragment extends SobotBaseFragment implements
                         });
             } else {
                 questionRecommend(handler, initModel,info);
+                processAutoSendMsg(info);
+            }
+        }
+    }
+
+    protected void processAutoSendMsg(final Information info) {
+        SobotAutoSendMsgMode autoSendMsgMode = info.getAutoSendMsgMode();
+        if (TextUtils.isEmpty(autoSendMsgMode.getContent())) {
+            return;
+        }
+        if (current_client_model == ZhiChiConstant.client_model_robot) {
+            if (autoSendMsgMode == SobotAutoSendMsgMode.SendToRobot
+                    || autoSendMsgMode == SobotAutoSendMsgMode.SendToAll) {
+                sendMsg(autoSendMsgMode.getContent());
+            }
+        } else if (current_client_model == ZhiChiConstant.client_model_customService) {
+            if ((autoSendMsgMode == SobotAutoSendMsgMode.SendToOperator
+                    || autoSendMsgMode == SobotAutoSendMsgMode.SendToAll) && customerState == CustomerState.Online) {
+                sendMsg(autoSendMsgMode.getContent());
             }
         }
     }
 
     private void questionRecommend(final Handler handler,final ZhiChiInitModeBase initModel,final Information info){
+        if (info.getQuestionRecommendParams() == null || info.getQuestionRecommendParams().size() == 0) {
+            return;
+        }
         zhiChiApi.questionRecommend(SobotChatBaseFragment.this,initModel.getUid(), info.getQuestionRecommendParams(), new StringResultCallBack<SobotQuestionRecommend>() {
             @Override
             public void onSuccess(SobotQuestionRecommend data) {
@@ -972,4 +998,5 @@ public abstract class SobotChatBaseFragment extends SobotBaseFragment implements
     protected void connectCustomerService(String groupId,String groupName, String keyword, String keywordId, boolean isShowTips){}
 
     protected void customerServiceOffline(ZhiChiInitModeBase initModel, int outLineType){}
+    protected void sendMsg(String content){}
 }

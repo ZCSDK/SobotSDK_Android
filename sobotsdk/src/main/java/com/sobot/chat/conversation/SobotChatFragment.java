@@ -1200,37 +1200,43 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
      * @param outLineType 下线类型
      */
     private void showOutlineTip(ZhiChiInitModeBase initModel,int outLineType){
-        ZhiChiMessageBase base = new ZhiChiMessageBase();
-        ZhiChiReplyAnswer reply = new ZhiChiReplyAnswer();
-        base.setSenderType(ZhiChiConstant.message_sender_type_remide_info + "");
-        reply.setMsg(ChatUtils.getMessageContentByOutLineType(mAppContext, initModel, outLineType));
-        reply.setRemindType(ZhiChiConstant.sobot_remind_type_outline);
-        base.setAnswer(reply);
-        if (1 == outLineType) {
-            base.setAction(ZhiChiConstant.sobot_outline_leverByManager);
-        } else if (2 == outLineType) {
-            base.setAction(ZhiChiConstant.sobot_outline_leverByManager);
-        } else if (3 == outLineType) {
-            base.setAction(ZhiChiConstant.sobot_outline_leverByManager);
-            if(initModel != null){
-                initModel.setIsblack("1");
+        String offlineMsg = ChatUtils.getMessageContentByOutLineType(mAppContext, initModel, outLineType);
+        if (!TextUtils.isEmpty(offlineMsg)) {
+            ZhiChiMessageBase base = new ZhiChiMessageBase();
+            ZhiChiReplyAnswer reply = new ZhiChiReplyAnswer();
+            base.setSenderType(ZhiChiConstant.message_sender_type_remide_info + "");
+            reply.setRemindType(ZhiChiConstant.sobot_remind_type_outline);
+            base.setAnswer(reply);
+            if (1 == outLineType) {
+                base.setAction(ZhiChiConstant.sobot_outline_leverByManager);
+            } else if (2 == outLineType) {
+                offlineMsg = offlineMsg.replace("#客服#",currentUserName);
+                base.setAction(ZhiChiConstant.sobot_outline_leverByManager);
+            } else if (3 == outLineType) {
+                base.setAction(ZhiChiConstant.sobot_outline_leverByManager);
+                if(initModel != null){
+                    initModel.setIsblack("1");
+                }
+            } else if (4 == outLineType) {
+                base.setAction(ZhiChiConstant.action_remind_past_time);
+            } else if (6 == outLineType) {
+                base.setAction(ZhiChiConstant.sobot_outline_leverByManager);
             }
-        } else if (4 == outLineType) {
-            base.setAction(ZhiChiConstant.action_remind_past_time);
-        } else if (6 == outLineType) {
-            base.setAction(ZhiChiConstant.sobot_outline_leverByManager);
+            reply.setMsg(offlineMsg);
+            // 提示会话结束
+            updateUiMessage(messageAdapter, base);
         }
-        // 提示会话结束
-        updateUiMessage(messageAdapter, base);
     }
 
     /**
      * 显示排队提醒
      */
-    private void showInLineHint(){
+    private void showInLineHint(String queueDoc){
         // 更新界面的操作
-        updateUiMessage(messageAdapter, ChatUtils.getInLineHint(mAppContext,queueNum));
-        gotoLastItem();
+        if (!TextUtils.isEmpty(queueDoc)) {
+            updateUiMessage(messageAdapter, ChatUtils.getInLineHint(queueDoc));
+            gotoLastItem();
+        }
     }
 
     //保持会话
@@ -1276,6 +1282,10 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
         if(config.customTimeTask){
             stopCustomTimeTask();
             startCustomTimeTask(handler);
+        }
+        if (config.isProcessAutoSendMsg) {
+            processAutoSendMsg(info);
+            config.isProcessAutoSendMsg = false;
         }
         //设置自动补全参数
         et_sendmessage.setRequestParams(initModel.getUid(),initModel.getCurrentRobotFlag());
@@ -1571,7 +1581,7 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
                                     zhichiMessageBase.getWslinkDefault(),initModel.getUid(),zhichiMessageBase.getPuid(),info.getAppkey(),zhichiMessageBase.getWayHttp());
                             customerState = CustomerState.Queuing;
                             isShowQueueTip = isShowTips;
-                            createCustomerQueue(zhichiMessageBase.getCount()+"",status, isShowTips);
+                            createCustomerQueue(zhichiMessageBase.getCount()+"",status,zhichiMessageBase.getQueueDoc(), isShowTips);
                         }
                     }
 
@@ -1648,12 +1658,14 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
         //转人工成功以后删除通过机器人关键字选择
         messageAdapter.removeKeyWordTranferItem();
 
-        String adminHelloWord = SharedPreferencesUtil.getStringData(mAppContext,ZhiChiConstant.SOBOT_CUSTOMADMINHELLOWORD,"");
-        //显示人工欢迎语
-        if (!TextUtils.isEmpty(adminHelloWord)){
-            messageAdapter.addData(ChatUtils.getServiceHelloTip(name,face,adminHelloWord));
-        } else {
-            messageAdapter.addData(ChatUtils.getServiceHelloTip(name,face,initModel.getAdminHelloWord()));
+        if (initModel.isAdminHelloWordFlag()) {
+            String adminHelloWord = SharedPreferencesUtil.getStringData(mAppContext,ZhiChiConstant.SOBOT_CUSTOMADMINHELLOWORD,"");
+            //显示人工欢迎语
+            if (!TextUtils.isEmpty(adminHelloWord)){
+                messageAdapter.addData(ChatUtils.getServiceHelloTip(name,face,adminHelloWord));
+            } else {
+                messageAdapter.addData(ChatUtils.getServiceHelloTip(name,face,initModel.getAdminHelloWord()));
+            }
         }
         messageAdapter.notifyDataSetChanged();
         //显示标题
@@ -1674,6 +1686,8 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
         hideItemTransferBtn();
         //关闭自动补全功能
         et_sendmessage.setAutoCompleteEnable(false);
+
+        processAutoSendMsg(info);
     }
 
     /**
@@ -1705,20 +1719,22 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
      * 显示客服不在线的提示
      */
     private void showCustomerOfflineTip(){
-        ZhiChiReplyAnswer reply = new ZhiChiReplyAnswer();
-        reply.setMsgType(null);
-        String adminNoneLineTitle = SharedPreferencesUtil.getStringData(mAppContext,ZhiChiConstant.SOBOT_CUSTOMADMINNONELINETITLE,"");
-        if (!TextUtils.isEmpty(adminNoneLineTitle)){
-            reply.setMsg(adminNoneLineTitle);
-        } else {
-            reply.setMsg(initModel.getAdminNonelineTitle());
+        if (initModel.isAdminNoneLineFlag()) {
+            ZhiChiReplyAnswer reply = new ZhiChiReplyAnswer();
+            reply.setMsgType(null);
+            String adminNoneLineTitle = SharedPreferencesUtil.getStringData(mAppContext,ZhiChiConstant.SOBOT_CUSTOMADMINNONELINETITLE,"");
+            if (!TextUtils.isEmpty(adminNoneLineTitle)){
+                reply.setMsg(adminNoneLineTitle);
+            } else {
+                reply.setMsg(initModel.getAdminNonelineTitle());
+            }
+            reply.setRemindType(ZhiChiConstant.sobot_remind_type_customer_offline);
+            ZhiChiMessageBase base = new ZhiChiMessageBase();
+            base.setSenderType(ZhiChiConstant.message_sender_type_remide_info + "");
+            base.setAnswer(reply);
+            base.setAction(ZhiChiConstant.action_remind_info_post_msg);
+            updateUiMessage(messageAdapter, base);
         }
-        reply.setRemindType(ZhiChiConstant.sobot_remind_type_customer_offline);
-        ZhiChiMessageBase base = new ZhiChiMessageBase();
-        base.setSenderType(ZhiChiConstant.message_sender_type_remide_info + "");
-        base.setAnswer(reply);
-        base.setAction(ZhiChiConstant.action_remind_info_post_msg);
-        updateUiMessage(messageAdapter, base);
     }
 
     /**
@@ -1741,8 +1757,9 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
      * 显示排队的处理逻辑
      * @param num		当前排队的位置
      * @param status	当前转人工的返回状态，如果是7，就说明排队已经达到最大值，可以直接留言。
+     * @param queueDoc  需要显示的排队提示语
      */
-    private void createCustomerQueue(String num, int status, boolean isShowTips){
+    private void createCustomerQueue(String num, int status,String queueDoc, boolean isShowTips){
         if (customerState == CustomerState.Queuing && !TextUtils.isEmpty(num)
                 && Integer.parseInt(num) > 0) {
             stopUserInfoTimeTask();
@@ -1752,7 +1769,7 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
             queueNum = Integer.parseInt(num);
             //显示当前排队的位置
             if (status != ZhiChiConstant.transfer_robot_custom_max_status && isShowTips){
-                showInLineHint();
+                showInLineHint(queueDoc);
             }
 
             if (type == ZhiChiConstant.type_custom_only) {
@@ -2994,7 +3011,7 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
                     }
                 } else if (ZhiChiConstant.push_message_paidui == pushMessage.getType()) {
                     // 排队的消息类型
-                    createCustomerQueue(pushMessage.getCount(), 0, isShowQueueTip);
+                    createCustomerQueue(pushMessage.getCount(), 0,pushMessage.getQueueDoc(), isShowQueueTip);
                 } else if (ZhiChiConstant.push_message_receverNewMessage == pushMessage.getType()) {
                     // 接收到新的消息
                     if (customerState == CustomerState.Online) {
@@ -3206,7 +3223,8 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
      * 发送消息的方法
      * @param content
      */
-    private void sendMsg(String content) {
+    @Override
+    protected void sendMsg(String content) {
         if(initModel == null){
             return;
         }

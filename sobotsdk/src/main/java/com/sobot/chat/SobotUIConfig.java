@@ -20,6 +20,7 @@ public class SobotUIConfig {
     public static int sobot_chat_right_textColor = DEFAULT;//聊天界面右边文字字体颜色
     public static int sobot_chat_bottom_bgColor = DEFAULT;//聊天界面底部布局背景颜色
 
+
     /**
      * 更多面板中的菜单配置
      */

@@ -90,6 +90,13 @@ public class ChattingPanelUploadView extends BaseChattingPanelView implements Vi
         public String name;
         public String action;
 
+        /**
+         * 自定义菜单实体类
+         * @param iconResId 菜单图标
+         * @param name      菜单名称
+         * @param action    菜单动作 当点击按钮时会将对应action返回给callback
+         *                  以此作为依据，判断用户点击了哪个按钮
+         */
         public SobotPlusEntity(int iconResId, String name, String action) {
             this.iconResId = iconResId;
             this.name = name;

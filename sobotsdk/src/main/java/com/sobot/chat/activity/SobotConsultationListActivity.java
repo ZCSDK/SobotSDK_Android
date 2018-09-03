@@ -1,10 +1,13 @@
 package com.sobot.chat.activity;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.View;
@@ -23,6 +26,7 @@ import com.sobot.chat.api.model.ZhiChiReplyAnswer;
 import com.sobot.chat.utils.DateUtil;
 import com.sobot.chat.utils.ZhiChiConstant;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -32,6 +36,7 @@ import java.util.List;
  * Created by jinxl on 2017/9/6.
  */
 public class SobotConsultationListActivity extends SobotBaseActivity {
+    private static final int REFRESH_DATA = 1;
 
     private ListView sobot_ll_msg_center;
     private SobotMsgCenterAdapter adapter;
@@ -39,6 +44,41 @@ public class SobotConsultationListActivity extends SobotBaseActivity {
     private LocalBroadcastManager localBroadcastManager;
     private SobotMessageReceiver receiver;
     private String currentUid;
+    private SHandler mHandler = new SHandler(this);
+
+    static class SHandler extends Handler {
+        WeakReference<Activity> mActivityReference;
+
+        SHandler(Activity activity) {
+            mActivityReference = new WeakReference<Activity>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            final SobotConsultationListActivity activity = (SobotConsultationListActivity) mActivityReference.get();
+            if (activity != null) {
+                switch (msg.what) {
+                    case REFRESH_DATA:
+                        List<SobotMsgCenterModel> datas = activity.datas;
+                        SobotMsgCenterAdapter adapter = activity.adapter;
+                        ListView sobot_ll_msg_center = activity.sobot_ll_msg_center;
+
+                        List<SobotMsgCenterModel> msgCenterList = (List<SobotMsgCenterModel>) msg.obj;
+                        if (msgCenterList != null && msgCenterList.size() > 0) {
+                            datas.clear();
+                            datas.addAll(msgCenterList);
+                            if (adapter == null) {
+                                adapter = new SobotMsgCenterAdapter(activity, datas);
+                                sobot_ll_msg_center.setAdapter(adapter);
+                            } else {
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+    }
 
     @Override
     protected int getContentViewResId() {
@@ -47,9 +87,9 @@ public class SobotConsultationListActivity extends SobotBaseActivity {
 
     @Override
     protected void initBundleData(Bundle savedInstanceState) {
-        if(savedInstanceState == null ){
+        if (savedInstanceState == null) {
             currentUid = getIntent().getStringExtra(ZhiChiConstant.SOBOT_CURRENT_IM_PARTNERID);
-        }else{
+        } else {
             currentUid = savedInstanceState.getString(ZhiChiConstant.SOBOT_CURRENT_IM_PARTNERID);
         }
     }
@@ -57,7 +97,7 @@ public class SobotConsultationListActivity extends SobotBaseActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         //销毁前缓存数据
-        outState.putString(ZhiChiConstant.SOBOT_CURRENT_IM_PARTNERID,currentUid);
+        outState.putString(ZhiChiConstant.SOBOT_CURRENT_IM_PARTNERID, currentUid);
         super.onSaveInstanceState(outState);
     }
 
@@ -82,12 +122,6 @@ public class SobotConsultationListActivity extends SobotBaseActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        initData();
-    }
-
-    @Override
     public void initView() {
         showLeftMenu(getResDrawableId("sobot_btn_back_selector"), getResString("sobot_back"), true);
         setTitle(getResString("sobot_consultation_list"));
@@ -107,18 +141,17 @@ public class SobotConsultationListActivity extends SobotBaseActivity {
 
     @Override
     public void initData() {
-        List<SobotMsgCenterModel> msgCenterList = SobotApi.getMsgCenterList(getApplicationContext(),currentUid);
-        if (msgCenterList != null && msgCenterList.size() > 0) {
-            datas.clear();
-            datas.addAll(msgCenterList);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<SobotMsgCenterModel> msgCenterList = SobotApi.getMsgCenterList(getApplicationContext(), currentUid);
+                Message message = mHandler.obtainMessage();
+                message.what = REFRESH_DATA;
+                message.obj = msgCenterList;
 
-            if (adapter == null) {
-                adapter = new SobotMsgCenterAdapter(SobotConsultationListActivity.this, datas);
-                sobot_ll_msg_center.setAdapter(adapter);
-            } else {
-                adapter.notifyDataSetChanged();
+                mHandler.sendMessage(message);
             }
-        }
+        }).start();
     }
 
     public class SobotMessageReceiver extends BroadcastReceiver {
@@ -147,7 +180,7 @@ public class SobotConsultationListActivity extends SobotBaseActivity {
                                 reply.setMsgType(pushMessage.getMsgType() + "");
                                 reply.setMsg(pushMessage.getContent());
                             }
-                            sobotMsgCenterModel.setLastDate(DateUtil.toDate(Calendar.getInstance().getTime().getTime(),DateUtil.DATE_FORMAT5));
+                            sobotMsgCenterModel.setLastDate(DateUtil.toDate(Calendar.getInstance().getTime().getTime(), DateUtil.DATE_FORMAT5));
                             sobotMsgCenterModel.setLastMsg(reply.getMsg());
                             int unreadCount = sobotMsgCenterModel.getUnreadCount() + 1;
                             sobotMsgCenterModel.setUnreadCount(unreadCount);
@@ -169,7 +202,7 @@ public class SobotConsultationListActivity extends SobotBaseActivity {
     /**
      * 刷新条目
      */
-    public void refershItemData(final SobotMsgCenterModel model){
+    public void refershItemData(final SobotMsgCenterModel model) {
         runOnUiThread(new Runnable() {
 
             @Override
@@ -181,7 +214,7 @@ public class SobotConsultationListActivity extends SobotBaseActivity {
                         continue;
                     }
                     SobotMsgCenterAdapter.SobotMsgCenterViewHolder holder = (SobotMsgCenterAdapter.SobotMsgCenterViewHolder) child.getTag();
-                    if (model != null && model.getInfo() != null && holder.data!=null
+                    if (model != null && model.getInfo() != null && holder.data != null
                             && holder.data.getInfo() != null && model.getInfo().getAppkey() != null
                             && model.getInfo().getAppkey().equals(holder.data.getInfo().getAppkey())) {
                         holder.bindData(model);

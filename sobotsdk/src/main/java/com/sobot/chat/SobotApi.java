@@ -367,14 +367,15 @@ public class SobotApi {
 		}
 		uid = uid == null?"":uid;
 		SobotCache sobotCache = SobotCache.get(context);
-		HashMap<String, SobotMsgCenterModel> msg_center_list = (HashMap<String, SobotMsgCenterModel>) sobotCache.getAsObject(uid+"sobot_msg_center_list");
+		ArrayList<String> msgDatas = (ArrayList<String>) sobotCache.getAsObject(SobotMsgManager.getMsgCenterListKey(uid));
 		List<SobotMsgCenterModel> datas = new ArrayList<SobotMsgCenterModel>();
-		if (msg_center_list != null && msg_center_list.size() > 0) {
+		if (msgDatas != null && msgDatas.size() > 0) {
 			datas.clear();
-			Iterator iter = msg_center_list.entrySet().iterator();
-			while (iter.hasNext()) {
-				Map.Entry next = (Map.Entry) iter.next();
-				datas.add((SobotMsgCenterModel) next.getValue());
+			for (String appkey : msgDatas) {
+				SobotMsgCenterModel data = (SobotMsgCenterModel) sobotCache.getAsObject(SobotMsgManager.getMsgCenterDataKey(appkey,uid));
+                if (data != null) {
+                    datas.add(data);
+                }
 			}
 		}
 		return datas;
@@ -391,7 +392,7 @@ public class SobotApi {
 		}
 		uid = uid == null?"":uid;
 		SobotCache sobotCache = SobotCache.get(context);
-		sobotCache.remove(uid+"sobot_msg_center_list");
+		sobotCache.remove(SobotMsgManager.getMsgCenterListKey(uid));
 	}
 
 	/**
@@ -406,10 +407,34 @@ public class SobotApi {
 		}
 		uid = uid == null?"":uid;
 		SobotCache sobotCache = SobotCache.get(context);
-		HashMap<String, SobotMsgCenterModel> msg_center_list = (HashMap<String, SobotMsgCenterModel>) sobotCache.getAsObject(uid+"sobot_msg_center_list");
+		ArrayList<String> msg_center_list = (ArrayList<String>) sobotCache.getAsObject(SobotMsgManager.getMsgCenterListKey(uid));
 		if (msg_center_list != null && msg_center_list.size() > 0) {
 			msg_center_list.remove(appId);
-			sobotCache.put(uid+"sobot_msg_center_list", msg_center_list);
+			sobotCache.put(SobotMsgManager.getMsgCenterListKey(uid), msg_center_list);
 		}
+	}
+
+	/**
+	 *
+	 * @param context   Context 对象
+	 * @param content	设置溢出公司id
+	 */
+	public static void setFlowCompanyId(Context context, String content){
+		if (context == null){
+			return;
+		}
+		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_FLOW_COMPANY_ID, content);
+	}
+
+	/**
+	 *
+	 * @param context   Context 对象
+	 * @param content	转人工溢出公司技能组id
+	 */
+	public static void setFlowGroupId(Context context, String content){
+		if (context == null){
+			return;
+		}
+		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_FLOW_GROUP_ID, content);
 	}
 }

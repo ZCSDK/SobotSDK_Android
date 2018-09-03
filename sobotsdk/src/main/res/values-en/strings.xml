@@ -39,7 +39,6 @@
     <string name="sobot_problem">What is the problem？</string>
     <string name="sobot_in_line">Please wait...</string>
     <string name="sobot_in_line_title">Waiting...</string>
-    <string name="sobot_in_line_position">Please wait，there are %1$s people in need of service before you</string>
     <string name="sobot_you_can">, you can also get replies by </string>
     <string name="sobot_no_more_data">No more record</string>
     <string name="sobot_pic_size_should_be_less_than_three">Image size can not exceed 3M</string>

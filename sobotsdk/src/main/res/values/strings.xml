@@ -39,7 +39,6 @@
     <string name="sobot_problem">存在哪些问题</string>
     <string name="sobot_in_line">排队中，请稍候</string>
     <string name="sobot_in_line_title">排队中...</string>
-    <string name="sobot_in_line_position">排队中,您在队伍中的第%1$s个</string>
     <string name="sobot_you_can">您可以</string>
     <string name="sobot_no_more_data">到顶了，没有更多</string>
     <string name="sobot_pic_size_should_be_less_than_three">图片大小需小于3M</string>
