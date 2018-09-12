@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
@@ -129,6 +130,7 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
     public TextView mTitleTextView;//头部标题
     public TextView sobot_title_conn_status;
     public LinearLayout sobot_container_conn_status;
+    public TextView sobot_tv_right_second;
     public ProgressBar sobot_conn_loading;
     public RelativeLayout net_status_remide;
     public RelativeLayout relative;
@@ -361,6 +363,7 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
         mTitleTextView = (TextView) rootView.findViewById(getResId("sobot_text_title"));
         sobot_title_conn_status = (TextView) rootView.findViewById(getResId("sobot_title_conn_status"));
         sobot_container_conn_status = (LinearLayout) rootView.findViewById(getResId("sobot_container_conn_status"));
+        sobot_tv_right_second = (TextView) rootView.findViewById(getResId("sobot_tv_right_second"));
         sobot_conn_loading = (ProgressBar) rootView.findViewById(getResId("sobot_conn_loading"));
         net_status_remide = (RelativeLayout) rootView.findViewById(getResId("sobot_net_status_remide"));
 
@@ -717,6 +720,7 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
         btn_model_edit.setOnClickListener(this);
         btn_model_voice.setOnClickListener(this);
         sobot_ll_switch_robot.setOnClickListener(this);
+        sobot_tv_right_second.setOnClickListener(this);
 
         btn_set_mode_rengong.setOnClickListener(new NoDoubleClickListener() {
             @Override
@@ -2014,8 +2018,10 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
     public void doRevaluate(final boolean revaluateFlag,final ZhiChiMessageBase message){
         if(isSessionOver){
             showOutlineTip(initModel,1);
+            ToastUtil.showToast(mAppContext, getResString("sobot_ding_cai_sessionoff"));
             return;
         }
+        ToastUtil.showToast(mAppContext,revaluateFlag?  getResString("sobot_ding_cai_like") : getResString("sobot_ding_cai_dislike"));
         zhiChiApi.rbAnswerComment(SobotChatFragment.this,initModel.getUid(), initModel.getCid(), initModel.getCurrentRobotFlag(),
                 message.getDocId(), message.getDocName(), revaluateFlag, new StringResultCallBack<CommonModelBase>() {
                     @Override
@@ -3209,6 +3215,9 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
             }
         }
 
+        if (view == sobot_tv_right_second) {
+            btnSatisfaction();
+        }
     }
 
     private void showRobotVoiceHint() {
@@ -3645,6 +3654,22 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
 
         if (SobotUIConfig.DEFAULT != SobotUIConfig.sobot_titleBgColor ) {
             relative.setBackgroundColor(getContext().getResources().getColor(SobotUIConfig.sobot_titleBgColor));
+        }
+
+        if (SobotUIConfig.sobot_title_right_menu2_display) {
+            sobot_tv_right_second.setVisibility(View.VISIBLE);
+            if (SobotUIConfig.DEFAULT != SobotUIConfig.sobot_title_right_menu2_bg) {
+                Drawable img = getResources().getDrawable(SobotUIConfig.sobot_title_right_menu2_bg);
+                img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
+                sobot_tv_right_second.setCompoundDrawables(null, null, img, null);
+            }
+
+            if (SobotUIConfig.DEFAULT != SobotUIConfig.sobot_title_right_menu2_text) {
+                sobot_tv_right_second.setText(SobotUIConfig.sobot_title_right_menu2_text);
+                if (SobotUIConfig.DEFAULT != SobotUIConfig.sobot_title_right_menu2_textColor){
+                    sobot_tv_right_second.setTextColor(getResources().getColor(SobotUIConfig.sobot_title_right_menu2_textColor));
+                }
+            }
         }
     }
 }

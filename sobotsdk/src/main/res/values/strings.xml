@@ -121,4 +121,10 @@
     <string name="sobot_switch_robot_title">选择要咨询的业务</string>
     <string name="sobot_connecting_customer_service">正在连接人工客服</string>
     <string name="sobot_retracted_msg_tip">客服 %1$s 撤回了一条消息</string>
+    <string name="sobot_ding_cai_sessionoff">会话结束，无法反馈</string>
+    <string name="sobot_ding_cai_like">感谢您的支持</string>
+    <string name="sobot_ding_cai_dislike">我会努力学习，希望下次帮到您</string>
+    <string name="sobot_transfer_to_customer_service">转人工</string>
+    <string name="sobot_ding_cai_yes">有用</string>
+    <string name="sobot_ding_cai_no">无用</string>
 </resources>

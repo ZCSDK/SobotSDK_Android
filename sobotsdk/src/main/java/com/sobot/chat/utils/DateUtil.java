@@ -34,10 +34,10 @@ public class DateUtil {
     public final static SimpleDateFormat DATE_FORMAT2 = new SimpleDateFormat(
             "yyyy-MM-dd", Locale.getDefault());
     /**
-     * 年-月-日 时:分
+     * 时:分
      */
     public final static SimpleDateFormat DATE_FORMAT3 = new SimpleDateFormat(
-            "yyyy-MM-dd HH:mm", Locale.getDefault());
+            "HH:mm", Locale.getDefault());
     /**
      * 分:秒
      */
@@ -48,7 +48,7 @@ public class DateUtil {
      * x月x日
      */
     public final static SimpleDateFormat DATE_FORMAT5 = new SimpleDateFormat(
-            "M月d日", Locale.getDefault());
+            "MM月dd日", Locale.getDefault());
 
     /**
      * 将毫秒级整数转换为字符串格式时间
@@ -109,13 +109,12 @@ public class DateUtil {
      * @return
      */
     public static String formatDateTime(String time, boolean showHours, String showToday) {
-        SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         if (time == null || "".equals(time) || time.length() < 19) {
             return "";
         }
         Date date = null;
         try {
-            date = format.parse(time);
+            date = DATE_FORMAT.parse(time);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -154,6 +153,34 @@ public class DateUtil {
             } else {
                 return time.substring(index, time.length()).substring(0, 5);
             }
+        }
+    }
+
+    /**
+     * 格式化时间
+     * 时间是当日内时，显示小时和分钟，时间不是当日内时，时间显示月-日
+     * @param time
+     * @return
+     */
+    public static String formatDateTime2(String time) {
+        if (TextUtils.isEmpty(time)) {
+            return "";
+        }
+        try {
+            Calendar current = Calendar.getInstance();
+            Calendar today = Calendar.getInstance();    //今天
+            today.set(Calendar.HOUR_OF_DAY, 0);
+            today.set(Calendar.MINUTE, 0);
+            today.set(Calendar.SECOND, 0);
+            current.setTime(new Date(Long.parseLong(time)));
+            if (current.before(today)) {
+                return toDate(Long.parseLong(time),DATE_FORMAT5);
+            } else {
+                return toDate(Long.parseLong(time),DATE_FORMAT3);
+            }
+        } catch (Exception e) {
+//            e.printStackTrace();
+            return "";
         }
     }
 

@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:layout_marginRight="70dp"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@+id/sobot_tv_right_second"
         android:layout_toRightOf="@+id/sobot_tv_left"
         android:ellipsize="end"
         android:gravity="center|center_horizontal"
@@ -22,7 +23,8 @@
         android:id="@+id/sobot_container_conn_status"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginRight="70dp"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@+id/sobot_tv_right_second"
         android:layout_toRightOf="@+id/sobot_tv_left"
         android:gravity="center"
         android:orientation="horizontal"
@@ -61,8 +63,21 @@
         android:textSize="@dimen/sobot_text_title" />
 
     <TextView
+        android:id="@+id/sobot_tv_right_second"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/sobot_DIMEN_108PX"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@+id/sobot_tv_right"
+        android:drawablePadding="5dp"
+        android:gravity="center_vertical"
+        android:drawableRight="@drawable/sobot_icon_evaluate"
+        android:textColor="@color/sobot_color_title_bar_menu_text"
+        android:textSize="@dimen/sobot_text_title"
+        android:visibility="gone" />
+
+    <TextView
         android:id="@+id/sobot_tv_right"
-        android:layout_width="80dp"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/sobot_DIMEN_108PX"
         android:layout_alignParentRight="true"
         android:drawablePadding="5dp"

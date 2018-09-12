@@ -64,12 +64,14 @@ public class SobotApi {
 	 *
 	 * @param context           Context 对象
 	 * @param platformUnionCode 平台标识
+	 * @param platformSecretkey 平台标识 秘钥
 	 */
-	public static void initPlatformUnion(Context context, String platformUnionCode) {
+	public static void initPlatformUnion(Context context, String platformUnionCode,String platformSecretkey) {
 		if (context == null) {
 			return;
 		}
 		SharedPreferencesUtil.saveStringData(context, ZhiChiConstant.SOBOT_PLATFORM_UNIONCODE, platformUnionCode);
+		SharedPreferencesUtil.saveStringData(context, ZhiChiConstant.SOBOT_PLATFORM_PLATFORM_SECRETKEY, platformSecretkey);
 	}
 
 	/**

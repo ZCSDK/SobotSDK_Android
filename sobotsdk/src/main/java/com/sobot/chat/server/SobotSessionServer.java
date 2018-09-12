@@ -182,7 +182,7 @@ public class SobotSessionServer extends Service {
                     }
 //                    if (!CommonUtils.getRunningActivityName(getApplicationContext()).contains(
 //                            "SobotChatActivity")){
-                        int localUnreadNum = SobotMsgManager.getInstance(getApplicationContext()).addUnreadCount(pushMessage, DateUtil.toDate(Calendar.getInstance().getTime().getTime(),DateUtil.DATE_FORMAT5),currentUid);
+                        int localUnreadNum = SobotMsgManager.getInstance(getApplicationContext()).addUnreadCount(pushMessage, Calendar.getInstance().getTime().getTime()+"",currentUid);
                         Intent intent = new Intent();
                         intent.setAction(ZhiChiConstant.sobot_unreadCountBrocast);
                         intent.putExtra("noReadCount", localUnreadNum);

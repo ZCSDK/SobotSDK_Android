@@ -121,4 +121,10 @@
     <string name="sobot_switch_robot_title">Select the business to consult</string>
     <string name="sobot_connecting_customer_service">connecting</string>
     <string name="sobot_retracted_msg_tip">Customer service %1$s withdrew a message</string>
+    <string name="sobot_ding_cai_sessionoff">End of session, no feedback</string>
+    <string name="sobot_ding_cai_like">Thank you for your support.</string>
+    <string name="sobot_ding_cai_dislike">I will study hard and hope to help you next time.</string>
+    <string name="sobot_transfer_to_customer_service">To manual</string>
+    <string name="sobot_ding_cai_yes">YES</string>
+    <string name="sobot_ding_cai_no">NO</string>
 </resources>

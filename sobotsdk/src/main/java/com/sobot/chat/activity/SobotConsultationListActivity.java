@@ -17,18 +17,23 @@ import android.widget.ListView;
 import com.sobot.chat.SobotApi;
 import com.sobot.chat.activity.base.SobotBaseActivity;
 import com.sobot.chat.adapter.base.SobotMsgCenterAdapter;
+import com.sobot.chat.api.ZhiChiApi;
 import com.sobot.chat.api.apiUtils.GsonUtil;
 import com.sobot.chat.api.apiUtils.ZhiChiConstants;
 import com.sobot.chat.api.model.Information;
 import com.sobot.chat.api.model.SobotMsgCenterModel;
 import com.sobot.chat.api.model.ZhiChiPushMessage;
 import com.sobot.chat.api.model.ZhiChiReplyAnswer;
-import com.sobot.chat.utils.DateUtil;
+import com.sobot.chat.core.channel.SobotMsgManager;
+import com.sobot.chat.utils.SharedPreferencesUtil;
+import com.sobot.chat.utils.SobotCompareNewMsgTime;
+import com.sobot.chat.utils.SobotOption;
 import com.sobot.chat.utils.ZhiChiConstant;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,6 +41,7 @@ import java.util.List;
  * Created by jinxl on 2017/9/6.
  */
 public class SobotConsultationListActivity extends SobotBaseActivity {
+    //刷新列表
     private static final int REFRESH_DATA = 1;
 
     private ListView sobot_ll_msg_center;
@@ -45,6 +51,7 @@ public class SobotConsultationListActivity extends SobotBaseActivity {
     private SobotMessageReceiver receiver;
     private String currentUid;
     private SHandler mHandler = new SHandler(this);
+    private SobotCompareNewMsgTime mCompareNewMsgTime;
 
     static class SHandler extends Handler {
         WeakReference<Activity> mActivityReference;
@@ -105,6 +112,7 @@ public class SobotConsultationListActivity extends SobotBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initBrocastReceiver();
+        mCompareNewMsgTime = new SobotCompareNewMsgTime();
     }
 
     /* 初始化广播接受者 */
@@ -131,6 +139,10 @@ public class SobotConsultationListActivity extends SobotBaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 SobotMsgCenterModel sobotMsgCenterModel = datas.get(position);
+                if (SobotOption.sobotConversationListCallback != null && !TextUtils.isEmpty(sobotMsgCenterModel.getAppkey())) {
+                    SobotOption.sobotConversationListCallback.onConversationInit(sobotMsgCenterModel.getAppkey());
+                    return;
+                }
                 Information info = sobotMsgCenterModel.getInfo();
                 if (info != null) {
                     SobotApi.startSobotChat(getApplicationContext(), info);
@@ -145,13 +157,31 @@ public class SobotConsultationListActivity extends SobotBaseActivity {
             @Override
             public void run() {
                 List<SobotMsgCenterModel> msgCenterList = SobotApi.getMsgCenterList(getApplicationContext(), currentUid);
-                Message message = mHandler.obtainMessage();
-                message.what = REFRESH_DATA;
-                message.obj = msgCenterList;
+                if (msgCenterList == null) {
+                    msgCenterList = new ArrayList<>();
+                }
+                SobotCompareNewMsgTime compare = new SobotCompareNewMsgTime();
+                Collections.sort(msgCenterList,compare);
+                sendDatasOnUi(msgCenterList);
 
-                mHandler.sendMessage(message);
+                List<SobotMsgCenterModel> dataFromServer = getDataFromServer();
+                if (dataFromServer != null && dataFromServer.size() > 0) {
+                    dataFromServer.removeAll(msgCenterList);
+                    msgCenterList.addAll(dataFromServer);
+                    Collections.sort(msgCenterList,compare);
+                    sendDatasOnUi(msgCenterList);
+                }
             }
         }).start();
+    }
+
+    private void sendDatasOnUi(final List<SobotMsgCenterModel> msgCenterList) {
+        Message message = mHandler.obtainMessage();
+        message.what = REFRESH_DATA;
+        List<SobotMsgCenterModel> tmpList = new ArrayList<>();
+        tmpList.addAll(msgCenterList);
+        message.obj = tmpList;
+        mHandler.sendMessage(message);
     }
 
     public class SobotMessageReceiver extends BroadcastReceiver {
@@ -160,7 +190,11 @@ public class SobotConsultationListActivity extends SobotBaseActivity {
         public void onReceive(Context context, Intent intent) {
             if (ZhiChiConstants.receiveMessageBrocast.equals(intent.getAction())) {
                 // 接受下推的消息
-                ZhiChiPushMessage pushMessage = (ZhiChiPushMessage) intent.getExtras().getSerializable(ZhiChiConstants.ZHICHI_PUSH_MESSAGE);
+                Bundle extras = intent.getExtras();
+                if (extras == null) {
+                    return;
+                }
+                ZhiChiPushMessage pushMessage = (ZhiChiPushMessage) extras.getSerializable(ZhiChiConstants.ZHICHI_PUSH_MESSAGE);
                 if (pushMessage == null || TextUtils.isEmpty(pushMessage.getAppId())) {
                     return;
                 }
@@ -180,7 +214,7 @@ public class SobotConsultationListActivity extends SobotBaseActivity {
                                 reply.setMsgType(pushMessage.getMsgType() + "");
                                 reply.setMsg(pushMessage.getContent());
                             }
-                            sobotMsgCenterModel.setLastDate(DateUtil.toDate(Calendar.getInstance().getTime().getTime(), DateUtil.DATE_FORMAT5));
+                            sobotMsgCenterModel.setLastDateTime(Calendar.getInstance().getTime().getTime() + "");
                             sobotMsgCenterModel.setLastMsg(reply.getMsg());
                             int unreadCount = sobotMsgCenterModel.getUnreadCount() + 1;
                             sobotMsgCenterModel.setUnreadCount(unreadCount);
@@ -203,25 +237,30 @@ public class SobotConsultationListActivity extends SobotBaseActivity {
      * 刷新条目
      */
     public void refershItemData(final SobotMsgCenterModel model) {
-        runOnUiThread(new Runnable() {
+        if (model != null && model.getInfo() != null && !TextUtils.isEmpty(model.getLastMsg()) && datas != null) {
+            datas.remove(model);
+            datas.add(model);
+            Collections.sort(datas,mCompareNewMsgTime);
+            sendDatasOnUi(datas);
+        }
+    }
 
-            @Override
-            public void run() {
-
-                for (int i = 0, count = sobot_ll_msg_center.getChildCount(); i < count; i++) {
-                    View child = sobot_ll_msg_center.getChildAt(i);
-                    if (child == null || child.getTag() == null || !(child.getTag() instanceof SobotMsgCenterAdapter.SobotMsgCenterViewHolder)) {
-                        continue;
-                    }
-                    SobotMsgCenterAdapter.SobotMsgCenterViewHolder holder = (SobotMsgCenterAdapter.SobotMsgCenterViewHolder) child.getTag();
-                    if (model != null && model.getInfo() != null && holder.data != null
-                            && holder.data.getInfo() != null && model.getInfo().getAppkey() != null
-                            && model.getInfo().getAppkey().equals(holder.data.getInfo().getAppkey())) {
-                        holder.bindData(model);
-                    }
-                }
+    /**
+     * IO Thread
+     * 从服务器获取会话列表
+     */
+    private List<SobotMsgCenterModel> getDataFromServer() {
+        String platformID = SharedPreferencesUtil.getStringData(getApplicationContext(), ZhiChiConstant.SOBOT_PLATFORM_UNIONCODE, "");
+        List<SobotMsgCenterModel> platformList = null;
+        if (!TextUtils.isEmpty(platformID) && !TextUtils.isEmpty(currentUid)) {
+            ZhiChiApi zhiChiApi = SobotMsgManager.getInstance(getApplicationContext()).getZhiChiApi();
+            try {
+                platformList = zhiChiApi.getPlatformList(ZhiChiConstant.SOBOT_GLOBAL_REQUEST_CANCEL_TAG, platformID, currentUid);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        });
+        }
+        return platformList;
     }
 
     @Override
@@ -232,4 +271,5 @@ public class SobotConsultationListActivity extends SobotBaseActivity {
             localBroadcastManager.unregisterReceiver(receiver);
         }
     }
+
 }

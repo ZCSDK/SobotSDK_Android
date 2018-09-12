@@ -134,16 +134,6 @@
                     android:layout_marginRight="@dimen/sobot_DIMEN_36PX"
                     android:layout_marginTop="3dip"
                     android:orientation="vertical"
-                    android:visibility="gone"/>
-
-                <!-- 阅读全文上面的一条横线 -->
-                <View
-                    android:id="@+id/read_alltext_line"
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="5dp"
-                    android:background="#dadada"
                     android:visibility="gone" />
 
                 <!-- 查看详情 -->
@@ -158,53 +148,106 @@
                     android:text="@string/sobot_read_all"
                     android:textColor="@color/sobot_color_read_all"
                     android:visibility="gone" />
-            </LinearLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/sobot_ll_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="80dp"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/sobot_tv_transferBtn"
-                    android:layout_width="70dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginRight="50dp"
-                    android:background="@drawable/sobot_edit_selector"
-                    android:gravity="center"
-                    android:text="转人工"
-                    android:textColor="@drawable/sobot_edit_textcolor_selector"
-                    android:textSize="13sp" />
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:id="@+id/sobot_chat_more_action"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/sobot_tv_transferBtn"
-                    android:orientation="horizontal">
+                    android:layout_marginBottom="3dp"
+                    android:orientation="vertical"
+                    android:visibility="visible">
 
-                    <TextView
-                        android:id="@+id/sobot_tv_likeBtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:background="@drawable/sobot_din_selector" />
+                    <!-- 阅读全文上面的一条横线 -->
+                    <View
+                        android:id="@+id/read_alltext_line"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
+                        android:background="#dadada"
+                        android:visibility="visible" />
 
-                    <TextView
-                        android:id="@+id/sobot_tv_dislikeBtn"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:background="@drawable/sobot_cai_selector" />
+                        android:layout_below="@+id/read_alltext_line"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/sobot_ll_transferBtn"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/sobot_tv_transferBtn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:drawableLeft="@drawable/sobot_transfer"
+                                android:gravity="center"
+                                android:text="@string/sobot_transfer_to_customer_service" />
+
+                        </LinearLayout>
+
+                        <View
+                            android:id="@+id/sobot_tv_transferBtn_line"
+                            android:layout_width="1.5dp"
+                            android:layout_height="21dp"
+                            android:layout_marginLeft="10dp"
+                            android:background="#e7e9ed" />
+
+                        <LinearLayout
+                            android:id="@+id/sobot_ll_likeBtn"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/sobot_tv_likeBtn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:drawableLeft="@drawable/sobot_din_selector"
+                                android:gravity="center"
+                                android:text="@string/sobot_ding_cai_yes" />
+
+                        </LinearLayout>
+
+                        <View
+                            android:id="@+id/sobot_tv_dislikeBtn_line"
+                            android:layout_width="1.5dp"
+                            android:layout_height="21dp"
+                            android:background="#e7e9ed" />
+
+                        <LinearLayout
+                            android:id="@+id/sobot_ll_dislikeBtn"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/sobot_tv_dislikeBtn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:drawableLeft="@drawable/sobot_cai_selector"
+                                android:gravity="center"
+                                android:text="@string/sobot_ding_cai_no" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
                 </LinearLayout>
-            </RelativeLayout>
+
+            </LinearLayout>
+
         </RelativeLayout>
+
     </RelativeLayout>
 
 </LinearLayout>

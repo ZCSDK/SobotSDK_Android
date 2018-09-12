@@ -39,10 +39,18 @@ public class RichTextMessageHolder extends MessageHolderBase {
     // 答案
     private ImageView bigPicImage; // 大的图片的展示
     private TextView rendAllText; // 阅读全文
-    private View read_alltext_line;
-    private TextView sobot_tv_transferBtn;
+
+    private LinearLayout sobot_chat_more_action;//包含以下所有控件
+
+    private LinearLayout sobot_ll_transferBtn;//只包含转人工按钮
+    private TextView sobot_tv_transferBtn;//机器人转人工按钮
+    private View sobot_tv_transferBtn_line;//转人工后面的线
+
+    private LinearLayout sobot_ll_likeBtn;
+    private LinearLayout sobot_ll_dislikeBtn;
     private TextView sobot_tv_likeBtn;//机器人评价 顶 的按钮
     private TextView sobot_tv_dislikeBtn;//机器人评价 踩 的按钮
+    private View sobot_tv_dislikeBtn_line;//顶踩两个按钮之间的线
 
     public RichTextMessageHolder(Context context, View convertView){
         super(context,convertView);
@@ -52,7 +60,10 @@ public class RichTextMessageHolder extends MessageHolderBase {
         msg = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_msg"));
         sobot_msg_title = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_msg_title"));
         sobot_msgStripe = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_msgStripe"));
-        read_alltext_line = convertView.findViewById(ResourceUtils.getIdByName(context, "id", "read_alltext_line"));
+        sobot_chat_more_action = (LinearLayout) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_chat_more_action"));
+        sobot_ll_transferBtn = (LinearLayout) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_ll_transferBtn"));
+        sobot_ll_likeBtn = (LinearLayout) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_ll_likeBtn"));
+        sobot_ll_dislikeBtn = (LinearLayout) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_ll_dislikeBtn"));
 
         // 富文本的大图片
         bigPicImage = (ImageView) convertView
@@ -72,6 +83,8 @@ public class RichTextMessageHolder extends MessageHolderBase {
         sobot_tv_transferBtn = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_tv_transferBtn"));
         sobot_tv_likeBtn = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_tv_likeBtn"));
         sobot_tv_dislikeBtn = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_tv_dislikeBtn"));
+        sobot_tv_dislikeBtn_line = (View) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_tv_dislikeBtn_line"));
+        sobot_tv_transferBtn_line = (View) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_tv_transferBtn_line"));
     }
 
     @Override
@@ -107,12 +120,10 @@ public class RichTextMessageHolder extends MessageHolderBase {
             }
 
             if (!TextUtils.isEmpty(message.getAnswer().getRichmoreurl())) {
-                read_alltext_line.setVisibility(View.VISIBLE);
                 rendAllText.setVisibility(View.VISIBLE);
                 rendAllText.setOnClickListener(new ReadAllTextLisenter(context,message.getAnswer().getRichmoreurl()));
                 msg.setMaxLines(3);
             } else {
-                read_alltext_line.setVisibility(View.GONE);
                 rendAllText.setVisibility(View.GONE);
                 msg.setMaxLines(Integer.MAX_VALUE);
             }
@@ -202,10 +213,21 @@ public class RichTextMessageHolder extends MessageHolderBase {
         }
     }
 
+    private void hideContainer(){
+        if (!message.isShowTransferBtn() && message.getRevaluateState() == 0){
+            sobot_chat_more_action.setVisibility(View.GONE);
+        } else {
+            sobot_chat_more_action.setVisibility(View.VISIBLE);
+        }
+    }
+
     /**
      * 隐藏转人工按钮
      */
     public void hideTransferBtn(){
+        hideContainer();
+        sobot_ll_transferBtn.setVisibility(View.GONE);
+        sobot_tv_transferBtn_line.setVisibility(View.GONE);
         sobot_tv_transferBtn.setVisibility(View.GONE);
         if(message != null){
             message.setShowTransferBtn(false);
@@ -216,11 +238,20 @@ public class RichTextMessageHolder extends MessageHolderBase {
      * 显示转人工按钮
      */
     public void showTransferBtn(){
+        if (message.getRevaluateState() == 0){
+            sobot_tv_transferBtn_line.setVisibility(View.GONE);
+            sobot_tv_dislikeBtn_line.setVisibility(View.GONE);
+        } else {
+            sobot_tv_transferBtn_line.setVisibility(View.VISIBLE);
+            sobot_tv_dislikeBtn_line.setVisibility(View.VISIBLE);
+        }
+        sobot_chat_more_action.setVisibility(View.VISIBLE);
         sobot_tv_transferBtn.setVisibility(View.VISIBLE);
+        sobot_ll_transferBtn.setVisibility(View.VISIBLE);
         if(message != null){
             message.setShowTransferBtn(true);
         }
-        sobot_tv_transferBtn.setOnClickListener(new NoDoubleClickListener() {
+        sobot_ll_transferBtn.setOnClickListener(new NoDoubleClickListener() {
 
             @Override
             public void onNoDoubleClick(View v) {
@@ -253,12 +284,16 @@ public class RichTextMessageHolder extends MessageHolderBase {
      * 显示 顶踩 按钮
      */
     public void showRevaluateBtn(){
+        sobot_chat_more_action.setVisibility(View.VISIBLE);
         sobot_tv_likeBtn.setVisibility(View.VISIBLE);
         sobot_tv_dislikeBtn.setVisibility(View.VISIBLE);
-        sobot_tv_dislikeBtn.setText("");
-        if(mContext != null){
-            sobot_tv_dislikeBtn.setBackgroundResource(ResourceUtils.getIdByName(mContext, "drawable", "sobot_cai_selector"));
-        }
+        sobot_ll_likeBtn.setVisibility(View.VISIBLE);
+        sobot_ll_dislikeBtn.setVisibility(View.VISIBLE);
+        sobot_tv_likeBtn.setEnabled(true);
+        sobot_tv_dislikeBtn.setEnabled(true);
+        sobot_tv_likeBtn.setSelected(false);
+        sobot_tv_dislikeBtn.setSelected(false);
+
         sobot_tv_likeBtn.setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
@@ -287,28 +322,37 @@ public class RichTextMessageHolder extends MessageHolderBase {
      * 隐藏 顶踩 按钮
      */
     public void hideRevaluateBtn(){
+        hideContainer();
         sobot_tv_likeBtn.setVisibility(View.GONE);
         sobot_tv_dislikeBtn.setVisibility(View.GONE);
+        sobot_ll_likeBtn.setVisibility(View.GONE);
+        sobot_ll_dislikeBtn.setVisibility(View.GONE);
     }
 
     /**
      * 显示顶之后的view
      */
     public void showLikeWordView(){
-        sobot_tv_likeBtn.setVisibility(View.GONE);
+        sobot_tv_likeBtn.setSelected(true);
+        sobot_tv_likeBtn.setEnabled(false);
+        sobot_tv_dislikeBtn.setEnabled(false);
+        sobot_tv_dislikeBtn.setSelected(false);
+        sobot_chat_more_action.setVisibility(View.VISIBLE);
+        sobot_tv_likeBtn.setVisibility(View.VISIBLE);
         sobot_tv_dislikeBtn.setVisibility(View.VISIBLE);
-        VersionUtils.setBackground(null,sobot_tv_dislikeBtn);
-        sobot_tv_dislikeBtn.setText(getResStringId("sobot_robot_like"));
     }
 
     /**
      * 显示踩之后的view
      */
     public void showDislikeWordView(){
-        sobot_tv_likeBtn.setVisibility(View.GONE);
+        sobot_tv_dislikeBtn.setSelected(true);
+        sobot_tv_dislikeBtn.setEnabled(false);
+        sobot_tv_likeBtn.setEnabled(false);
+        sobot_tv_likeBtn.setSelected(false);
+        sobot_chat_more_action.setVisibility(View.VISIBLE);
+        sobot_tv_likeBtn.setVisibility(View.VISIBLE);
         sobot_tv_dislikeBtn.setVisibility(View.VISIBLE);
-        VersionUtils.setBackground(null,sobot_tv_dislikeBtn);
-        sobot_tv_dislikeBtn.setText(getResStringId("sobot_robot_dislike"));
     }
 
     public int getResStringId(String name) {

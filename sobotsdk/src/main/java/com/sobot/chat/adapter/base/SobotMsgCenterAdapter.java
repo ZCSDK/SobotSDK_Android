@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sobot.chat.api.model.SobotMsgCenterModel;
+import com.sobot.chat.utils.DateUtil;
 import com.sobot.chat.utils.SobotBitmapUtil;
 import com.sobot.chat.utils.ResourceUtils;
 
@@ -48,7 +49,8 @@ public class SobotMsgCenterAdapter extends SobotBaseAdapter<SobotMsgCenterModel>
         TextView sobot_tv_date;
         ImageView sobot_iv_face;
         Context context;
-        public SobotMsgCenterModel data=null;
+        int defaultFaceId;
+        private SobotMsgCenterModel data = null;
 
         public SobotMsgCenterViewHolder(Context context, View convertView) {
             this.context = context;
@@ -57,6 +59,7 @@ public class SobotMsgCenterAdapter extends SobotBaseAdapter<SobotMsgCenterModel>
             sobot_tv_content = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_tv_content"));
             sobot_tv_date = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_tv_date"));
             sobot_iv_face = (ImageView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_iv_face"));
+            defaultFaceId = ResourceUtils.getIdByName(context, "drawable", "sobot_chatting_default_head");
 
         }
 
@@ -65,10 +68,16 @@ public class SobotMsgCenterAdapter extends SobotBaseAdapter<SobotMsgCenterModel>
                 return;
             }
             this.data = model;
-            SobotBitmapUtil.display(context, model.getFace(), sobot_iv_face);
+            SobotBitmapUtil.displayRound(context, model.getFace(), sobot_iv_face, defaultFaceId);
             sobot_tv_title.setText(model.getName());
-            sobot_tv_content.setText(TextUtils.isEmpty(model.getLastMsg())?"":Html.fromHtml(model.getLastMsg()).toString());
-            sobot_tv_date.setText(model.getLastDate());
+            sobot_tv_content.setText(TextUtils.isEmpty(model.getLastMsg()) ? "" : Html.fromHtml(model.getLastMsg()).toString());
+            if (!TextUtils.isEmpty(model.getLastDateTime())) {
+                try {
+                    sobot_tv_date.setText(DateUtil.formatDateTime2(model.getLastDateTime()));
+                } catch (Exception e) {
+                    //ignor
+                }
+            }
             setUnReadNum(sobot_tv_unread_count, model.getUnreadCount());
         }
 

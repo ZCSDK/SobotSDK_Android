@@ -701,19 +701,23 @@ public class ChatUtils {
 		sobotMsgCenterModel.setInfo(info);
 		sobotMsgCenterModel.setFace(initModel.getCompanyLogo());
 		sobotMsgCenterModel.setName(initModel.getCompanyName());
-		sobotMsgCenterModel.setLastDate(DateUtil.toDate(Calendar.getInstance().getTime().getTime(),DateUtil.DATE_FORMAT5));
+		sobotMsgCenterModel.setAppkey(appkey);
+		sobotMsgCenterModel.setLastDateTime(Calendar.getInstance().getTime().getTime()+"");
 		sobotMsgCenterModel.setUnreadCount(0);
 
 		if (messageList != null) {
-			String lastMsg = "";
+			String continueType = ZhiChiConstant.message_sender_type_consult_info +"";
 			for (int i = messageList.size() -1; i >= 0; i--) {
 				ZhiChiMessageBase tempMsg = messageList.get(i);
+				if (continueType.equals(tempMsg.getSenderType())) {
+					continue;
+				}
 				if (tempMsg.getAnswer() != null){
-					lastMsg = tempMsg.getAnswer().getMsg();
+					String lastMsg = tempMsg.getAnswer().getMsg();
+					sobotMsgCenterModel.setLastMsg(lastMsg);
 				}
 				break;
 			}
-			sobotMsgCenterModel.setLastMsg(lastMsg);
 		}
 		sobotCache.put(SobotMsgManager.getMsgCenterDataKey(appkey,info.getUid()),sobotMsgCenterModel);
 
