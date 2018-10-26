@@ -340,6 +340,8 @@ public class RichTextMessageHolder extends MessageHolderBase {
         sobot_chat_more_action.setVisibility(View.VISIBLE);
         sobot_tv_likeBtn.setVisibility(View.VISIBLE);
         sobot_tv_dislikeBtn.setVisibility(View.VISIBLE);
+        sobot_ll_likeBtn.setVisibility(View.VISIBLE);
+        sobot_ll_dislikeBtn.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -353,6 +355,8 @@ public class RichTextMessageHolder extends MessageHolderBase {
         sobot_chat_more_action.setVisibility(View.VISIBLE);
         sobot_tv_likeBtn.setVisibility(View.VISIBLE);
         sobot_tv_dislikeBtn.setVisibility(View.VISIBLE);
+        sobot_ll_likeBtn.setVisibility(View.VISIBLE);
+        sobot_ll_dislikeBtn.setVisibility(View.VISIBLE);
     }
 
     public int getResStringId(String name) {

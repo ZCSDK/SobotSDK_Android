@@ -9,6 +9,7 @@ import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.core.HttpUtils;
 import com.sobot.chat.utils.AudioTools;
 import com.sobot.chat.utils.LogUtils;
+import com.sobot.chat.utils.ToastUtil;
 import com.sobot.chat.utils.ZhiChiConstant;
 
 import java.io.File;
@@ -72,6 +73,10 @@ public class AudioPlayPresenter {
             final File file = new File(contentPath);
             if (!file.exists()) {
                 // 下载
+                if(TextUtils.isEmpty(path) || !path.startsWith("http")){
+                    ToastUtil.showToast(mContent,"语音地址错误");
+                    return;
+                }
                 HttpUtils.getInstance().download(path, file, null, new HttpUtils.FileCallBack() {
 
                     @Override

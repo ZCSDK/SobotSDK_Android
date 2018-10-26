@@ -10,12 +10,14 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 
+import com.sobot.chat.api.model.ZhiChiPushMessage;
+
 public class NotificationUtils {
 
     private static final  String SOBOT_CHANNEL_ID= "sobot_channel_id";
     private static final  String SOBOT_CHANNEL_NAME = "sobot_notification";
 
-    public static void createNotification(Context context, Class<?> cls, String title, String content, String ticker, int id){
+    public static void createNotification(Context context, String title, String content, String ticker, int id,ZhiChiPushMessage pushMessage){
 
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if(manager == null){
@@ -23,6 +25,9 @@ public class NotificationUtils {
         }
 
         Intent detailIntent = new Intent(ZhiChiConstant.SOBOT_NOTIFICATION_CLICK);
+        if (pushMessage != null) {
+            detailIntent.putExtra("sobot_appId", pushMessage.getAppId());
+        }
         detailIntent.setPackage(context.getPackageName());
         PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, 0,
                 detailIntent, 0);

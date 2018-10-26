@@ -127,7 +127,7 @@ public class ChatUtils {
 		// 创建图片文件存放的位置
 		File cameraFile = new File(path);
 		boolean mkdirs = cameraFile.getParentFile().mkdirs();
-		LogUtils.i("cameraPath:" + path);
+		LogUtils.i("cameraPath:" + path + "----mkdirs----" + mkdirs);
 		Uri uri;
 		if(Build.VERSION.SDK_INT > Build.VERSION_CODES.M){
 			ContentValues contentValues = new ContentValues(1);
@@ -236,7 +236,7 @@ public class ChatUtils {
 		reply.setMsg(imageUrl);
 		zhichiMessage.setAnswer(reply);
 		zhichiMessage.setId(id);
-
+		zhichiMessage.setT(Calendar.getInstance().getTime().getTime()+"");
 		zhichiMessage.setSendSuccessState(ZhiChiConstant.MSG_SEND_STATUS_LOADING);
 		zhichiMessage.setSenderType(ZhiChiConstant.message_sender_type_customer_sendImage + "");
 		Message message = new Message();
@@ -345,6 +345,7 @@ public class ChatUtils {
 	 */
 	public static ZhiChiMessageBase getCustomEvaluateMode(ZhiChiPushMessage pushMessage){
 		ZhiChiMessageBase base = new ZhiChiMessageBase();
+		base.setT(Calendar.getInstance().getTime().getTime()+"");
 		base.setSenderName(TextUtils.isEmpty(pushMessage.getAname())?"客服":pushMessage.getAname());
 		SobotEvaluateModel sobotEvaluateModel = new SobotEvaluateModel();
 		sobotEvaluateModel.setIsQuestionFlag(pushMessage.getIsQuestionFlag());
@@ -527,6 +528,7 @@ public class ChatUtils {
 		ZhiChiMessageBase base = new ZhiChiMessageBase();
 		base.setSenderType(ZhiChiConstant.message_sender_type_remide_info + "");
 		base.setAction(ZhiChiConstant.action_remind_connt_success);
+		base.setT(Calendar.getInstance().getTime().getTime()+"");
 		ZhiChiReplyAnswer reply = new ZhiChiReplyAnswer();
 		reply.setMsgType(null);
 
@@ -547,6 +549,7 @@ public class ChatUtils {
 	 */
 	public static ZhiChiMessageBase getServiceHelloTip(String aname, String aface,String content) {
 		ZhiChiMessageBase base = new ZhiChiMessageBase();
+		base.setT(Calendar.getInstance().getTime().getTime()+"");
 		base.setSenderName(TextUtils.isEmpty(aname)?"":aname);
 		ZhiChiReplyAnswer reply = new ZhiChiReplyAnswer();
 		reply.setMsgType(ZhiChiConstant.message_type_text + "");
@@ -565,7 +568,7 @@ public class ChatUtils {
 		ZhiChiMessageBase paiduizhichiMessageBase = new ZhiChiMessageBase();
 		paiduizhichiMessageBase.setSenderType(ZhiChiConstant.message_sender_type_remide_info + "");
 		paiduizhichiMessageBase.setAction(ZhiChiConstant.action_remind_info_paidui);
-
+		paiduizhichiMessageBase.setT(Calendar.getInstance().getTime().getTime()+"");
 		ZhiChiReplyAnswer reply_paidui = new ZhiChiReplyAnswer();
 		reply_paidui.setMsg(queueDoc);
 		reply_paidui.setRemindType(ZhiChiConstant.sobot_remind_type_paidui_status);
@@ -702,7 +705,7 @@ public class ChatUtils {
 		sobotMsgCenterModel.setFace(initModel.getCompanyLogo());
 		sobotMsgCenterModel.setName(initModel.getCompanyName());
 		sobotMsgCenterModel.setAppkey(appkey);
-		sobotMsgCenterModel.setLastDateTime(Calendar.getInstance().getTime().getTime()+"");
+//		sobotMsgCenterModel.setLastDateTime(Calendar.getInstance().getTime().getTime()+"");
 		sobotMsgCenterModel.setUnreadCount(0);
 
 		if (messageList != null) {
@@ -712,11 +715,21 @@ public class ChatUtils {
 				if (continueType.equals(tempMsg.getSenderType())) {
 					continue;
 				}
-				if (tempMsg.getAnswer() != null){
-					String lastMsg = tempMsg.getAnswer().getMsg();
-					sobotMsgCenterModel.setLastMsg(lastMsg);
+				String lastMsg = "";
+                if ((ZhiChiConstant.message_sender_type_customer_sendImage + "").equals(tempMsg.getSenderType())) {
+					lastMsg = "[图片]";
+				} else if ((ZhiChiConstant.message_sender_type_send_voice + "").equals(tempMsg.getSenderType())) {
+                    lastMsg = "[语音]";
+                } else if(tempMsg.getAnswer() != null){
+                	if((ZhiChiConstant.message_type_pic + "").equals(tempMsg.getAnswer().getMsgType())){
+						lastMsg = "[图片]";
+					} else {
+						lastMsg = tempMsg.getAnswer().getMsg();
+					}
 				}
-				break;
+                sobotMsgCenterModel.setLastMsg(lastMsg);
+                sobotMsgCenterModel.setLastDateTime(!TextUtils.isEmpty(tempMsg.getT())?tempMsg.getT():Calendar.getInstance().getTime().getTime()+"");
+                break;
 			}
 		}
 		sobotCache.put(SobotMsgManager.getMsgCenterDataKey(appkey,info.getUid()),sobotMsgCenterModel);
@@ -786,6 +799,7 @@ public class ChatUtils {
 		ZhiChiMessageBase robot = new ZhiChiMessageBase();
 		robot.setSenderType(ZhiChiConstant.message_sender_type_questionRecommend + "");
 		ZhiChiReplyAnswer reply = new ZhiChiReplyAnswer();
+		robot.setT(Calendar.getInstance().getTime().getTime()+"");
 		reply.setQuestionRecommend(data);
 		robot.setAnswer(reply);
 		robot.setSenderFace(initModel.getRobotLogo());
@@ -797,7 +811,7 @@ public class ChatUtils {
 	public static ZhiChiMessageBase getTipByText(String content){
 		ZhiChiMessageBase data = new ZhiChiMessageBase();
 		data.setSenderType(ZhiChiConstant.message_sender_type_remide_info + "");
-
+		data.setT(Calendar.getInstance().getTime().getTime()+"");
 		ZhiChiReplyAnswer reply = new ZhiChiReplyAnswer();
 		reply.setMsg(content);
 		reply.setRemindType(ZhiChiConstant.sobot_remind_type_tip);

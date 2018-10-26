@@ -109,6 +109,7 @@ import com.sobot.chat.widget.kpswitch.widget.KPSwitchPanelLinearLayout;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -283,11 +284,20 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
             return;
         }
 
-        if (TextUtils.isEmpty(info.getAppkey())) {
-            Toast.makeText(mAppContext, getResString("sobot_appkey_is_null"), Toast.LENGTH_SHORT).show();
-            finish();
-            return;
+        if (SobotVerControl.isPlatformVer){
+            if (TextUtils.isEmpty(info.getAppkey()) && TextUtils.isEmpty(info.getCustomerCode())){
+                Toast.makeText(mAppContext, "appkey或者customCode必须设置一项", Toast.LENGTH_SHORT).show();
+                finish();
+                return;
+            }
+        } else {
+            if (TextUtils.isEmpty(info.getAppkey())){
+                Toast.makeText(mAppContext, getResString("sobot_appkey_is_null"), Toast.LENGTH_SHORT).show();
+                finish();
+                return;
+            }
         }
+
         SharedPreferencesUtil.saveStringData(mAppContext, ZhiChiConstant.SOBOT_CURRENT_IM_APPID, info.getAppkey());
 
         //保存自定义配置
@@ -469,6 +479,7 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
                     break;
                 case ZhiChiConstant.hander_robot_message:
                     ZhiChiMessageBase zhiChiMessageBasebase = (ZhiChiMessageBase) msg.obj;
+                    zhiChiMessageBasebase.setT(Calendar.getInstance().getTime().getTime()+"");
                     if(type == ZhiChiConstant.type_robot_first || type == ZhiChiConstant.type_custom_first ){
                         //智能客服模式下，特定问题类型的机器人回答语下显示“转人工”按钮。
                         if(initModel != null && ChatUtils.checkManualType(initModel.getManualType(),
@@ -497,8 +508,8 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
 
                     messageAdapter.justAddData(zhiChiMessageBasebase);
                     SobotKeyWordTransfer keyWordTransfer = zhiChiMessageBasebase.getSobotKeyWordTransfer();
-                    if (keyWordTransfer != null){
-                        if (1 == keyWordTransfer.getTransferFlag()) {
+                    if (keyWordTransfer != null && type != ZhiChiConstant.type_robot_only){
+                        if (1 == keyWordTransfer.getTransferFlag() || 3 == keyWordTransfer.getTransferFlag()) {
                             transfer2Custom(keyWordTransfer.getGroupId(), keyWordTransfer.getKeyword(), keyWordTransfer.getKeywordId(), false);
                         } else if (2 == keyWordTransfer.getTransferFlag()){
                             ZhiChiMessageBase keyWordBase = new ZhiChiMessageBase();
@@ -1042,6 +1053,8 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
                     return;
                 }
                 initModel = result;
+
+                processPlatformAppId();
                 getAnnouncement();
                 if(info.getInitModeType() > 0){
                     initModel.setType(info.getInitModeType()+"");
@@ -1134,6 +1147,19 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
     }
 
     /**
+     * 特殊处理电商版传CustomerCode的情况
+     */
+    private void processPlatformAppId() {
+        if (SobotVerControl.isPlatformVer  && !TextUtils.isEmpty(info.getCustomerCode())){
+            if (!TextUtils.isEmpty(initModel.getAppId())){
+                info.setAppkey(initModel.getAppId());
+            }
+
+            SharedPreferencesUtil.saveStringData(mAppContext, ZhiChiConstant.SOBOT_CURRENT_IM_APPID, info.getAppkey());
+        }
+    }
+
+    /**
      * 会话保持初始化的逻辑
      */
     private void doKeepsessionInit(){
@@ -1207,6 +1233,7 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
         String offlineMsg = ChatUtils.getMessageContentByOutLineType(mAppContext, initModel, outLineType);
         if (!TextUtils.isEmpty(offlineMsg)) {
             ZhiChiMessageBase base = new ZhiChiMessageBase();
+            base.setT(Calendar.getInstance().getTime().getTime()+"");
             ZhiChiReplyAnswer reply = new ZhiChiReplyAnswer();
             base.setSenderType(ZhiChiConstant.message_sender_type_remide_info + "");
             reply.setRemindType(ZhiChiConstant.sobot_remind_type_outline);
@@ -1534,6 +1561,11 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
                         if (!isActive()) {
                             return;
                         }
+
+                        if (!TextUtils.isEmpty(zhichiMessageBase.getServiceEndPushMsg())){
+                            initModel.setServiceEndPushMsg(zhichiMessageBase.getServiceEndPushMsg());
+                        }
+
                         int status = Integer.parseInt(zhichiMessageBase.getStatus());
                         setAdminFace(zhichiMessageBase.getAface());
                         LogUtils.i("status---:" + status);
@@ -2375,7 +2407,7 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
             }
             ZhiChiReplyAnswer reply = new ZhiChiReplyAnswer();
             zhichiMessageBase.setAnswer(reply);
-            zhichiMessageBase.setT(consultingContent.getSobotGoodsTitle());
+            zhichiMessageBase.setContent(consultingContent.getSobotGoodsTitle());
             zhichiMessageBase.setUrl(consultingContent.getSobotGoodsFromUrl());
             zhichiMessageBase.setCid(initModel == null?"":initModel.getCid());
             zhichiMessageBase.setAname(consultingContent.getSobotGoodsLable());
@@ -3008,6 +3040,7 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
                     return;
                 }
                 ZhiChiMessageBase base = new ZhiChiMessageBase();
+                base.setT(Calendar.getInstance().getTime().getTime()+"");
                 base.setSenderName(pushMessage.getAname());
 
                 if (ZhiChiConstant.push_message_createChat == pushMessage.getType()) {
@@ -3374,6 +3407,8 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
                             if (type == ZhiChiConstant.type_custom_only) {
                                 //仅人工模式退出聊天
                                 isSessionOver = true;
+                                //清除会话信息
+                                clearCache();
                                 finish();
                             }
                         }
@@ -3622,6 +3657,7 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
             initModel.setCurrentRobotFlag(sobotRobot.getRobotFlag());
             initModel.setRobotLogo(sobotRobot.getRobotLogo());
             initModel.setRobotName(sobotRobot.getRobotName());
+            initModel.setRobotHelloWord(sobotRobot.getRobotHelloWord());
             showLogicTitle(initModel.getRobotName(),false);
             List<ZhiChiMessageBase> datas = messageAdapter.getDatas();
             int count = 0;
@@ -3664,12 +3700,6 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
                 sobot_tv_right_second.setCompoundDrawables(null, null, img, null);
             }
 
-            if (SobotUIConfig.DEFAULT != SobotUIConfig.sobot_title_right_menu2_text) {
-                sobot_tv_right_second.setText(SobotUIConfig.sobot_title_right_menu2_text);
-                if (SobotUIConfig.DEFAULT != SobotUIConfig.sobot_title_right_menu2_textColor){
-                    sobot_tv_right_second.setTextColor(getResources().getColor(SobotUIConfig.sobot_title_right_menu2_textColor));
-                }
-            }
         }
     }
 }

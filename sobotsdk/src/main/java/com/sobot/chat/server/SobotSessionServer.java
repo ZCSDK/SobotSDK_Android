@@ -106,6 +106,7 @@ public class SobotSessionServer extends Service {
         }
         // 接受下推的消息
         ZhiChiMessageBase base = new ZhiChiMessageBase();
+        base.setT(Calendar.getInstance().getTime().getTime()+"");
         base.setSenderName(pushMessage.getAname());
         ZhiChiConfig config = SobotMsgManager.getInstance(getApplication()).getConfig(pushMessage.getAppId());
         if (ZhiChiConstant.push_message_createChat == pushMessage.getType()) {
@@ -119,7 +120,7 @@ public class SobotSessionServer extends Service {
                         initModel.setAdminTipTime(!TextUtils.isEmpty(pushMessage.getServiceOutTime())?pushMessage.getServiceOutTime():initModel.getAdminTipTime());
                         initModel.setAdminTipWord(!TextUtils.isEmpty(pushMessage.getServiceOutDoc())?pushMessage.getServiceOutDoc():initModel.getAdminTipWord());
                     }
-                    createCustomerService(pushMessage.getAppId(),pushMessage.getAname(),pushMessage.getAface());
+                    createCustomerService(pushMessage.getAppId(),pushMessage.getAname(),pushMessage.getAface(),pushMessage);
                 }
             }
         } else if (ZhiChiConstant.push_message_receverNewMessage == pushMessage
@@ -180,16 +181,14 @@ public class SobotSessionServer extends Service {
                         content = "[图片]";
                         notificationContent = "[图片]";
                     }
-//                    if (!CommonUtils.getRunningActivityName(getApplicationContext()).contains(
-//                            "SobotChatActivity")){
-                        int localUnreadNum = SobotMsgManager.getInstance(getApplicationContext()).addUnreadCount(pushMessage, Calendar.getInstance().getTime().getTime()+"",currentUid);
-                        Intent intent = new Intent();
-                        intent.setAction(ZhiChiConstant.sobot_unreadCountBrocast);
-                        intent.putExtra("noReadCount", localUnreadNum);
-                        intent.putExtra("content", content);
-                        CommonUtils.sendLocalBroadcast(getApplicationContext(), intent);
-//                    }
-                    showNotification(notificationContent);
+                    int localUnreadNum = SobotMsgManager.getInstance(getApplicationContext()).addUnreadCount(pushMessage, Calendar.getInstance().getTime().getTime()+"",currentUid);
+                    Intent intent = new Intent();
+                    intent.setAction(ZhiChiConstant.sobot_unreadCountBrocast);
+                    intent.putExtra("noReadCount", localUnreadNum);
+                    intent.putExtra("content", content);
+                    intent.putExtra("sobot_appId", pushMessage.getAppId());
+                    CommonUtils.sendLocalBroadcast(getApplicationContext(), intent);
+                    showNotification(notificationContent,pushMessage);
                 }
             }
         } else if (ZhiChiConstant.push_message_paidui == pushMessage.getType()) {
@@ -201,7 +200,7 @@ public class SobotSessionServer extends Service {
             // 发送用户被下线的广播
             SobotMsgManager.getInstance(getApplication()).clearAllConfig();
             CommonUtils.sendLocalBroadcast(getApplicationContext(),new Intent(Const.SOBOT_CHAT_USER_OUTLINE));
-            showNotification("您好，本次会话已结束");
+            showNotification("您好，本次会话已结束",pushMessage);
         }  else if (ZhiChiConstant.push_message_transfer == pushMessage.getType()) {
             if (config.getInitModel() != null) {
                 LogUtils.i("用户被转接--->"+pushMessage.getName());
@@ -270,7 +269,7 @@ public class SobotSessionServer extends Service {
      * @param name 客服的名称
      * @param face  客服的头像
      */
-    private void createCustomerService(String appId,String name,String face){
+    private void createCustomerService(String appId,String name,String face,ZhiChiPushMessage pushMessage){
         ZhiChiConfig config = SobotMsgManager.getInstance(getApplication()).getConfig(appId);
         ZhiChiInitModeBase initModel = config.getInitModel();
         if(initModel == null){
@@ -311,7 +310,7 @@ public class SobotSessionServer extends Service {
         config.hideItemTransferBtn();
 
         if(isNeedShowMessage(appId)){
-            showNotification(String.format(getResString("sobot_service_accept"), config.currentUserName));
+            showNotification(String.format(getResString("sobot_service_accept"), config.currentUserName),pushMessage);
         }
     }
 
@@ -338,13 +337,13 @@ public class SobotSessionServer extends Service {
      *
      * @param content
      */
-    private void showNotification(String content) {
+    private void showNotification(String content,ZhiChiPushMessage pushMessage) {
         boolean notification_flag = SharedPreferencesUtil.getBooleanData(getApplicationContext(), Const
                 .SOBOT_NOTIFICATION_FLAG, false);
 
         if (notification_flag) {
             String notificationTitle = "客服提示";
-            NotificationUtils.createNotification(getApplicationContext(), null, notificationTitle, content, content, getNotificationId());
+            NotificationUtils.createNotification(getApplicationContext(), notificationTitle, content, content, getNotificationId(),pushMessage);
         }
     }
 

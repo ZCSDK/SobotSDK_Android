@@ -1,9 +1,8 @@
 package com.sobot.chat.activity;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,13 +17,13 @@ import com.sobot.chat.SobotApi;
 import com.sobot.chat.activity.base.SobotBaseActivity;
 import com.sobot.chat.adapter.base.SobotMsgCenterAdapter;
 import com.sobot.chat.api.ZhiChiApi;
-import com.sobot.chat.api.apiUtils.GsonUtil;
 import com.sobot.chat.api.apiUtils.ZhiChiConstants;
 import com.sobot.chat.api.model.Information;
 import com.sobot.chat.api.model.SobotMsgCenterModel;
-import com.sobot.chat.api.model.ZhiChiPushMessage;
-import com.sobot.chat.api.model.ZhiChiReplyAnswer;
 import com.sobot.chat.core.channel.SobotMsgManager;
+import com.sobot.chat.core.http.callback.StringResultCallBack;
+import com.sobot.chat.handler.SobotMsgCenterHandler;
+import com.sobot.chat.receiver.SobotMsgCenterReceiver;
 import com.sobot.chat.utils.SharedPreferencesUtil;
 import com.sobot.chat.utils.SobotCompareNewMsgTime;
 import com.sobot.chat.utils.SobotOption;
@@ -32,7 +31,6 @@ import com.sobot.chat.utils.ZhiChiConstant;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -40,7 +38,7 @@ import java.util.List;
  * 咨询列表
  * Created by jinxl on 2017/9/6.
  */
-public class SobotConsultationListActivity extends SobotBaseActivity {
+public class SobotConsultationListActivity extends SobotBaseActivity implements SobotMsgCenterHandler.SobotMsgCenterCallBack{
     //刷新列表
     private static final int REFRESH_DATA = 1;
 
@@ -71,11 +69,12 @@ public class SobotConsultationListActivity extends SobotBaseActivity {
                         ListView sobot_ll_msg_center = activity.sobot_ll_msg_center;
 
                         List<SobotMsgCenterModel> msgCenterList = (List<SobotMsgCenterModel>) msg.obj;
-                        if (msgCenterList != null && msgCenterList.size() > 0) {
+                        if (msgCenterList != null) {
                             datas.clear();
                             datas.addAll(msgCenterList);
                             if (adapter == null) {
                                 adapter = new SobotMsgCenterAdapter(activity, datas);
+                                activity.adapter = adapter;
                                 sobot_ll_msg_center.setAdapter(adapter);
                             } else {
                                 adapter.notifyDataSetChanged();
@@ -139,40 +138,65 @@ public class SobotConsultationListActivity extends SobotBaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 SobotMsgCenterModel sobotMsgCenterModel = datas.get(position);
-                if (SobotOption.sobotConversationListCallback != null && !TextUtils.isEmpty(sobotMsgCenterModel.getAppkey())) {
-                    SobotOption.sobotConversationListCallback.onConversationInit(sobotMsgCenterModel.getAppkey());
-                    return;
-                }
                 Information info = sobotMsgCenterModel.getInfo();
                 if (info != null) {
+                    info.setUid(currentUid);
+                    if (SobotOption.sobotConversationListCallback != null && !TextUtils.isEmpty(sobotMsgCenterModel.getAppkey())) {
+                        SobotOption.sobotConversationListCallback.onConversationInit(getApplicationContext(), info);
+                        return;
+                    }
                     SobotApi.startSobotChat(getApplicationContext(), info);
                 }
+            }
+        });
+        sobot_ll_msg_center.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, final View view, final int position, long id) {
+                new AlertDialog.Builder(SobotConsultationListActivity.this)
+                        .setPositiveButton("删除会话", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                final SobotMsgCenterModel data = (SobotMsgCenterModel) adapter.getItem(position);
+                                dialog.dismiss();
+                                ZhiChiApi zhiChiApi = SobotMsgManager.getInstance(getApplicationContext()).getZhiChiApi();
+                                String platformID = SharedPreferencesUtil.getStringData(getApplicationContext(), ZhiChiConstant.SOBOT_PLATFORM_UNIONCODE, "");
+                                zhiChiApi.removeMerchant(SobotConsultationListActivity.this, platformID
+                                        , currentUid,data, new StringResultCallBack<SobotMsgCenterModel>() {
+                                            @Override
+                                            public void onSuccess(SobotMsgCenterModel deleteData) {
+                                                if (deleteData != null && deleteData.getInfo() != null && datas != null) {
+                                                    datas.remove(deleteData);
+                                                    Collections.sort(datas, mCompareNewMsgTime);
+                                                    sendDatasOnUi(datas);
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(Exception e, String des) {
+                                            }
+                                        });
+                            }
+                        })
+                        .create().show();
+
+                return true;
             }
         });
     }
 
     @Override
     public void initData() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                List<SobotMsgCenterModel> msgCenterList = SobotApi.getMsgCenterList(getApplicationContext(), currentUid);
-                if (msgCenterList == null) {
-                    msgCenterList = new ArrayList<>();
-                }
-                SobotCompareNewMsgTime compare = new SobotCompareNewMsgTime();
-                Collections.sort(msgCenterList,compare);
-                sendDatasOnUi(msgCenterList);
+        SobotMsgCenterHandler.getMsgCenterAllData(SobotConsultationListActivity.this,currentUid,this);
+    }
 
-                List<SobotMsgCenterModel> dataFromServer = getDataFromServer();
-                if (dataFromServer != null && dataFromServer.size() > 0) {
-                    dataFromServer.removeAll(msgCenterList);
-                    msgCenterList.addAll(dataFromServer);
-                    Collections.sort(msgCenterList,compare);
-                    sendDatasOnUi(msgCenterList);
-                }
-            }
-        }).start();
+    @Override
+    public void onLocalDataSuccess(List<SobotMsgCenterModel> msgCenterList) {
+        sendDatasOnUi(msgCenterList);
+    }
+
+    @Override
+    public void onAllDataSuccess(List<SobotMsgCenterModel> msgCenterList) {
+        sendDatasOnUi(msgCenterList);
     }
 
     private void sendDatasOnUi(final List<SobotMsgCenterModel> msgCenterList) {
@@ -184,52 +208,16 @@ public class SobotConsultationListActivity extends SobotBaseActivity {
         mHandler.sendMessage(message);
     }
 
-    public class SobotMessageReceiver extends BroadcastReceiver {
+    public class SobotMessageReceiver extends SobotMsgCenterReceiver {
 
         @Override
-        public void onReceive(Context context, Intent intent) {
-            if (ZhiChiConstants.receiveMessageBrocast.equals(intent.getAction())) {
-                // 接受下推的消息
-                Bundle extras = intent.getExtras();
-                if (extras == null) {
-                    return;
-                }
-                ZhiChiPushMessage pushMessage = (ZhiChiPushMessage) extras.getSerializable(ZhiChiConstants.ZHICHI_PUSH_MESSAGE);
-                if (pushMessage == null || TextUtils.isEmpty(pushMessage.getAppId())) {
-                    return;
-                }
-                if (ZhiChiConstant.push_message_receverNewMessage == pushMessage.getType()) {
-                    // 接收到新的消息
-                    for (int i = 0; i < datas.size(); i++) {
-                        SobotMsgCenterModel sobotMsgCenterModel = datas.get(i);
-                        if (sobotMsgCenterModel.getInfo() != null && pushMessage.getAppId().equals(sobotMsgCenterModel.getInfo().getAppkey())) {
-                            ZhiChiReplyAnswer reply;
-                            if (TextUtils.isEmpty(pushMessage.getMsgType())) {
-                                return;
-                            }
-                            if ("7".equals(pushMessage.getMsgType())) {
-                                reply = GsonUtil.jsonToZhiChiReplyAnswer(pushMessage.getContent());
-                            } else {
-                                reply = new ZhiChiReplyAnswer();
-                                reply.setMsgType(pushMessage.getMsgType() + "");
-                                reply.setMsg(pushMessage.getContent());
-                            }
-                            sobotMsgCenterModel.setLastDateTime(Calendar.getInstance().getTime().getTime() + "");
-                            sobotMsgCenterModel.setLastMsg(reply.getMsg());
-                            int unreadCount = sobotMsgCenterModel.getUnreadCount() + 1;
-                            sobotMsgCenterModel.setUnreadCount(unreadCount);
-                            refershItemData(sobotMsgCenterModel);
-                            break;
-                        }
-                    }
-                }
-            } else if (ZhiChiConstant.SOBOT_ACTION_UPDATE_LAST_MSG.equals(intent.getAction())) {
-                SobotMsgCenterModel lastMsg = (SobotMsgCenterModel) intent.getSerializableExtra("lastMsg");
-                if (lastMsg == null || lastMsg.getInfo() == null || TextUtils.isEmpty(lastMsg.getInfo().getAppkey())) {
-                    return;
-                }
-                refershItemData(lastMsg);
-            }
+        public void onDataChanged(SobotMsgCenterModel data) {
+            refershItemData(data);
+        }
+
+        @Override
+        public List<SobotMsgCenterModel> getMsgCenterDatas() {
+            return datas;
         }
     }
 
@@ -240,27 +228,9 @@ public class SobotConsultationListActivity extends SobotBaseActivity {
         if (model != null && model.getInfo() != null && !TextUtils.isEmpty(model.getLastMsg()) && datas != null) {
             datas.remove(model);
             datas.add(model);
-            Collections.sort(datas,mCompareNewMsgTime);
+            Collections.sort(datas, mCompareNewMsgTime);
             sendDatasOnUi(datas);
         }
-    }
-
-    /**
-     * IO Thread
-     * 从服务器获取会话列表
-     */
-    private List<SobotMsgCenterModel> getDataFromServer() {
-        String platformID = SharedPreferencesUtil.getStringData(getApplicationContext(), ZhiChiConstant.SOBOT_PLATFORM_UNIONCODE, "");
-        List<SobotMsgCenterModel> platformList = null;
-        if (!TextUtils.isEmpty(platformID) && !TextUtils.isEmpty(currentUid)) {
-            ZhiChiApi zhiChiApi = SobotMsgManager.getInstance(getApplicationContext()).getZhiChiApi();
-            try {
-                platformList = zhiChiApi.getPlatformList(ZhiChiConstant.SOBOT_GLOBAL_REQUEST_CANCEL_TAG, platformID, currentUid);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return platformList;
     }
 
     @Override

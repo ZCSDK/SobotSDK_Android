@@ -398,22 +398,15 @@ public class SobotApi {
 	}
 
 	/**
-	 * 清除消息中心单一消息
+	 * 清除所有未读消息计数
 	 * @param context
-	 * @param appId appkey
 	 * @param uid 用户唯一标识 与information中传的uid一致
 	 */
-	public static void clearMsgCenter(Context context, String appId,String uid) {
-		if (context == null || TextUtils.isEmpty(appId)) {
+	public static void clearAllUnreadCount(Context context,String uid) {
+		if (context == null) {
 			return;
 		}
-		uid = uid == null?"":uid;
-		SobotCache sobotCache = SobotCache.get(context);
-		ArrayList<String> msg_center_list = (ArrayList<String>) sobotCache.getAsObject(SobotMsgManager.getMsgCenterListKey(uid));
-		if (msg_center_list != null && msg_center_list.size() > 0) {
-			msg_center_list.remove(appId);
-			sobotCache.put(SobotMsgManager.getMsgCenterListKey(uid), msg_center_list);
-		}
+		SobotMsgManager.getInstance(context).clearAllUnreadCount(context,uid);
 	}
 
 	/**

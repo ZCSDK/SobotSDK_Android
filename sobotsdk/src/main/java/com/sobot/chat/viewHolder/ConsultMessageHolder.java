@@ -42,7 +42,7 @@ public class ConsultMessageHolder extends MessageHolderBase {
     @Override
     public void bindData(final Context context, final ZhiChiMessageBase message) {
 
-        String title = message.getT();
+        String title = message.getContent();
         String picurl = message.getPicurl();
         final String url = message.getUrl();
         String lable = message.getAname();

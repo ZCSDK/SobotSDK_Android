@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="sobot_app_name">智齿sdk</string>
-    <string name="sobot_restart_talk">新会话</string>
+    <string name="sobot_restart_talk">重新建立会话</string>
     <string name="sobot_choice_test">选择咨询内容</string>
     <string name="sobot_clear_history_message">清空聊天记录</string>
     <string name="sobot_btn_cancle">取消</string>

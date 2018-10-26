@@ -1,5 +1,9 @@
 package com.sobot.chat.listener;
 
+import android.content.Context;
+
+import com.sobot.chat.api.model.Information;
+
 /**
  *
  * 消息中心 点击会话的回调
@@ -8,5 +12,5 @@ package com.sobot.chat.listener;
 
 public interface SobotConversationListCallback {
 
-    void onConversationInit(String appId);
+    void onConversationInit(Context context,Information information);
 }

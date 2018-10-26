@@ -12,8 +12,6 @@ public class SobotUIConfig {
     public static int sobot_titleTextColor = DEFAULT;//修改顶部文字字体颜色
     public static boolean sobot_title_right_menu2_display = false;//toolbar右边第二个按钮是否显示（评价）
     public static int sobot_title_right_menu2_bg = DEFAULT;//修改toolbar右边第二个按钮的图片
-    public static int sobot_title_right_menu2_text = DEFAULT;//修改toolbar右边第二个按钮的文字
-    public static int sobot_title_right_menu2_textColor = DEFAULT;//修改toolbar右边第二个按钮的文字颜色
     public static int sobot_moreBtnImgId = DEFAULT;//修改更多按钮的图片
     public static int sobot_titleBgColor = DEFAULT;//修改顶部背景颜色
     public static int sobot_chat_left_textColor = DEFAULT;//聊天界面左边文字字体颜色

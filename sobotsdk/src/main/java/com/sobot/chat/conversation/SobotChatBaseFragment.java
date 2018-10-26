@@ -41,6 +41,7 @@ import com.sobot.chat.utils.SobotOption;
 import com.sobot.chat.utils.ToastUtil;
 import com.sobot.chat.utils.ZhiChiConstant;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -266,6 +267,7 @@ public abstract class SobotChatBaseFragment extends SobotBaseFragment implements
         if (initModel != null) {
             if (noReplyTimeCustoms == Integer.parseInt(initModel.getAdminTipTime()) * 60) {
                 ZhiChiMessageBase result = new ZhiChiMessageBase();
+                result.setT(Calendar.getInstance().getTime().getTime()+"");
                 ZhiChiReplyAnswer reply = new ZhiChiReplyAnswer();
                 customTimeTask = false;
                 // 发送我的语音的消息
@@ -315,6 +317,7 @@ public abstract class SobotChatBaseFragment extends SobotBaseFragment implements
                     userInfoTimeTask = false;
                     // 进行消息的封装
                     ZhiChiMessageBase base = new ZhiChiMessageBase();
+                    base.setT(Calendar.getInstance().getTime().getTime()+"");
                     // 设置
                     base.setSenderType(ZhiChiConstant.message_sender_type_service + "");
                     ZhiChiReplyAnswer reply = new ZhiChiReplyAnswer();
@@ -550,6 +553,7 @@ public abstract class SobotChatBaseFragment extends SobotBaseFragment implements
         myMessage.setAnswer(reply);
         myMessage.setSenderType(ZhiChiConstant.message_sender_type_customer + "");
         myMessage.setSendSuccessState(isSendStatus);
+        myMessage.setT(Calendar.getInstance().getTime().getTime()+"");
         Message handMyMessage = handler.obtainMessage();
         switch (updateStatus) {
             case SEND_TEXT:
@@ -680,6 +684,7 @@ public abstract class SobotChatBaseFragment extends SobotBaseFragment implements
         ZhiChiReplyAnswer reply = new ZhiChiReplyAnswer();
         reply.setMsg(voiceUrl);
         reply.setDuration(voiceTimeLongStr);
+        zhichiMessage.setT(Calendar.getInstance().getTime().getTime()+"");
         zhichiMessage.setAnswer(reply);
         zhichiMessage.setSenderType(ZhiChiConstant.message_sender_type_send_voice + "");
         zhichiMessage.setId(voiceMsgId);
