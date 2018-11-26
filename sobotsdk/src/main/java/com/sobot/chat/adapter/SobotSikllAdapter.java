@@ -1,4 +1,4 @@
-package com.sobot.chat.adapter.base;
+package com.sobot.chat.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.sobot.chat.adapter.base.SobotBaseAdapter;
 import com.sobot.chat.api.model.ZhiChiGroupBase;
 import com.sobot.chat.utils.ResourceUtils;
 import com.sobot.chat.utils.ZhiChiConstant;

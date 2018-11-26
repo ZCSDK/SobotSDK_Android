@@ -17,7 +17,7 @@
         android:layout_gravity="left">
 
         <!--头像-->
-        <ImageView
+        <com.sobot.chat.widget.SobotImageView
             android:id="@+id/sobot_imgHead"
             style="@style/sobot_chatting_imghead"
             android:layout_alignParentLeft="true"

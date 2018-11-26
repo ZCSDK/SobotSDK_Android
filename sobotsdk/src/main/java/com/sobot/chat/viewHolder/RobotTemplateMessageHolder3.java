@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 
 public class RobotTemplateMessageHolder3 extends MessageHolderBase implements View.OnClickListener {
-    private Context mContext;
     private TextView sobot_msg;
     private TextView tv_more;
     private LinearLayout sobot_ll_content;
@@ -31,7 +30,6 @@ public class RobotTemplateMessageHolder3 extends MessageHolderBase implements Vi
 
     public RobotTemplateMessageHolder3(Context context, View convertView) {
         super(context, convertView);
-        mContext = context;
         sobot_msg = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_template3_msg"));
         sobot_template3_layout = (LinearLayout) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_template3_layout"));
         tv_more = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_tv_more"));

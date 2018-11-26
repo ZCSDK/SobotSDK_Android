@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 import com.sobot.chat.SobotApi;
 import com.sobot.chat.SobotUIConfig;
-import com.sobot.chat.adapter.base.SobotMsgAdapter;
+import com.sobot.chat.adapter.SobotMsgAdapter;
 import com.sobot.chat.api.ResultCallBack;
 import com.sobot.chat.api.ZhiChiApi;
 import com.sobot.chat.api.apiUtils.GsonUtil;
@@ -265,7 +265,7 @@ public class ChatUtils {
 					@Override
 					public void onLoading(long total, long current,
 							boolean isUploading) {
-						LogUtils.i("发送图片 进度:" + current + "/" + total);
+						LogUtils.i("发送图片 进度:" + current);
 						if (id != null) {
 							int position=messageAdapter.getMsgInfoPosition(id);
 							LogUtils.i("发送图片 position:" +position);
@@ -373,12 +373,6 @@ public class ChatUtils {
 				(info.getTel())?"":info.getTel());
 		SharedPreferencesUtil.saveStringData(context, "sobot_user_email", TextUtils.isEmpty
 				(info.getEmail())?"":info.getEmail());
-
-		if (!TextUtils.isEmpty(info.getColor())) {
-			SharedPreferencesUtil.saveStringData(context, "robot_current_themeColor", info.getColor());
-		} else {
-			SharedPreferencesUtil.removeKey(context,"robot_current_themeColor");
-		}
 
 		if (TextUtils.isEmpty(info.getUid())) {
 			info.setEquipmentId(CommonUtils.getPartnerId(context));
@@ -850,5 +844,86 @@ public class ChatUtils {
         }
 		answer.setTextColor(context.getResources().getColor(colorId));
 		return answer;
+	}
+
+	/**
+	 * 根据文件类型获取文件icon
+	 * @param context
+	 * @param fileType
+	 * @return
+	 */
+	public static int getFileIcon(Context context,int fileType) {
+		int tmpResId;
+		if (context == null) {
+			return 0;
+		}
+		switch (fileType) {
+			case ZhiChiConstant.MSGTYPE_FILE_DOC:
+				tmpResId = ResourceUtils.getIdByName(context, "drawable", "sobot_icon_file_doc");
+				break;
+			case ZhiChiConstant.MSGTYPE_FILE_PPT:
+				tmpResId = ResourceUtils.getIdByName(context, "drawable", "sobot_icon_file_ppt");
+				break;
+			case ZhiChiConstant.MSGTYPE_FILE_XLS:
+				tmpResId = ResourceUtils.getIdByName(context, "drawable", "sobot_icon_file_xls");
+				break;
+			case ZhiChiConstant.MSGTYPE_FILE_PDF:
+				tmpResId = ResourceUtils.getIdByName(context, "drawable", "sobot_icon_file_pdf");
+				break;
+			case ZhiChiConstant.MSGTYPE_FILE_MP3:
+				tmpResId = ResourceUtils.getIdByName(context, "drawable", "sobot_icon_file_mp3");
+				break;
+			case ZhiChiConstant.MSGTYPE_FILE_MP4:
+				tmpResId = ResourceUtils.getIdByName(context, "drawable", "sobot_icon_file_mp4");
+				break;
+			case ZhiChiConstant.MSGTYPE_FILE_RAR:
+				tmpResId = ResourceUtils.getIdByName(context, "drawable", "sobot_icon_file_rar");
+				break;
+			case ZhiChiConstant.MSGTYPE_FILE_TXT:
+				tmpResId = ResourceUtils.getIdByName(context, "drawable", "sobot_icon_file_txt");
+				break;
+			case ZhiChiConstant.MSGTYPE_FILE_OTHER:
+				tmpResId = ResourceUtils.getIdByName(context, "drawable", "sobot_icon_file_unknow");
+				break;
+			default:
+				tmpResId = ResourceUtils.getIdByName(context, "drawable", "sobot_icon_file_unknow");
+				break;
+		}
+		return tmpResId;
+	}
+
+	/**
+	 * 根据文件名获取文件类型
+	 * @param file
+	 * @return
+	 */
+	public static int getFileType(File file) {
+		int tmpFileType = ZhiChiConstant.MSGTYPE_FILE_OTHER;
+		if (file == null) {
+			return tmpFileType;
+		}
+		try {
+			String name = file.getName().toLowerCase();
+			if (name.endsWith("doc") || name.endsWith("docx")) {
+				return ZhiChiConstant.MSGTYPE_FILE_DOC;
+			} else if (name.endsWith("ppt") || name.endsWith("pptx")) {
+				return ZhiChiConstant.MSGTYPE_FILE_PPT;
+			} else if (name.endsWith("xls") || name.endsWith("xlsx")) {
+				return ZhiChiConstant.MSGTYPE_FILE_XLS;
+			} else if (name.endsWith("pdf")) {
+				return ZhiChiConstant.MSGTYPE_FILE_PDF;
+			} else if (name.endsWith("mp3")) {
+				return ZhiChiConstant.MSGTYPE_FILE_MP3;
+			} else if (name.endsWith("mp4")) {
+				return ZhiChiConstant.MSGTYPE_FILE_MP4;
+			} else if (name.endsWith("rar") || name.endsWith("zip")) {
+				return ZhiChiConstant.MSGTYPE_FILE_RAR;
+			} else if (name.endsWith("txt")) {
+				return ZhiChiConstant.MSGTYPE_FILE_TXT;
+			}
+		} catch (Exception e) {
+			//ignor
+		}
+		return tmpFileType;
 	}
 }

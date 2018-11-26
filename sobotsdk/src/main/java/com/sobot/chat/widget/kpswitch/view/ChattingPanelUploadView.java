@@ -34,6 +34,7 @@ public class ChattingPanelUploadView extends BaseChattingPanelView implements Vi
     private static final String ACTION_LEAVEMSG = "sobot_action_leavemsg";
     private static final String ACTION_PIC = "sobot_action_pic";
     private static final String ACTION_CAMERA = "sobot_action_camera";
+    private static final String ACTION_CHOOSE_FILE = "sobot_action_choose_file";
 
 
     private List<SobotPlusEntity> robotList = new ArrayList<>();
@@ -71,6 +72,8 @@ public class ChattingPanelUploadView extends BaseChattingPanelView implements Vi
         SobotPlusEntity picEntity = new SobotPlusEntity(getResDrawableId("sobot_tack_picture_button_selector"), getResString("sobot_upload"), ACTION_PIC);
         //拍照
         SobotPlusEntity cameraEntity = new SobotPlusEntity(getResDrawableId("sobot_camera_picture_button_selector"), getResString("sobot_attach_take_pic"), ACTION_CAMERA);
+        //文件
+        SobotPlusEntity fileEntity = new SobotPlusEntity(getResDrawableId("sobot_choose_file_btn_selector"), getResString("sobot_choose_file"), ACTION_CHOOSE_FILE);
 
         robotList.clear();
         robotList.add(satisfactionEntity);
@@ -80,6 +83,7 @@ public class ChattingPanelUploadView extends BaseChattingPanelView implements Vi
 
         operatorList.clear();
         operatorList.add(picEntity);
+        operatorList.add(fileEntity);
         operatorList.add(cameraEntity);
         operatorList.add(satisfactionEntity);
 
@@ -193,6 +197,8 @@ public class ChattingPanelUploadView extends BaseChattingPanelView implements Vi
         void btnSatisfaction();
 
         void startToPostMsgActivty(boolean flag);
+
+        void chooseFile();
     }
 
     @Override
@@ -224,6 +230,9 @@ public class ChattingPanelUploadView extends BaseChattingPanelView implements Vi
             } else if (ACTION_CAMERA.equals(action)) {
                 //拍照
                 mListener.btnCameraPicture();
+            } else if (ACTION_CHOOSE_FILE.equals(action)) {
+                //选择文件
+                mListener.chooseFile();
             } else {
                 if (SobotUIConfig.pulsMenu.sSobotPlusMenuListener != null) {
                     SobotUIConfig.pulsMenu.sSobotPlusMenuListener.onClick(v, action);

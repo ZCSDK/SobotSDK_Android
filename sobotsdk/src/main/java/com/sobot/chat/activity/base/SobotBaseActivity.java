@@ -99,11 +99,6 @@ public abstract class SobotBaseActivity extends FragmentActivity {
             return;
         }
 
-        String bg_color = SharedPreferencesUtil.getStringData(this, "robot_current_themeColor", "");
-        if (!TextUtils.isEmpty(bg_color)) {
-            toolBar.setBackgroundColor(Color.parseColor(bg_color));
-        }
-
         if (SobotUIConfig.DEFAULT != SobotUIConfig.sobot_titleBgColor ) {
             toolBar.setBackgroundColor(getResources().getColor(SobotUIConfig.sobot_titleBgColor));
         }

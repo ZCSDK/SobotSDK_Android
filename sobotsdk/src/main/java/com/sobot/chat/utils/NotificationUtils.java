@@ -15,7 +15,6 @@ import com.sobot.chat.api.model.ZhiChiPushMessage;
 public class NotificationUtils {
 
     private static final  String SOBOT_CHANNEL_ID= "sobot_channel_id";
-    private static final  String SOBOT_CHANNEL_NAME = "sobot_notification";
 
     public static void createNotification(Context context, String title, String content, String ticker, int id,ZhiChiPushMessage pushMessage){
 
@@ -49,6 +48,7 @@ public class NotificationUtils {
 
         boolean compatFlag = CommonUtils.getTargetSdkVersion(context) >= 26;
         if (Build.VERSION.SDK_INT >= 26 && compatFlag) {
+            String SOBOT_CHANNEL_NAME = context.getResources().getString(ResourceUtils.getIdByName(context, "string", "sobot_notification_name"));//"客服通知";
             NotificationChannel mChannel = new NotificationChannel(SOBOT_CHANNEL_ID, SOBOT_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
             manager.createNotificationChannel(mChannel);
             builder.setChannelId(SOBOT_CHANNEL_ID);

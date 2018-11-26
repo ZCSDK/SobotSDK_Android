@@ -125,7 +125,7 @@ public class RoundProgressBar extends View {
         paint.setAntiAlias(true);  //消除锯齿
         canvas.drawCircle(centre, centre, radius, paint); //画出圆环
 
-        LogUtils.i("RoundProgressBar-----centre:"+centre);
+//        LogUtils.i("RoundProgressBar-----centre:"+centre);
 
         /**
          * 画进度百分比

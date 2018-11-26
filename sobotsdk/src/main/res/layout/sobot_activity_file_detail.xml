@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/sobot_layout_titlebar1" />
+
+    <TextView
+        android:id="@+id/sobot_file_icon"
+        android:layout_width="53dp"
+        android:layout_height="70dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="41dp"
+        android:background="@drawable/sobot_icon_file_unknow" />
+
+    <TextView
+        android:id="@+id/sobot_file_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textColor="#333333"
+        android:textSize="14sp"
+        tools:text="文件名称" />
+
+    <LinearLayout
+        android:id="@+id/sobot_ll_file_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/sobot_tv_file_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#999999"
+            android:textSize="12sp"
+            android:visibility="gone"
+            tools:text="@string/sobot_file_size"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/sobot_tv_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#999999"
+            android:textSize="15sp"
+            android:visibility="gone"
+            tools:text="@string/sobot_file_downloading"
+            tools:visibility="visible" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/sobot_btn_start"
+        android:layout_width="300dp"
+        android:layout_height="44dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/sobot_btn_normal_selector"
+        android:gravity="center"
+        android:text="@string/sobot_file_download"
+        android:textColor="@drawable/sobot_btn_text_selector" />
+
+    <LinearLayout
+        android:id="@+id/sobot_ll_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ProgressBar
+            android:id="@+id/sobot_pb_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_weight="1"
+            android:progressDrawable="@drawable/sobot_progressbar_preview" />
+
+        <TextView
+            android:id="@+id/sobot_btn_cancel"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:background="@drawable/sobot_icon_remove" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/sobot_tv_decribe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="9dp"
+        android:textColor="#999999"
+        android:textSize="13sp"
+        android:visibility="gone"
+        tools:text="@string/sobot_file_open_decribe"
+        tools:visibility="visible" />
+
+</LinearLayout>

@@ -20,7 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sobot.chat.activity.base.SobotBaseActivity;
-import com.sobot.chat.adapter.base.SobotPicListAdapter;
+import com.sobot.chat.adapter.SobotPicListAdapter;
 import com.sobot.chat.api.ResultCallBack;
 import com.sobot.chat.api.model.CommonModelBase;
 import com.sobot.chat.api.model.PostParamModel;

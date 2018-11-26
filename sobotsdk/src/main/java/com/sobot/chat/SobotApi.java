@@ -24,13 +24,11 @@ import com.sobot.chat.utils.NotificationUtils;
 import com.sobot.chat.utils.SharedPreferencesUtil;
 import com.sobot.chat.utils.SobotCache;
 import com.sobot.chat.utils.SobotOption;
+import com.sobot.chat.utils.StServiceUtils;
 import com.sobot.chat.utils.ZhiChiConstant;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * SobotChatApi接口输出类
@@ -124,7 +122,7 @@ public class SobotApi {
 		SobotMsgManager.getInstance(context).getZhiChiApi().reconnectChannel();
 		Intent intent = new Intent(context, SobotSessionServer.class);
 		intent.putExtra(ZhiChiConstant.SOBOT_CURRENT_IM_PARTNERID, uid);
-		context.startService(intent);
+		StServiceUtils.safeStartService(context,intent);
 	}
 
 	/**

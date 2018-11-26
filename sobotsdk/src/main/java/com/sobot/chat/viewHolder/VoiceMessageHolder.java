@@ -13,7 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.sobot.chat.SobotUIConfig;
-import com.sobot.chat.adapter.base.SobotMsgAdapter;
+import com.sobot.chat.adapter.SobotMsgAdapter;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.api.model.ZhiChiReplyAnswer;
 import com.sobot.chat.utils.DateUtil;
@@ -31,10 +31,8 @@ public class VoiceMessageHolder extends MessageHolderBase {
     ImageView voicePlay;
     LinearLayout ll_voice_layout;
     public ZhiChiMessageBase message;
-    private Context mContext;
     public VoiceMessageHolder(Context context, View convertView) {
         super(context, convertView);
-        mContext = context;
         voicePlay = (ImageView) convertView.findViewById(ResourceUtils
                 .getIdByName(context, "id", "sobot_iv_voice"));
         voiceTimeLong = (TextView) convertView

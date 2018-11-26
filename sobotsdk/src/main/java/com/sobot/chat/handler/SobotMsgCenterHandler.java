@@ -7,9 +7,9 @@ import com.sobot.chat.SobotApi;
 import com.sobot.chat.api.ZhiChiApi;
 import com.sobot.chat.api.model.SobotMsgCenterModel;
 import com.sobot.chat.core.channel.SobotMsgManager;
+import com.sobot.chat.utils.SobotExecutorService;
 import com.sobot.chat.utils.SharedPreferencesUtil;
 import com.sobot.chat.utils.SobotCompareNewMsgTime;
-import com.sobot.chat.utils.SobotExecutorService;
 import com.sobot.chat.utils.ZhiChiConstant;
 
 import java.util.ArrayList;

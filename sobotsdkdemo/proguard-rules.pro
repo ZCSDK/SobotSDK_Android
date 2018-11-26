@@ -12,6 +12,7 @@
 -keep public class com.android.vending.licensing.ILicensingService
 -keep class com.android.vending.licensing.ILicensingService
 -keep class android.support.v4.** { *; }
+-keep class android.support.v7.** { *; }
 
 -dontwarn android.support.v4.**
 -dontwarn android.webkit.WebView

@@ -132,19 +132,7 @@ public class SobotSessionServer extends Service {
                     base.setSenderName(pushMessage.getAname());
                     base.setSenderFace(pushMessage.getAface());
                     base.setSenderType(ZhiChiConstant.message_sender_type_service + "");
-                    ZhiChiReplyAnswer reply = null;
-                    if(TextUtils.isEmpty(pushMessage.getMsgType())){
-                        return;
-                    }
-                    if ("7".equals(pushMessage.getMsgType())) {
-                        reply = GsonUtil.jsonToZhiChiReplyAnswer(pushMessage
-                                .getContent());
-                    } else {
-                        reply = new ZhiChiReplyAnswer();
-                        reply.setMsgType(pushMessage.getMsgType() + "");
-                        reply.setMsg(pushMessage.getContent());
-                    }
-                    base.setAnswer(reply);
+                    base.setAnswer(pushMessage.getAnswer());
                     // 更新界面的操作
                     //添加“以下为未读消息”
                     if (config.isShowUnreadUi) {

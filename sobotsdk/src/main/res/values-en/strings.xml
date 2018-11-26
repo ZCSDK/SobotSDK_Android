@@ -12,6 +12,7 @@
     <string name="sobot_release_to_cancel">Slide up to cancel</string>
     <string name="sobot_up_send_calcel">Slide up to cancel</string>
     <string name="sobot_upload">Photos</string>
+    <string name="sobot_choose_file">File</string>
     <string name="sobot_cancel">Cancel</string>
     <string name="sobot_prompt">Tips</string>
     <string name="sobot_button_end_now">End now</string>
@@ -127,4 +128,16 @@
     <string name="sobot_transfer_to_customer_service">To manual</string>
     <string name="sobot_ding_cai_yes">YES</string>
     <string name="sobot_ding_cai_no">NO</string>
+    <string name="sobot_internal_memory">Internal Memory</string>
+    <string name="sobot_files_selected">Selected:%1$s</string>
+    <string name="sobot_file_preview">File Preview</string>
+    <string name="sobot_file_size">File Size:%1$s</string>
+    <string name="sobot_file_downloading">downloading…(%1$s/%2$s)</string>
+    <string name="sobot_file_download">download</string>
+    <string name="sobot_file_open">open</string>
+    <string name="sobot_file_open_decribe">Open browsing with other apps</string>
+    <string name="sobot_file_upload_failed">Cannot upload files that exceed the limit</string>
+    <string name="sobot_file_upload_failed_unknown_format">Unable to upload unknown file</string>
+    <string name="sobot_notification_name">service nofitication</string>
+    <string name="sobot_cannot_open_file">Your phone cannot open this file</string>
 </resources>

@@ -9,7 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.sobot.chat.activity.base.SobotBaseActivity;
-import com.sobot.chat.adapter.base.SobotPostCategoryAdapter;
+import com.sobot.chat.adapter.SobotPostCategoryAdapter;
 import com.sobot.chat.api.model.SobotTypeModel;
 import com.sobot.chat.utils.ZhiChiConstant;
 

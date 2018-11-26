@@ -16,7 +16,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 
-import com.sobot.chat.adapter.base.SobotSikllAdapter;
+import com.sobot.chat.adapter.SobotSikllAdapter;
 import com.sobot.chat.api.ZhiChiApi;
 import com.sobot.chat.api.apiUtils.ZhiChiConstants;
 import com.sobot.chat.api.model.ZhiChiGroup;

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sobot_real_ll_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginRight="@dimen/sobot_DIMEN_48PX"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/sobot_reminde_time_Text"
+        style="@style/sobot_center_remind_time"
+        android:layout_marginTop="10dp" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginBottom="@dimen/sobot_list_divider_height"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="@dimen/sobot_DIMEN_116PX">
+
+        <ImageView
+            android:id="@+id/sobot_msgStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="6dp"
+            android:background="@drawable/sobot_re_send_selector"
+            android:contentDescription="@null"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <!-- 我的名称 -->
+        <TextView
+            android:id="@+id/sobot_name"
+            style="@style/sobot_chatting_nickname"
+            android:layout_toLeftOf="@+id/sobot_imgHead"
+            android:visibility="gone" />
+
+        <com.sobot.chat.widget.SobotImageView
+            android:id="@+id/sobot_imgHead"
+            style="@style/sobot_chatting_imghead"
+            android:layout_alignParentRight="true"
+            tools:background="@drawable/sobot_chatting_default_head" />
+
+        <LinearLayout
+            android:id="@+id/sobot_msg_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/sobot_name"
+            android:layout_gravity="right"
+            android:layout_marginLeft="28dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_toLeftOf="@+id/sobot_imgHead">
+
+            <RelativeLayout
+                android:id="@+id/sobot_ll_file_container"
+                android:layout_width="218dp"
+                android:layout_height="60dp"
+                android:layout_marginBottom="@dimen/sobot_DIMEN_10PX"
+                android:background="@drawable/sobot_file_bg_normal_r"
+                android:paddingLeft="@dimen/sobot_DIMEN_20PX"
+                android:paddingRight="@dimen/sobot_DIMEN_20PX">
+
+                <com.sobot.chat.widget.SobotSectorProgressView
+                    android:id="@+id/sobot_progress"
+                    android:layout_width="30dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp" />
+
+                <TextView
+                    android:id="@+id/sobot_file_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="6dp"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_toRightOf="@+id/sobot_progress"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="#333333"
+                    android:textSize="14sp"
+                    tools:text="PPT文档.pptx" />
+
+                <TextView
+                    android:id="@+id/sobot_file_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/sobot_file_name"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_toRightOf="@+id/sobot_progress"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="#999999"
+                    android:textSize="11sp"
+                    tools:text="30.58KB" />
+
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

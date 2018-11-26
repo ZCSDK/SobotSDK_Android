@@ -20,11 +20,9 @@ public class RobotKeyWordMessageHolder extends MessageHolderBase {
 
     private TextView tv_title;
     private LinearLayout sobot_keyword_grouplist;
-    private Context mContext;
 
     public RobotKeyWordMessageHolder(Context context, View convertView) {
         super(context, convertView);
-        mContext = context;
         tv_title = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_keyword_tips_msg"));
         sobot_keyword_grouplist = (LinearLayout) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_keyword_grouplist"));
     }

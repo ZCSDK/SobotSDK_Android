@@ -13,6 +13,7 @@
     <string name="sobot_release_to_cancel">松开手指，取消发送</string>
     <string name="sobot_up_send_calcel">松开手指 取消发送</string>
     <string name="sobot_upload">图片</string>
+    <string name="sobot_choose_file">文件</string>
     <string name="sobot_cancel">取消</string>
     <string name="sobot_prompt">提示</string>
     <string name="sobot_button_end_now">立即结束</string>
@@ -127,4 +128,17 @@
     <string name="sobot_transfer_to_customer_service">转人工</string>
     <string name="sobot_ding_cai_yes">有用</string>
     <string name="sobot_ding_cai_no">无用</string>
+    <string name="sobot_internal_memory">内部存储</string>
+    <string name="sobot_files_selected">已选择:%1$s</string>
+    <string name="sobot_file_preview">文件预览</string>
+    <string name="sobot_file_size">文件大小:%1$s</string>
+    <string name="sobot_file_downloading">正在下载中…(%1$s/%2$s)</string>
+    <string name="sobot_file_download">立即下载</string>
+    <string name="sobot_file_open">用其他应用打开</string>
+    <string name="sobot_file_open_decribe">暂时无法打开此类文件，可使用其他应用打开浏览</string>
+    <string name="sobot_file_upload_failed">不能上传20m以上的文件</string>
+    <string name="sobot_file_upload_failed_unknown_format">不能上传此格式的文件</string>
+    <string name="sobot_notification_name">客服通知</string>
+    <string name="sobot_cannot_open_file">您的手机无法打开此文件</string>
+
 </resources>

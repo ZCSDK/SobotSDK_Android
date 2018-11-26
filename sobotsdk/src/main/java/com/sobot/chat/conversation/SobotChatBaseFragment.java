@@ -11,17 +11,20 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.text.format.Formatter;
 import android.view.View;
+import android.widget.ListView;
 
 import com.sobot.chat.activity.SobotQueryFromActivity;
 import com.sobot.chat.activity.WebViewActivity;
-import com.sobot.chat.adapter.base.SobotMsgAdapter;
+import com.sobot.chat.adapter.SobotMsgAdapter;
 import com.sobot.chat.api.ResultCallBack;
 import com.sobot.chat.api.enumtype.CustomerState;
 import com.sobot.chat.api.enumtype.SobotAutoSendMsgMode;
 import com.sobot.chat.api.model.CommonModel;
 import com.sobot.chat.api.model.CommonModelBase;
 import com.sobot.chat.api.model.Information;
+import com.sobot.chat.api.model.SobotCacheFile;
 import com.sobot.chat.api.model.SobotQueryFormModel;
 import com.sobot.chat.api.model.SobotQuestionRecommend;
 import com.sobot.chat.api.model.ZhiChiInitModeBase;
@@ -34,6 +37,7 @@ import com.sobot.chat.core.http.callback.StringResultCallBack;
 import com.sobot.chat.fragment.SobotBaseFragment;
 import com.sobot.chat.utils.ChatUtils;
 import com.sobot.chat.utils.CommonUtils;
+import com.sobot.chat.utils.FileOpenHelper;
 import com.sobot.chat.utils.LogUtils;
 import com.sobot.chat.utils.NotificationUtils;
 import com.sobot.chat.utils.SharedPreferencesUtil;
@@ -41,9 +45,8 @@ import com.sobot.chat.utils.SobotOption;
 import com.sobot.chat.utils.ToastUtil;
 import com.sobot.chat.utils.ZhiChiConstant;
 
+import java.io.File;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -518,14 +521,49 @@ public abstract class SobotChatBaseFragment extends SobotBaseFragment implements
                     return;
                 }
                 LogUtils.i("error:" + e.toString());
-                Map<String, String> map = new HashMap<>();
-                map.put("content", "消息发送失败：---content:" + content + "    err:" + e.toString());
-                map.put("title", "sendMsg failure");
-                map.put("uid", uid);
-                LogUtils.i2Local(map);
                 sendTextMessageToHandler(mid, null, handler, 0, UPDATE_TEXT);
             }
         });
+    }
+
+    protected void uploadFile(File selectedFile, Handler handler, final ListView lv_message,
+                              final SobotMsgAdapter messageAdapter) {
+        if (selectedFile != null && selectedFile.exists()) {
+            // 发送文件
+            LogUtils.i(selectedFile.toString());
+            String fileName = selectedFile.getName().toLowerCase();
+            if (fileName.endsWith(".gif") || fileName.endsWith(".jpg") || fileName.endsWith(".png")) {
+                ChatUtils.sendPicLimitBySize(selectedFile.getAbsolutePath(), initModel.getCid(),
+                        initModel.getUid(), handler, mAppContext, lv_message, messageAdapter);
+            } else {
+                if (selectedFile.length() > 20 * 1024 * 1024) {
+                    ToastUtil.showToast(getContext(),getResString("sobot_file_upload_failed"));
+                    return;
+                }
+                if (!FileOpenHelper.checkEndsWithInStringArray(fileName, getContext(), "sobot_fileEndingAll")) {
+                    ToastUtil.showToast(getContext(),getResString("sobot_file_upload_failed_unknown_format"));
+                    return;
+                }
+                String tmpMsgId = String.valueOf(System.currentTimeMillis());
+                LogUtils.i("tmpMsgId:"+tmpMsgId);
+                zhiChiApi.addUploadFileTask(tmpMsgId, initModel.getUid(), initModel.getCid(), selectedFile.getAbsolutePath());
+                ZhiChiMessageBase zhichiMessage = new ZhiChiMessageBase();
+                ZhiChiReplyAnswer reply = new ZhiChiReplyAnswer();
+                SobotCacheFile cacheFile = new SobotCacheFile();
+                cacheFile.setMsgId(tmpMsgId);
+                cacheFile.setFilePath(selectedFile.getAbsolutePath());
+                cacheFile.setFileName(selectedFile.getName());
+                cacheFile.setFileType(ChatUtils.getFileType(selectedFile));
+                cacheFile.setFileSize(Formatter.formatFileSize(getContext(), selectedFile.length()));
+                reply.setCacheFile(cacheFile);
+                zhichiMessage.setAnswer(reply);
+                zhichiMessage.setId(tmpMsgId);
+                zhichiMessage.setT(Calendar.getInstance().getTime().getTime()+"");
+                reply.setMsgType(ZhiChiConstant.message_type_file);
+                zhichiMessage.setSenderType(ZhiChiConstant.message_sender_type_customer + "");
+                updateUiMessage(messageAdapter, zhichiMessage);
+            }
+        }
     }
 
     /**

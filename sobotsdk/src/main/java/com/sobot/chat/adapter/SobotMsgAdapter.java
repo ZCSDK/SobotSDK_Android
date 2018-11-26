@@ -1,4 +1,4 @@
-package com.sobot.chat.adapter.base;
+package com.sobot.chat.adapter;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sobot.chat.adapter.base.SobotBaseAdapter;
 import com.sobot.chat.api.apiUtils.GsonUtil;
 import com.sobot.chat.api.model.SobotEvaluateModel;
 import com.sobot.chat.api.model.SobotMultiDiaRespInfo;
@@ -19,6 +20,7 @@ import com.sobot.chat.utils.VersionUtils;
 import com.sobot.chat.utils.ZhiChiConstant;
 import com.sobot.chat.viewHolder.ConsultMessageHolder;
 import com.sobot.chat.viewHolder.CusEvaluateMessageHolder;
+import com.sobot.chat.viewHolder.FileMessageHolder;
 import com.sobot.chat.viewHolder.ImageMessageHolder;
 import com.sobot.chat.viewHolder.RetractedMessageHolder;
 import com.sobot.chat.viewHolder.RobotAnswerItemsMsgHolder;
@@ -64,6 +66,8 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
             "sobot_chat_msg_item_retracted_msg",//消息撤回
             "sobot_chat_msg_item_robot_answer_items_l",//多轮会话模板 1511类型  显示的view
             "sobot_chat_msg_item_robot_keyword_items_l",//机器人关键字转人工 布局
+            "sobot_chat_msg_item_file_l",//文件消息左边的布局文件
+            "sobot_chat_msg_item_file_r",//文件消息右边的布局文件
     };
 
     /**
@@ -146,6 +150,14 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
      * 机器人关键字转人工 布局类型
      */
     public static final int MSG_TYPE_ROBOT_KEYWORD_ITEMS = 18;
+    /**
+     * 收到的文件消息
+     */
+    public static final int MSG_TYPE_FILE_L = 19;
+    /**
+     * 发送的文件消息
+     */
+    public static final int MSG_TYPE_FILE_R = 20;
 
     private String senderface;
     private String sendername;
@@ -305,7 +317,7 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
 
     public void cancelVoiceUiById(String id) {
         ZhiChiMessageBase info = getMsgInfo(id);
-        if (info != null) {
+        if (info != null && info.getSendSuccessState() == ZhiChiConstant.MSG_SEND_STATUS_ANIM) {
             list.remove(info);
         }
     }
@@ -441,6 +453,16 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
                 case MSG_TYPE_RETRACTED_MSG:
                     holder = new RetractedMessageHolder(context, convertView);
                     break;
+                case MSG_TYPE_FILE_L:
+                case MSG_TYPE_FILE_R: {
+                    holder = new FileMessageHolder(context, convertView);
+                    if (itemType == MSG_TYPE_FILE_L) {
+                        holder.setRight(false);
+                    } else {
+                        holder.setRight(true);
+                    }
+                    break;
+                }
                 default: {
                     holder = new TextMessageHolder(context, convertView);
                     break;
@@ -586,6 +608,14 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
                                 }
                                 return MSG_TYPE_ROBOT_TEMPLATE2;
                             }
+                        }
+                    } else if (ZhiChiConstant.message_type_file.equals(message.getAnswer().getMsgType())) {
+                        if(ZhiChiConstant.message_sender_type_service == Integer
+                                .parseInt(message.getSenderType())){
+                            return MSG_TYPE_FILE_L;
+                        } else if (ZhiChiConstant.message_sender_type_customer == Integer
+                                .parseInt(message.getSenderType())) {
+                            return MSG_TYPE_FILE_R;
                         }
                     }
                 } else {

@@ -1,4 +1,4 @@
-package com.sobot.chat.adapter.base;
+package com.sobot.chat.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.sobot.chat.adapter.base.SobotBaseAdapter;
 import com.sobot.chat.api.model.ZhiChiUploadAppFileModelResult;
 import com.sobot.chat.utils.SobotBitmapUtil;
 import com.sobot.chat.utils.ResourceUtils;

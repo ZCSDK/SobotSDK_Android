@@ -1,4 +1,4 @@
-package com.sobot.chat.adapter.base;
+package com.sobot.chat.adapter;
 
 import android.content.Context;
 import android.view.View;
@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.sobot.chat.adapter.base.SobotBaseAdapter;
 import com.sobot.chat.api.model.SobotCusFieldDataInfo;
 import com.sobot.chat.utils.ResourceUtils;
 import com.sobot.chat.utils.ZhiChiConstant;

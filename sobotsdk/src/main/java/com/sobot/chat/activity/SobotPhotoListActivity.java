@@ -6,7 +6,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import com.sobot.chat.activity.base.SobotBaseActivity;
-import com.sobot.chat.adapter.base.SobotImageScaleAdapter;
+import com.sobot.chat.adapter.SobotImageScaleAdapter;
 import com.sobot.chat.api.model.ZhiChiUploadAppFileModelResult;
 import com.sobot.chat.utils.ZhiChiConstant;
 import com.sobot.chat.widget.dialog.SobotDeleteWorkOrderDialog;

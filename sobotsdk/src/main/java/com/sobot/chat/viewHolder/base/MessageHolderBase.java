@@ -3,10 +3,6 @@ package com.sobot.chat.viewHolder.base;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.support.annotation.ColorRes;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.TextUtils;
 import android.view.Display;
 import android.view.View;
@@ -15,11 +11,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sobot.chat.SobotUIConfig;
 import com.sobot.chat.activity.SobotPhotoActivity;
-import com.sobot.chat.adapter.base.SobotMsgAdapter;
+import com.sobot.chat.adapter.SobotMsgAdapter;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.utils.ScreenUtils;
 import com.sobot.chat.utils.SobotBitmapUtil;
@@ -27,35 +24,41 @@ import com.sobot.chat.utils.CommonUtils;
 import com.sobot.chat.utils.ResourceUtils;
 import com.sobot.chat.utils.ToastUtil;
 import com.sobot.chat.widget.ReSendDialog;
+import com.sobot.chat.widget.SobotImageView;
 
 /**
  * view基类
  * Created by jinxl on 2017/3/17.
  */
 public abstract class MessageHolderBase {
-    private Context mContext;
+    protected Context mContext;
     protected boolean isRight = false;
     protected SobotMsgAdapter.SobotMsgCallBack msgCallBack;
 
     public TextView name; // 用户姓名
-    protected ImageView imgHead;// 头像
+    private SobotImageView imgHead;// 头像
     public TextView reminde_time_Text;//时间提醒
 
     protected FrameLayout frameLayout;
     protected ImageView msgStatus;// 消息发送的状态
     protected ProgressBar msgProgressBar; // 重新发送的进度条的信信息；
     protected LinearLayout sobot_ll_content;
+    protected RelativeLayout sobot_ll_file_container;//文件类型的气泡
+    protected int sobot_chat_file_bgColor;//文件类型的气泡默认颜色
 
     public MessageHolderBase(Context context, View convertView) {
         mContext = context;
         reminde_time_Text = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id","sobot_reminde_time_Text"));
-        imgHead = (ImageView) convertView.findViewById(ResourceUtils.getIdByName(context, "id","sobot_imgHead"));
+        imgHead = (SobotImageView) convertView.findViewById(ResourceUtils.getIdByName(context, "id","sobot_imgHead"));
         name = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id","sobot_name"));
         frameLayout = (FrameLayout) convertView.findViewById(ResourceUtils.getIdByName(context, "id","sobot_frame_layout"));
         msgProgressBar = (ProgressBar) convertView.findViewById(ResourceUtils.getIdByName(context, "id","sobot_msgProgressBar"));// 重新发送的进度条信息
         // 消息的状态
         msgStatus = (ImageView) convertView.findViewById(ResourceUtils.getIdByName(context, "id","sobot_msgStatus"));
         sobot_ll_content = (LinearLayout) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_ll_content"));
+        sobot_ll_file_container = (RelativeLayout) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_ll_file_container"));
+        sobot_chat_file_bgColor = ResourceUtils.getIdByName(mContext, "color", "sobot_chat_file_bgColor");
+        applyCustomHeadUI();
     }
 
     public abstract void bindData(Context context, final ZhiChiMessageBase message);
@@ -70,6 +73,7 @@ public abstract class MessageHolderBase {
         switch (itemType) {
             case SobotMsgAdapter.MSG_TYPE_IMG_R:
             case SobotMsgAdapter.MSG_TYPE_TXT_R:
+            case SobotMsgAdapter.MSG_TYPE_FILE_R:
             case SobotMsgAdapter.MSG_TYPE_AUDIO_R:
             case SobotMsgAdapter.MSG_TYPE_MULTI_ROUND_R:
                 this.isRight = true;
@@ -85,6 +89,7 @@ public abstract class MessageHolderBase {
                 name.setText(sendername);
                 break;
             case SobotMsgAdapter.MSG_TYPE_TXT_L:
+            case SobotMsgAdapter.MSG_TYPE_FILE_L:
             case SobotMsgAdapter.MSG_TYPE_RICH:
             case SobotMsgAdapter.MSG_TYPE_IMG_L:
             case SobotMsgAdapter.MSG_TYPE_ROBOT_TEMPLATE1:
@@ -120,6 +125,12 @@ public abstract class MessageHolderBase {
                     ScreenUtils.setBubbleBackGroud(mContext, sobot_ll_content, SobotUIConfig.sobot_chat_left_bgColor);
                 }
             }
+        }
+        if (sobot_ll_file_container != null) {
+            //文件类型气泡颜色特殊处理
+            int filleContainerBgColor = SobotUIConfig.DEFAULT != SobotUIConfig.sobot_chat_file_bgColor
+                    ? SobotUIConfig.sobot_chat_file_bgColor:sobot_chat_file_bgColor;
+            ScreenUtils.setBubbleBackGroud(mContext, sobot_ll_file_container, filleContainerBgColor);
         }
     }
 
@@ -235,6 +246,16 @@ public abstract class MessageHolderBase {
                 intent.putExtra("isRight", isRight);
             }
             context.startActivity(intent);
+        }
+    }
+
+    /**
+     * 设置头像UI
+     */
+    private void applyCustomHeadUI() {
+        if (imgHead != null) {
+            imgHead.setCornerRadius(4);
+//            imgHead.setIsCircle(true);
         }
     }
 }

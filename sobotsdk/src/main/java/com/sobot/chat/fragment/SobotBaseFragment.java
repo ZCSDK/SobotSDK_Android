@@ -101,6 +101,8 @@ public abstract class SobotBaseFragment extends Fragment {
                         if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                             if (permissions[i] != null && permissions[i].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                                 ToastUtil.showToast(getContext().getApplicationContext(), getResString("sobot_no_write_external_storage_permission"));
+                            } else if(permissions[i] != null && permissions[i].equals(Manifest.permission.READ_EXTERNAL_STORAGE)){
+                                ToastUtil.showToast(getContext().getApplicationContext(), getResString("sobot_no_write_external_storage_permission"));
                             } else if (permissions[i] != null && permissions[i].equals(Manifest.permission.RECORD_AUDIO)) {
                                 ToastUtil.showToast(getContext().getApplicationContext(), getResString("sobot_no_record_audio_permission"));
                             } else if (permissions[i] != null && permissions[i].equals(Manifest.permission.CAMERA)) {
@@ -180,8 +182,15 @@ public abstract class SobotBaseFragment extends Fragment {
             if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     != PackageManager.PERMISSION_GRANTED) {
                 //申请WRITE_EXTERNAL_STORAGE权限
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        ZhiChiConstant.SOBOT_PERMISSIONS_REQUEST_CODE);
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE
+                                ,Manifest.permission.READ_EXTERNAL_STORAGE}, ZhiChiConstant.SOBOT_PERMISSIONS_REQUEST_CODE);
+                return false;
+            }
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                //申请READ_EXTERNAL_STORAGE权限
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        ,Manifest.permission.READ_EXTERNAL_STORAGE}, ZhiChiConstant.SOBOT_PERMISSIONS_REQUEST_CODE);
                 return false;
             }
         }

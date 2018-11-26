@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="sobot_colorPrimary">#09aeb0</color>
     <color name="sobot_welcomeBackcolor">#019587</color>
     <color name="sobot_viewpagerbackground">#EBEBEB</color>
     <!-- tab底部栏目的切换 -->
@@ -88,13 +89,18 @@
 
     <!-- 消息提醒中的超链接颜色 -->
     <color name="sobot_color_link_remind">@color/sobot_color_link</color>
+    <!-- 文件消息气泡颜色 -->
+    <color name="sobot_chat_file_bgColor">@android:color/white</color>
 
     <!-- button字体 -->
     <drawable name="sobot_color_drawable_text_black">#000000</drawable>
     <drawable name="sobot_color_drawbale_text_white">#ffffff</drawable>
+    <!-- 普通button背景 -->
+    <color name="sobot_btn_normal_color">@color/sobot_colorPrimary</color>
     <!-- 聊天界面发送按钮的背景颜色 -->
     <color name="sobot_btn_bg_send">#09aeb0</color>
     <color name="sobot_btn_bg_send_pressed">#b309aeb0</color>
+    <color name="sobot_btn_bg_send_disable">#EFF3FA</color>
     <!-- 底部 -->
     <!-- 底部背景 -->
     <color name="sobot_color_bottom_bg">#fafcfc</color>
@@ -143,4 +149,8 @@
     <color name="sobot_lable_press_bg_color">#ffffff</color>
     <!--自定义标签字体颜色-->
     <color name="sobot_lable_text_color">#3D4966</color>
+
+    <!--文件进度条前景色-->
+    <color name="sobot_sectorProgressView_fgColor">#4D000000</color>
+
 </resources>

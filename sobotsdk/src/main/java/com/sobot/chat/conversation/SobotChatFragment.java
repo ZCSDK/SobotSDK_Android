@@ -39,10 +39,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sobot.chat.SobotUIConfig;
+import com.sobot.chat.activity.SobotChooseFileActivity;
 import com.sobot.chat.activity.SobotPostMsgActivity;
 import com.sobot.chat.activity.SobotSkillGroupActivity;
 import com.sobot.chat.activity.WebViewActivity;
-import com.sobot.chat.adapter.base.SobotMsgAdapter;
+import com.sobot.chat.adapter.SobotMsgAdapter;
 import com.sobot.chat.api.apiUtils.GsonUtil;
 import com.sobot.chat.api.apiUtils.SobotVerControl;
 import com.sobot.chat.api.apiUtils.ZhiChiConstants;
@@ -69,6 +70,7 @@ import com.sobot.chat.api.model.ZhiChiReplyAnswer;
 import com.sobot.chat.core.channel.Const;
 import com.sobot.chat.core.channel.SobotMsgManager;
 import com.sobot.chat.core.http.callback.StringResultCallBack;
+import com.sobot.chat.core.http.upload.SobotUpload;
 import com.sobot.chat.listener.NoDoubleClickListener;
 import com.sobot.chat.server.SobotSessionServer;
 import com.sobot.chat.utils.AnimationUtil;
@@ -81,6 +83,7 @@ import com.sobot.chat.utils.LogUtils;
 import com.sobot.chat.utils.ResourceUtils;
 import com.sobot.chat.utils.SharedPreferencesUtil;
 import com.sobot.chat.utils.SobotOption;
+import com.sobot.chat.utils.StServiceUtils;
 import com.sobot.chat.utils.TimeTools;
 import com.sobot.chat.utils.ToastUtil;
 import com.sobot.chat.utils.ZhiChiConfig;
@@ -311,6 +314,9 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
     public void onResume() {
         super.onResume();
         SharedPreferencesUtil.saveStringData(mAppContext, ZhiChiConstant.SOBOT_CURRENT_IM_APPID, info.getAppkey());
+        Intent intent = new Intent(mAppContext, SobotSessionServer.class);
+        intent.putExtra(ZhiChiConstant.SOBOT_CURRENT_IM_PARTNERID, info.getUid());
+        StServiceUtils.safeStartService(mAppContext,intent);
         SobotMsgManager.getInstance(mAppContext).getConfig(info.getAppkey()).clearCache();
     }
 
@@ -351,6 +357,7 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
         stopCustomTimeTask();
         stopVoice();
         AudioTools.destory();
+        SobotUpload.getInstance().unRegister();
         if (mEvaluateDialog != null && mEvaluateDialog.isShowing()) {
             mEvaluateDialog.dismiss();
         }
@@ -536,7 +543,6 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
                     gotoLastItem();
                     break;
                 case ZhiChiConstant.message_type_wo_sendImage: // 我发送图片 更新ui
-                    // 加载更过view隐藏
                     updateUiMessage(messageAdapter, msg);
                     break;
                 case ZhiChiConstant.message_type_send_voice: // 发送语音
@@ -636,9 +642,6 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
         setupListView();
         loadUnreadNum();
         initSdk(false);
-        Intent intent = new Intent(mAppContext, SobotSessionServer.class);
-        intent.putExtra(ZhiChiConstant.SOBOT_CURRENT_IM_PARTNERID, info.getUid());
-        mAppContext.startService(intent);
     }
 
     private void setToolBar() {
@@ -697,6 +700,7 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
         filter.addAction(ZhiChiConstants.sobot_close_now_clear_cache);// 立即结束不留缓存
         filter.addAction(ZhiChiConstants.SOBOT_CHANNEL_STATUS_CHANGE);/* 接收通道状态变化 */
         filter.addAction(ZhiChiConstants.SOBOT_BROCAST_KEYWORD_CLICK);/* 机器人转人工关键字  用户选择  技能组  转人工 */
+        filter.addAction(ZhiChiConstants.SOBOT_BROCAST_REMOVE_FILE_TASK);//取消文件上传
         // 注册广播接收器
         getActivity().registerReceiver(receiver, filter);
 
@@ -858,7 +862,7 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
     public void voiceCuttingMethod() {
         stopVoice();
         sendVoiceMap(1,voiceMsgId);
-        voice_time_long.setText("00" + "''");
+        voice_time_long.setText("59" + "''");
     }
 
     /**
@@ -1092,8 +1096,6 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
                 SharedPreferencesUtil.saveBooleanData(mAppContext,ZhiChiConstant.SOBOT_POSTMSG_ENCLOSURESHOWFLAG,initModel.isEnclosureShowFlag());
                 SharedPreferencesUtil.saveBooleanData(mAppContext,ZhiChiConstant.SOBOT_POSTMSG_ENCLOSUREFLAG,initModel.isEnclosureFlag());
 
-                initModel.setColor(info.getColor());
-
                 if (type == ZhiChiConstant.type_robot_only){
                     remindRobotMessage(handler,initModel,info);
                     showSwitchRobotBtn();
@@ -1283,7 +1285,6 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
         SharedPreferencesUtil.saveIntData(mAppContext,
                 info.getAppkey()+"_"+ZhiChiConstant.initType, type);
         LogUtils.i("sobot----type---->" + type);
-        initModel.setColor(info.getColor());
         showLogicTitle(config.activityTitle,false);
         showSwitchRobotBtn();
         customerState = config.customerState;
@@ -1923,7 +1924,7 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
         sendMessageToRobot(base,type, questionFlag, docId, null);
     }
 
-    /*发送0、机器人问答 1、文本  2、语音  3、图片*/
+    /*发送0、机器人问答 1、文本  2、语音  3、图片 4、多伦会话重复*/
     @Override
     public void sendMessageToRobot(ZhiChiMessageBase base,int type, int questionFlag, String docId, String multiRoundMsg){
         if (type == 4){
@@ -2613,6 +2614,20 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
         submitEvaluation(true,5);
     }
 
+    /**
+     * 提供给聊天面板执行的方法
+     * 选择文件
+     */
+    @Override
+    public void chooseFile() {
+        // 选择文件
+        if (!checkStoragePermission()) {
+            return;
+        }
+        Intent intent = new Intent(getActivity(), SobotChooseFileActivity.class);
+        startActivityForResult(intent, ZhiChiConstant.REQUEST_COCE_TO_CHOOSE_FILE);
+    }
+
     @Override
     public void startToPostMsgActivty(boolean FLAG_EXIT_SDK) {
         if (initModel == null){
@@ -3017,6 +3032,21 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
                 String keyword = intent.getStringExtra("keyword");
                 String keywordId = intent.getStringExtra("keywordId");
                 transfer2Custom(tempGroupId, keyword, keywordId, true);
+            } else if (ZhiChiConstants.SOBOT_BROCAST_REMOVE_FILE_TASK.equals(intent.getAction())){
+                try {
+                    String msgId = intent.getStringExtra("sobot_msgId");
+                    if (!TextUtils.isEmpty(msgId)) {
+                        for (int i = messageList.size() - 1; i >= 0; i--) {
+                            if (msgId.equals(messageList.get(i).getId())) {
+                                messageList.remove(i);
+                                break;
+                            }
+                        }
+                        messageAdapter.notifyDataSetChanged();
+                    }
+                } catch (Exception e) {
+                    //ignor
+                }
             }
         }
     }
@@ -3059,18 +3089,7 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
                         base.setSenderName(pushMessage.getAname());
                         base.setSenderFace(pushMessage.getAface());
                         base.setSenderType(ZhiChiConstant.message_sender_type_service + "");
-                        ZhiChiReplyAnswer reply = null;
-                        if(TextUtils.isEmpty(pushMessage.getMsgType())){
-                            return;
-                        }
-                        if ("7".equals(pushMessage.getMsgType())) {
-                            reply = GsonUtil.jsonToZhiChiReplyAnswer(pushMessage.getContent());
-                        } else {
-                            reply = new ZhiChiReplyAnswer();
-                            reply.setMsgType(pushMessage.getMsgType() + "");
-                            reply.setMsg(pushMessage.getContent());
-                        }
-                        base.setAnswer(reply);
+                        base.setAnswer(pushMessage.getAnswer());
                         stopCustomTimeTask();
                         startUserInfoTimeTask(handler);
                         // 更新界面的操作
@@ -3413,6 +3432,10 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
                             }
                         }
                         break;
+                    case ZhiChiConstant.REQUEST_COCE_TO_CHOOSE_FILE:
+                        File selectedFile = (File) data.getSerializableExtra(ZhiChiConstant.SOBOT_INTENT_DATA_SELECTED_FILE);
+                        uploadFile(selectedFile,handler, lv_message,messageAdapter);
+                        break;
                 }
             }
         } catch (Exception e) {
@@ -3547,12 +3570,15 @@ public class SobotChatFragment extends SobotChatBaseFragment implements View.OnC
                         }
                         currentVoiceLong = 0;
                         closeVoiceWindows(toLongOrShort);
+                    } else {
+                        sendVoiceMap(2,voiceMsgId);
                     }
                     voiceTimerLong = 0;
                     restartMyTimeTask(handler);
                     // mFileName
                     return true;
                 default:
+                    sendVoiceMap(2,voiceMsgId);
                     closeVoiceWindows(2);
                     return true;
             }

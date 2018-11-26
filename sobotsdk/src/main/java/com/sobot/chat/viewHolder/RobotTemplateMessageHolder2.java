@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 public class RobotTemplateMessageHolder2 extends MessageHolderBase implements SobotLabelsView.OnLabelClickListener, View.OnClickListener {
-    private Context mContext;
     // 聊天的消息内容
     private TextView tv_msg;
     private TextView tv_more;
@@ -38,7 +37,6 @@ public class RobotTemplateMessageHolder2 extends MessageHolderBase implements So
 
     public RobotTemplateMessageHolder2(Context context, View convertView) {
         super(context, convertView);
-        mContext = context;
         tv_msg = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_template2_msg"));
         tv_more = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_tv_more"));
         slv_labels = (SobotLabelsView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_template2_labels"));

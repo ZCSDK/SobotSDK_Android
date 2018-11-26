@@ -8,7 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.sobot.chat.activity.base.SobotBaseActivity;
-import com.sobot.chat.adapter.base.SobotCusFieldAdapter;
+import com.sobot.chat.adapter.SobotCusFieldAdapter;
 import com.sobot.chat.api.model.SobotCusFieldConfig;
 import com.sobot.chat.api.model.SobotCusFieldDataInfo;
 import com.sobot.chat.api.model.SobotFieldModel;

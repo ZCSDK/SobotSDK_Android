@@ -1,4 +1,4 @@
-package com.sobot.chat.adapter.base;
+package com.sobot.chat.adapter;
 
 import android.content.Context;
 import android.text.Html;
@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.sobot.chat.adapter.base.SobotBaseAdapter;
 import com.sobot.chat.api.model.SobotMsgCenterModel;
 import com.sobot.chat.utils.DateUtil;
 import com.sobot.chat.utils.SobotBitmapUtil;

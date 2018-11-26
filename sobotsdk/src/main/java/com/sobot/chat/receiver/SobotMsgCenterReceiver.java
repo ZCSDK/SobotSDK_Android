@@ -42,19 +42,10 @@ public abstract class SobotMsgCenterReceiver extends BroadcastReceiver {
                     for (int i = 0; i < datas.size(); i++) {
                         SobotMsgCenterModel sobotMsgCenterModel = datas.get(i);
                         if (sobotMsgCenterModel.getInfo() != null && pushMessage.getAppId().equals(sobotMsgCenterModel.getInfo().getAppkey())) {
-                            ZhiChiReplyAnswer reply;
-                            if (TextUtils.isEmpty(pushMessage.getMsgType())) {
-                                return;
-                            }
-                            if ("7".equals(pushMessage.getMsgType())) {
-                                reply = GsonUtil.jsonToZhiChiReplyAnswer(pushMessage.getContent());
-                            } else {
-                                reply = new ZhiChiReplyAnswer();
-                                reply.setMsgType(pushMessage.getMsgType() + "");
-                                reply.setMsg(pushMessage.getContent());
-                            }
                             sobotMsgCenterModel.setLastDateTime(Calendar.getInstance().getTime().getTime() + "");
-                            sobotMsgCenterModel.setLastMsg(reply.getMsg());
+                            if (pushMessage.getAnswer() != null) {
+                                sobotMsgCenterModel.setLastMsg(pushMessage.getAnswer().getMsg());
+                            }
                             int unreadCount = sobotMsgCenterModel.getUnreadCount() + 1;
                             sobotMsgCenterModel.setUnreadCount(unreadCount);
                             onDataChanged(sobotMsgCenterModel);

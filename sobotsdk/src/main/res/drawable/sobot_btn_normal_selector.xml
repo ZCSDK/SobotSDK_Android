@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_enabled="true">
+        <shape>
+            <solid android:color="@color/sobot_btn_normal_color" />
+
+            <stroke android:width="0.1dp" android:color="@color/sobot_btn_normal_color" />
+
+            <corners android:radius="@dimen/sobot_bbuton_rounded_corner_radius" />
+        </shape>
+    </item>
+
+    <item android:state_pressed="true" android:state_enabled="true">
+        <shape>
+            <solid android:color="@color/sobot_btn_bg_send_pressed" />
+
+            <stroke android:width="0.1dp" android:color="@color/sobot_btn_bg_send_pressed" />
+
+            <corners android:radius="@dimen/sobot_bbuton_rounded_corner_radius" />
+        </shape>
+    </item>
+    <item android:state_enabled="false">
+        <shape>
+            <solid android:color="@color/sobot_btn_bg_send_disable" />
+
+            <stroke android:width="0.1dp" android:color="@color/sobot_btn_bg_send_disable" />
+
+            <corners android:radius="@dimen/sobot_bbuton_rounded_corner_radius" />
+        </shape>
+    </item>
+</selector>

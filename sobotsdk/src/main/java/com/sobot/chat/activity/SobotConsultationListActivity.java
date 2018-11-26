@@ -15,7 +15,7 @@ import android.widget.ListView;
 
 import com.sobot.chat.SobotApi;
 import com.sobot.chat.activity.base.SobotBaseActivity;
-import com.sobot.chat.adapter.base.SobotMsgCenterAdapter;
+import com.sobot.chat.adapter.SobotMsgCenterAdapter;
 import com.sobot.chat.api.ZhiChiApi;
 import com.sobot.chat.api.apiUtils.ZhiChiConstants;
 import com.sobot.chat.api.model.Information;

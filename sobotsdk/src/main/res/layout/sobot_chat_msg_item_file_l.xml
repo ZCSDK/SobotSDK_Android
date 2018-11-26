@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/sobot_DIMEN_12PX"
+    android:layout_marginLeft="@dimen/sobot_DIMEN_48PX"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/sobot_list_divider_height"
+    android:paddingTop="0dp">
+
+    <!-- 中间提醒内容 -->
+    <TextView
+        android:id="@+id/sobot_reminde_time_Text"
+        style="@style/sobot_center_remind_time" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <!--头像-->
+        <com.sobot.chat.widget.SobotImageView
+            android:id="@+id/sobot_imgHead"
+            style="@style/sobot_chatting_imghead"
+            android:layout_marginLeft="10dp" />
+
+        <!-- 昵称 -->
+        <TextView
+            android:id="@+id/sobot_name"
+            style="@style/sobot_chatting_nickname"
+            android:layout_toRightOf="@+id/sobot_imgHead" />
+
+        <RelativeLayout
+            android:id="@+id/sobot_ll_file_container"
+            android:layout_width="218dp"
+            android:layout_height="60dp"
+            android:layout_below="@id/sobot_name"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="80dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/sobot_imgHead"
+            android:background="@drawable/sobot_file_bg_normal_l"
+            android:paddingLeft="15dp"
+            android:paddingRight="2dp">
+
+            <com.sobot.chat.widget.SobotSectorProgressView
+                android:id="@+id/sobot_progress"
+                android:layout_width="30dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:id="@+id/sobot_file_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_toRightOf="@+id/sobot_progress"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="#333333"
+                android:textSize="14sp"
+                tools:text="PPT文档.pptx" />
+
+            <TextView
+                android:id="@+id/sobot_file_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/sobot_file_name"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="8dp"
+                android:layout_toRightOf="@+id/sobot_progress"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="#999999"
+                android:textSize="11sp"
+                tools:text="30.58KB" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/sobot_real_ll_content"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:layout_marginRight="@dimen/sobot_DIMEN_48PX"
-              android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sobot_real_ll_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginRight="@dimen/sobot_DIMEN_48PX"
+    android:orientation="vertical">
     <TextView
         android:id="@+id/sobot_reminde_time_Text"
         android:layout_marginTop="10dp"
@@ -24,11 +25,11 @@
             android:layout_toLeftOf="@+id/sobot_imgHead"
             android:visibility="gone"/>
 
-        <ImageView
+        <com.sobot.chat.widget.SobotImageView
             android:id="@+id/sobot_imgHead"
             style="@style/sobot_chatting_imghead"
             android:layout_alignParentRight="true"
-            android:background="@drawable/sobot_chatting_default_head"/>
+            tools:background="@drawable/sobot_chatting_default_head"/>
 
         <!-- 我的消息的内容 -->
         <LinearLayout

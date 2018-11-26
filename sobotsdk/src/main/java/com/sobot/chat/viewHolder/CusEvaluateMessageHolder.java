@@ -28,12 +28,10 @@ public class CusEvaluateMessageHolder extends MessageHolderBase implements Radio
     RatingBar sobot_ratingBar;
     TextView sobot_describe;
     SobotEvaluateModel sobotEvaluateModel;
-    Context mContext;
     public ZhiChiMessageBase message;
 
     public CusEvaluateMessageHolder(Context context, View convertView) {
         super(context, convertView);
-        mContext = context;
         sobot_center_title = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id",
                 "sobot_center_title"));
         sobot_readiogroup = (RadioGroup) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_readiogroup"));

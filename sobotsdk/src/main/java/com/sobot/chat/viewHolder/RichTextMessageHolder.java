@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sobot.chat.activity.WebViewActivity;
-import com.sobot.chat.adapter.base.SobotMsgAdapter;
+import com.sobot.chat.adapter.SobotMsgAdapter;
 import com.sobot.chat.api.model.Suggestions;
 import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.listener.NoDoubleClickListener;
@@ -19,7 +19,6 @@ import com.sobot.chat.utils.HtmlTools;
 import com.sobot.chat.utils.ResourceUtils;
 import com.sobot.chat.utils.SobotBitmapUtil;
 import com.sobot.chat.utils.ToastUtil;
-import com.sobot.chat.utils.VersionUtils;
 import com.sobot.chat.viewHolder.base.MessageHolderBase;
 
 import java.util.ArrayList;
@@ -30,7 +29,6 @@ import java.util.ArrayList;
  */
 public class RichTextMessageHolder extends MessageHolderBase {
     public ZhiChiMessageBase message;
-    private Context mContext;
     private TextView msg; // 聊天的消息内容
     private TextView sobot_msg_title; // 机会人回复的富文本标题
     private TextView sobot_msgStripe; // 多轮会话中配置的引导语
@@ -54,9 +52,6 @@ public class RichTextMessageHolder extends MessageHolderBase {
 
     public RichTextMessageHolder(Context context, View convertView){
         super(context,convertView);
-        this.mContext = context;
-        imgHead = (ImageView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_imgHead"));
-        name = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_name"));
         msg = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_msg"));
         sobot_msg_title = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_msg_title"));
         sobot_msgStripe = (TextView) convertView.findViewById(ResourceUtils.getIdByName(context, "id", "sobot_msgStripe"));
@@ -357,14 +352,6 @@ public class RichTextMessageHolder extends MessageHolderBase {
         sobot_tv_dislikeBtn.setVisibility(View.VISIBLE);
         sobot_ll_likeBtn.setVisibility(View.VISIBLE);
         sobot_ll_dislikeBtn.setVisibility(View.VISIBLE);
-    }
-
-    public int getResStringId(String name) {
-        if (mContext != null){
-            return ResourceUtils.getIdByName(mContext, "string", name);
-        } else {
-            return 0;
-        }
     }
 
     // 查看阅读全文的监听
