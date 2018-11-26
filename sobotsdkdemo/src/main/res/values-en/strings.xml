@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="sobot_demo_app_name">ZhiChi_sdk</string>
+    <string name="app_name">ZhiChi_sdk</string>
     <string name="sobot_demo_please">SOBOT SDK  2.6.7</string>
     <string name="sobot_demo_person_set_value">User basic information（optional）</string>
     <string name="sobot_demo_start_set_value">Startup parameters（AppKey required）</string>
