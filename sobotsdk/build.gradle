@@ -21,24 +21,3 @@ dependencies {
     compileOnly 'com.squareup.picasso:picasso:2.5.2'
     api 'com.sobot.chat:sobotsupport-glidev4:1.0.8'
 }
-
-ext {
-    yourSiteUrl = 'https://github.com/ZCSDK/SobotSDK_Android'
-    yourGitUrl = 'https://github.com/ZCSDK/SobotSDK_Android.git'
-    YourIssueTrackerUrl = 'https://github.com/ZCSDK/SobotSDK_Android/issues'
-
-    yourOtganizationId = 'sobot-wangshuai'
-    yourProName = 'sobotsdk'
-    yourProDesc = 'Android Library'
-
-    yourId = 'wangshuai'
-    yourName = 'wangshuai'
-    yourEmail = 'wangxingshuai@vip.qq.com'
-
-    yourGroup = 'com.sobot.chat'
-    yourArtifactId = 'sobotsdk'
-    yourVersion = '2.6.8'
-
-    yourBintrayUserPath = './local.properties'
-}
-apply from: '../bintrayUpload.gradle'
