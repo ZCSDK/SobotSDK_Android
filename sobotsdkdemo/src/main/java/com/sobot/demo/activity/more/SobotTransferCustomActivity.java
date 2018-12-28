@@ -23,7 +23,7 @@ public class SobotTransferCustomActivity extends AppCompatActivity implements Vi
     private EditText sobot_isArtificialIntelligence_num;//如果是只能转人工，需要设置当应到问题出现几次以后显示转人工按钮
     private EditText sobot_demo_transferKeyWord;//转人工关键字
     private RelativeLayout sobot_isArtificialIntelligence;//是否智能转人工,如果是，需要设置setArtificialIntelligenceNum为大于等于1的数字，默认是1
-    private ImageView sobot_tv_left;
+    private RelativeLayout sobot_tv_left;
     private boolean isUseVoice = false;//是否显示咨询信息，默认不显示
     private ImageView imgOpenVoice;
 
@@ -38,7 +38,7 @@ public class SobotTransferCustomActivity extends AppCompatActivity implements Vi
     }
 
     private void findvViews(){
-        sobot_tv_left = (ImageView) findViewById(R.id.sobot_demo_tv_left);
+        sobot_tv_left = (RelativeLayout) findViewById(R.id.sobot_demo_tv_left);
         sobot_tv_left .setOnClickListener(this);
         TextView sobot_text_title = (TextView) findViewById(R.id.sobot_demo_tv_title);
         sobot_text_title.setText("转人工设置");

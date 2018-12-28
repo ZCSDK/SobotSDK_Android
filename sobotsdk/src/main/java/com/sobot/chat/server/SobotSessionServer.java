@@ -330,8 +330,14 @@ public class SobotSessionServer extends Service {
                 .SOBOT_NOTIFICATION_FLAG, false);
 
         if (notification_flag) {
-            String notificationTitle = "客服提示";
-            NotificationUtils.createNotification(getApplicationContext(), notificationTitle, content, content, getNotificationId(),pushMessage);
+            String notificationTitle = ResourceUtils.getResString(getApplicationContext(),"sobot_notification_tip_title");
+            String contentTmp;
+            if (!TextUtils.isEmpty(pushMessage.getAname())) {
+                contentTmp = String.format(ResourceUtils.getResString(getApplicationContext(), "sobot_notification_tip"), pushMessage.getAname(), content);
+            } else {
+                contentTmp = content;
+            }
+            NotificationUtils.createNotification(getApplicationContext(), notificationTitle, contentTmp, content, getNotificationId(),pushMessage);
         }
     }
 

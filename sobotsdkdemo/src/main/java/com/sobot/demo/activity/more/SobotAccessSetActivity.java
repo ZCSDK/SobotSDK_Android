@@ -31,7 +31,7 @@ public class SobotAccessSetActivity extends AppCompatActivity implements View.On
         RelativeLayout rl_5 = (RelativeLayout) findViewById(R.id.rl_5);
         RelativeLayout rl_6 = (RelativeLayout) findViewById(R.id.rl_6);
         RelativeLayout rl_7 = (RelativeLayout) findViewById(R.id.rl_7);
-        ImageView sobot_tv_left = (ImageView) findViewById(R.id.sobot_demo_tv_left);
+        RelativeLayout sobot_tv_left = (RelativeLayout) findViewById(R.id.sobot_demo_tv_left);
         TextView sobot_text_title = (TextView) findViewById(R.id.sobot_demo_tv_title);
         sobot_text_title.setText("接入信息设置");
         sobot_tv_left.setOnClickListener(this);

@@ -4,14 +4,19 @@
     android:layout_height="@dimen/sobot_DIMEN_108PX"
     android:background="#ffffff">
 
-    <ImageView
+    <RelativeLayout
         android:id="@+id/sobot_demo_tv_left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="20dp"
-        android:background="@drawable/sobot_demo_back_arrow"
-        android:contentDescription="@null" />
+        android:layout_width="50dp"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/sobot_demo_back_arrow"
+            android:contentDescription="@null" />
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/sobot_demo_tv_title"

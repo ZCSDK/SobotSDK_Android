@@ -14,6 +14,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
+import android.text.format.Formatter;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -28,7 +29,9 @@ import com.sobot.chat.api.apiUtils.SobotVerControl;
 import com.sobot.chat.api.enumtype.SobotChatTitleDisplayMode;
 import com.sobot.chat.api.model.CommonModel;
 import com.sobot.chat.api.model.Information;
+import com.sobot.chat.api.model.SobotCacheFile;
 import com.sobot.chat.api.model.SobotEvaluateModel;
+import com.sobot.chat.api.model.SobotLocationModel;
 import com.sobot.chat.api.model.SobotMsgCenterModel;
 import com.sobot.chat.api.model.SobotMultiDiaRespInfo;
 import com.sobot.chat.api.model.SobotQuestionRecommend;
@@ -122,8 +125,7 @@ public class ChatUtils {
 	 * @return
      */
 	public static File openCamera(Activity act, Fragment childFragment) {
-		String path = CommonUtils.getSDCardRootPath() + "/" +
-				CommonUtils.getApplicationName(act.getApplicationContext()) + "/" + System.currentTimeMillis() + ".jpg";
+		String path = SobotPathManager.getInstance().getPicDir() + System.currentTimeMillis() + ".jpg";
 		// 创建图片文件存放的位置
 		File cameraFile = new File(path);
 		boolean mkdirs = cameraFile.getParentFile().mkdirs();
@@ -176,8 +178,11 @@ public class ChatUtils {
 		String picturePath = ImageUtils.getPath(context, selectedImage);
 		LogUtils.i("picturePath:" + picturePath);
 		if (!TextUtils.isEmpty(picturePath)) {
-			sendPicLimitBySize(picturePath, initModel.getCid(),
-					initModel.getUid(), handler, context, lv_message,messageAdapter);
+			File tmpFile = new File(picturePath);
+			if (tmpFile.exists() && tmpFile.isFile()) {
+				sendPicLimitBySize(picturePath, initModel.getCid(),
+						initModel.getUid(), handler, context, lv_message,messageAdapter);
+			}
 		} else {
 			File file = new File(selectedImage.getPath());
 			if (!file.exists()) {
@@ -201,12 +206,11 @@ public class ChatUtils {
 			bitmap = ImageUtils.rotateBitmap(bitmap, degree);
 			if (!(filePath.endsWith(".gif") || filePath.endsWith(".GIF"))) {
 				String fName = MD5Util.encode(filePath);
-				filePath = CommonUtils.getSDCardRootPath() + "/" +
-						CommonUtils.getApplicationName(context.getApplicationContext()) + "/" + fName + "_tmp.jpg";
+				filePath = SobotPathManager.getInstance().getPicDir() + fName + "_tmp.jpg";
 				FileOutputStream fos;
 				try {
 					fos = new FileOutputStream(filePath);
-					bitmap.compress(Bitmap.CompressFormat.JPEG, 80, fos);
+					bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
 				} catch (Exception e) {
 					e.printStackTrace();
 					filePath = realFilePath;
@@ -240,7 +244,7 @@ public class ChatUtils {
 		zhichiMessage.setSendSuccessState(ZhiChiConstant.MSG_SEND_STATUS_LOADING);
 		zhichiMessage.setSenderType(ZhiChiConstant.message_sender_type_customer_sendImage + "");
 		Message message = new Message();
-		message.what = ZhiChiConstant.message_type_wo_sendImage;
+		message.what = ZhiChiConstant.hander_send_msg;
 		message.obj = zhichiMessage;
 		handler.sendMessage(message);
 	}
@@ -356,6 +360,55 @@ public class ChatUtils {
 		base.setAction(ZhiChiConstant.action_custom_evaluate);
 		base.setAnswer(reply);
 		return base;
+	}
+
+	public static ZhiChiMessageBase getUploadFileModel(Context context,String tmpMsgId,File selectedFile){
+		ZhiChiMessageBase zhichiMessage = new ZhiChiMessageBase();
+		ZhiChiReplyAnswer reply = new ZhiChiReplyAnswer();
+		SobotCacheFile cacheFile = new SobotCacheFile();
+		cacheFile.setMsgId(tmpMsgId);
+		cacheFile.setFilePath(selectedFile.getAbsolutePath());
+		cacheFile.setFileName(selectedFile.getName());
+		cacheFile.setFileType(ChatUtils.getFileType(selectedFile));
+		cacheFile.setFileSize(Formatter.formatFileSize(context, selectedFile.length()));
+		reply.setCacheFile(cacheFile);
+		zhichiMessage.setAnswer(reply);
+		zhichiMessage.setId(tmpMsgId);
+		zhichiMessage.setT(Calendar.getInstance().getTime().getTime()+"");
+		reply.setMsgType(ZhiChiConstant.message_type_file);
+		zhichiMessage.setSenderType(ZhiChiConstant.message_sender_type_customer + "");
+		return zhichiMessage;
+	}
+
+	public static ZhiChiMessageBase getLocationModel(String tmpMsgId,SobotLocationModel data){
+		ZhiChiMessageBase zhichiMessage = new ZhiChiMessageBase();
+		ZhiChiReplyAnswer reply = new ZhiChiReplyAnswer();
+		reply.setLocationData(data);
+		zhichiMessage.setAnswer(reply);
+		zhichiMessage.setId(tmpMsgId);
+		zhichiMessage.setT(Calendar.getInstance().getTime().getTime()+"");
+		reply.setMsgType(ZhiChiConstant.message_type_location);
+		zhichiMessage.setSenderType(ZhiChiConstant.message_sender_type_customer + "");
+		return zhichiMessage;
+	}
+
+	public static ZhiChiMessageBase getUploadVideoModel(Context context,String tmpMsgId,File selectedFile,String snapshot){
+		ZhiChiMessageBase zhichiMessage = new ZhiChiMessageBase();
+		ZhiChiReplyAnswer reply = new ZhiChiReplyAnswer();
+		SobotCacheFile cacheFile = new SobotCacheFile();
+		cacheFile.setMsgId(tmpMsgId);
+		cacheFile.setFilePath(selectedFile.getAbsolutePath());
+		cacheFile.setFileName(selectedFile.getName());
+		cacheFile.setSnapshot(snapshot);
+		cacheFile.setFileType(ChatUtils.getFileType(selectedFile));
+		cacheFile.setFileSize(Formatter.formatFileSize(context, selectedFile.length()));
+		reply.setCacheFile(cacheFile);
+		zhichiMessage.setAnswer(reply);
+		zhichiMessage.setId(tmpMsgId);
+		zhichiMessage.setT(Calendar.getInstance().getTime().getTime()+"");
+		reply.setMsgType(ZhiChiConstant.message_type_video);
+		zhichiMessage.setSenderType(ZhiChiConstant.message_sender_type_customer + "");
+		return zhichiMessage;
 	}
 
 	/**

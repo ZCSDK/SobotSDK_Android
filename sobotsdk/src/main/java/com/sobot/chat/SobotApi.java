@@ -3,6 +3,7 @@ package com.sobot.chat;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -11,6 +12,7 @@ import com.sobot.chat.api.ZhiChiApi;
 import com.sobot.chat.api.enumtype.SobotChatTitleDisplayMode;
 import com.sobot.chat.api.model.CommonModel;
 import com.sobot.chat.api.model.Information;
+import com.sobot.chat.api.model.SobotLocationModel;
 import com.sobot.chat.api.model.SobotMsgCenterModel;
 import com.sobot.chat.conversation.SobotChatActivity;
 import com.sobot.chat.core.channel.Const;
@@ -429,5 +431,21 @@ public class SobotApi {
 			return;
 		}
 		SharedPreferencesUtil.saveStringData(context,ZhiChiConstant.SOBOT_FLOW_GROUP_ID, content);
+	}
+
+	/**
+	 * 发送地址信息
+	 * @param context
+	 * @param locationData 地址对象的值
+	 */
+	public static void sendLocation(Context context,SobotLocationModel locationData) {
+		if (context == null || locationData == null) {
+			return;
+		}
+		Intent intent = new Intent();
+		LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context.getApplicationContext());
+		intent.setAction(ZhiChiConstant.SOBOT_BROCAST_ACTION_SEND_LOCATION);
+		intent.putExtra(ZhiChiConstant.SOBOT_LOCATION_DATA, locationData);
+		localBroadcastManager.sendBroadcast(intent);
 	}
 }

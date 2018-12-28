@@ -64,7 +64,11 @@ public class NotificationUtils {
     public static void cancleAllNotification(Context context){
         NotificationManager nm =(NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (nm != null) {
-            nm.cancelAll();
+            try {
+                nm.cancelAll();
+            } catch (Exception e) {
+                //ignore
+            }
         }
     }
 }

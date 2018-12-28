@@ -563,7 +563,7 @@ public class SobotPostMsgActivity extends SobotBaseActivity implements OnClickLi
     private ChatUtils.SobotSendFileListener sendFileListener = new ChatUtils.SobotSendFileListener() {
         @Override
         public void onSuccess(final String filePath) {
-            zhiChiApi.fileUploadForPostMsg(companyId, filePath, new ResultCallBack<ZhiChiMessage>() {
+            zhiChiApi.fileUploadForPostMsg(SobotPostMsgActivity.this,companyId, filePath, new ResultCallBack<ZhiChiMessage>() {
                 @Override
                 public void onSuccess(ZhiChiMessage zhiChiMessage) {
                     SobotDialogUtils.stopProgressDialog(SobotPostMsgActivity.this);

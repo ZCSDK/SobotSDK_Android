@@ -58,7 +58,7 @@ public class CusEvaluateMessageHolder extends MessageHolderBase implements Radio
         sobot_tv_star_title.setText(String.format(ChatUtils.getResString(context, "sobot_please_evaluate"), message.getSenderName()));
 
         checkQuestionFlag();
-        checkEvaluateStatus();
+        refreshItem();
 
         sobot_readiogroup.setOnCheckedChangeListener(this);
         sobot_ratingBar.setOnRatingBarChangeListener(this);
@@ -86,7 +86,7 @@ public class CusEvaluateMessageHolder extends MessageHolderBase implements Radio
     /**
      * 根据是否已经评价设置UI
      */
-    public void checkEvaluateStatus() {
+    public void refreshItem() {
         if (sobotEvaluateModel == null) {
             return;
         }

@@ -13,7 +13,7 @@ import com.sobot.demo.R;
 public class SobotIsUseVoiceSetActivity extends AppCompatActivity implements View.OnClickListener{
 
     private RelativeLayout sobot_isUseVoice;
-    private ImageView sobot_tv_left;
+    private RelativeLayout sobot_tv_left;
     private boolean isUseVoice = false;//是否显示咨询信息，默认不显示
     private ImageView imgOpenVoice;
 
@@ -28,7 +28,7 @@ public class SobotIsUseVoiceSetActivity extends AppCompatActivity implements Vie
     }
 
     private void initSobotView() {
-        sobot_tv_left = (ImageView) findViewById(R.id.sobot_demo_tv_left);
+        sobot_tv_left = (RelativeLayout) findViewById(R.id.sobot_demo_tv_left);
         sobot_tv_left .setOnClickListener(this);
         TextView sobot_text_title = (TextView) findViewById(R.id.sobot_demo_tv_title);
         sobot_text_title.setText("是否开启语音功能设置");

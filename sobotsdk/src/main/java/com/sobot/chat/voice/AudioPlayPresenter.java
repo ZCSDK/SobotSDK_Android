@@ -9,8 +9,8 @@ import com.sobot.chat.api.model.ZhiChiMessageBase;
 import com.sobot.chat.core.HttpUtils;
 import com.sobot.chat.utils.AudioTools;
 import com.sobot.chat.utils.LogUtils;
+import com.sobot.chat.utils.SobotPathManager;
 import com.sobot.chat.utils.ToastUtil;
-import com.sobot.chat.utils.ZhiChiConstant;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,7 +57,8 @@ public class AudioPlayPresenter {
             if (message.getSugguestionsFontColor() == 1) {
                 //是历史记录  就创建文件夹进行下载
                 contentPath = path.substring(path.lastIndexOf("/")+1, path.length());
-                File directory = new File(ZhiChiConstant.voicePositionPath + contentPath).getParentFile();
+                String tmpFilePath = SobotPathManager.getInstance().getVoiceDir() + contentPath;
+                File directory = new File(tmpFilePath).getParentFile();
                 if (!directory.exists() && !directory.mkdirs()) {
                     try {
                         boolean success = directory.createNewFile();
@@ -65,7 +66,7 @@ public class AudioPlayPresenter {
                         e.printStackTrace();
                     }
                 }
-                contentPath = ZhiChiConstant.voicePositionPath + contentPath;
+                contentPath = tmpFilePath;
             } else {
                 contentPath = path;
             }

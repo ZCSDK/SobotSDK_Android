@@ -25,7 +25,15 @@ public class SobotDemoMasterActivity extends AppCompatActivity implements View.O
     private EditText sobot_partnerId;//partnerId唯一标识用户
     private EditText ed_hot_question;;//
     private RelativeLayout rl_;
-    private ImageView sobot_tv_left;
+    private RelativeLayout sobot_tv_left;
+
+    private EditText
+                                  key1,
+                                  key2,
+                                  key3,
+                                  value1,
+                                  value2,
+                                  value3;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,7 +46,13 @@ public class SobotDemoMasterActivity extends AppCompatActivity implements View.O
     }
 
     private void inifViews() {
-        sobot_tv_left = (ImageView) findViewById(R.id.sobot_demo_tv_left);
+        key1 = findViewById(R.id.key1);
+        key2 = findViewById(R.id.key2);
+        key3 = findViewById(R.id.key3);
+        value1 = findViewById(R.id.value1);
+        value2 = findViewById(R.id.value2);
+        value3 = findViewById(R.id.value3);
+        sobot_tv_left = (RelativeLayout) findViewById(R.id.sobot_demo_tv_left);
         sobot_tv_left .setOnClickListener(this);
         TextView sobot_text_title = (TextView) findViewById(R.id.sobot_demo_tv_title);
         sobot_text_title.setText("基本设置");
@@ -60,6 +74,12 @@ public class SobotDemoMasterActivity extends AppCompatActivity implements View.O
         SobotSPUtil.saveStringData(this, "sobot_appkey", sobot_appkey.getText().toString());
         SobotSPUtil.saveStringData(this, "sobot_partnerId", sobot_partnerId.getText().toString());
         SobotSPUtil.saveStringData(this, "ed_hot_question_value", ed_hot_question.getText().toString());
+        SobotSPUtil.saveStringData(this, "key1_value", key1.getText().toString());
+        SobotSPUtil.saveStringData(this, "key2_value", key2.getText().toString());
+        SobotSPUtil.saveStringData(this, "key3_value", key3.getText().toString());
+        SobotSPUtil.saveStringData(this, "value1_value", value1.getText().toString());
+        SobotSPUtil.saveStringData(this, "value2_value", value2.getText().toString());
+        SobotSPUtil.saveStringData(this, "value3_value", value3.getText().toString());
     }
 
     private void getSobotStartSet() {
@@ -74,6 +94,18 @@ public class SobotDemoMasterActivity extends AppCompatActivity implements View.O
         String ed_hot_question_value = SobotSPUtil.getStringData(this, "ed_hot_question_value", "");
         if (!TextUtils.isEmpty(ed_hot_question_value)) {
             ed_hot_question.setText(ed_hot_question_value);
+        }
+        String key1_value = SobotSPUtil.getStringData(this, "key1_value", "");
+        if (!TextUtils.isEmpty(key1_value)) {
+            key1.setText(key1_value);
+        }
+        String key2_value = SobotSPUtil.getStringData(this, "key2_value", "");
+        if (!TextUtils.isEmpty(key2_value)) {
+            key2.setText(key2_value);
+        }
+        String key3_value = SobotSPUtil.getStringData(this, "key3_value", "");
+        if (!TextUtils.isEmpty(key3_value)) {
+            key3.setText(key3_value);
         }
     }
 

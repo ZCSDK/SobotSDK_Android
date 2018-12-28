@@ -50,7 +50,7 @@ public class SobotDemoSettingFragment extends Fragment implements View.OnClickLi
         RelativeLayout rl_11 = (RelativeLayout) view.findViewById(R.id.rl_11);
         RelativeLayout rl_12 = (RelativeLayout) view.findViewById(R.id.rl_12);
         RelativeLayout rl_13 = (RelativeLayout) view.findViewById(R.id.rl_13);
-        ImageView sobot_tv_left = (ImageView) view.findViewById(R.id.sobot_demo_tv_left);
+        RelativeLayout sobot_tv_left = (RelativeLayout) view.findViewById(R.id.sobot_demo_tv_left);
         sobot_tv_left.setVisibility(View.GONE);
         TextView sobot_text_title = (TextView) view.findViewById(R.id.sobot_demo_tv_title);
         sobot_text_title.setText("设置");

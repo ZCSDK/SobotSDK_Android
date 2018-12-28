@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sobot.chat.utils.ZhiChiConstant;
@@ -26,7 +27,7 @@ public class SobotDemoInitModeTypeActivity extends AppCompatActivity implements 
     private RadioButton rg_initModeType_robot_first;//3  机器人优先
     private RadioButton rg_initModeType_custom_first;//4  人工优先
     private String sobot_bool_rg_initModeType = "-1";//客服模式默认值
-    private ImageView sobot_tv_left;
+    private RelativeLayout sobot_tv_left;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public class SobotDemoInitModeTypeActivity extends AppCompatActivity implements 
     }
 
     private void initViews(){
-        sobot_tv_left = (ImageView) findViewById(R.id.sobot_demo_tv_left);
+        sobot_tv_left = (RelativeLayout) findViewById(R.id.sobot_demo_tv_left);
         sobot_tv_left .setOnClickListener(this);
         TextView sobot_text_title = (TextView) findViewById(R.id.sobot_demo_tv_title);
         sobot_text_title.setText("接入模式设置");

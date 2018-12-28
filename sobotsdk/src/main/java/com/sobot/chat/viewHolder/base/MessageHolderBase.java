@@ -74,6 +74,8 @@ public abstract class MessageHolderBase {
             case SobotMsgAdapter.MSG_TYPE_IMG_R:
             case SobotMsgAdapter.MSG_TYPE_TXT_R:
             case SobotMsgAdapter.MSG_TYPE_FILE_R:
+            case SobotMsgAdapter.MSG_TYPE_VIDEO_R:
+            case SobotMsgAdapter.MSG_TYPE_LOCATION_R:
             case SobotMsgAdapter.MSG_TYPE_AUDIO_R:
             case SobotMsgAdapter.MSG_TYPE_MULTI_ROUND_R:
                 this.isRight = true;
@@ -111,6 +113,8 @@ public abstract class MessageHolderBase {
                 break;
         }
     }
+
+    public void refreshItem() {}
 
     public void applyCustomUI(){
         if (isRight()){

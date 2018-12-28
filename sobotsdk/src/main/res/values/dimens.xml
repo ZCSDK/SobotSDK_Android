@@ -28,7 +28,7 @@
     <dimen name="sobot_min_keyboard_height">80dp</dimen>
 
     <dimen name="sobot_item_emoticon_size_default">32dp</dimen>
-    <dimen name="sobot_item_plus_size_default">50dp</dimen>
+    <dimen name="sobot_item_plus_size_default">44dp</dimen>
 
     <dimen name="sobot_item_qr_divider">15dp</dimen>
 

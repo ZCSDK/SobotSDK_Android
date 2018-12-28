@@ -29,6 +29,7 @@ public class SobotUIConfig {
      */
     public static final class pulsMenu {
         public static List<ChattingPanelUploadView.SobotPlusEntity> menus;
+        public static List<ChattingPanelUploadView.SobotPlusEntity> operatorMenus;
 
         public static SobotPlusMenuListener sSobotPlusMenuListener;
     }

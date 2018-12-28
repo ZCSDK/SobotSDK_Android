@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sobot.demo.SobotSPUtil;
@@ -19,7 +20,7 @@ import com.sobot.demo.R;
 public class SobotRobotSetActivity extends AppCompatActivity implements View.OnClickListener{
 
     private EditText sobot_robot_code;//指定接入的机器人编号
-    private ImageView sobot_tv_left;
+    private RelativeLayout sobot_tv_left;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,7 +33,7 @@ public class SobotRobotSetActivity extends AppCompatActivity implements View.OnC
     }
 
     private void findvViews(){
-        sobot_tv_left = (ImageView) findViewById(R.id.sobot_demo_tv_left);
+        sobot_tv_left = (RelativeLayout) findViewById(R.id.sobot_demo_tv_left);
         sobot_tv_left .setOnClickListener(this);
         TextView sobot_text_title = (TextView) findViewById(R.id.sobot_demo_tv_title);
         sobot_text_title.setText("对接机器人设置");

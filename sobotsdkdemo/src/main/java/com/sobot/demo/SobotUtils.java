@@ -35,8 +35,11 @@ public class SobotUtils {
         customerFields.put("userSex", "女");
         customerFields.put("birthday", "2017-05-17");
         customerFields.put("cardNo", "142201198704102222");
-        info.setCustomerFields(customerFields);
-        info.setUseRobotVoice(false);//这个属性默认都是false。想使用需要付费。付费才可以设置为true。
+        customerFields.put(SobotSPUtil.getStringData(context, "key1_value", ""), SobotSPUtil.getStringData(context, "value1_value", ""));
+        customerFields.put(SobotSPUtil.getStringData(context, "key2_value", ""), SobotSPUtil.getStringData(context, "value2_value", ""));
+        customerFields.put(SobotSPUtil.getStringData(context, "key3_value", ""), SobotSPUtil.getStringData(context, "value3_value", ""));
+
+        info.setUseRobotVoice(true);//这个属性默认都是false。想使用需要付费。付费才可以设置为true。
         SobotSPUtil.getStringData(context, "sobot_key1", "");
         SobotSPUtil.getStringData(context, "sobot_key2", "");
         info.setUname(SobotSPUtil.getStringData(context, "person_uName", ""));
@@ -83,6 +86,7 @@ public class SobotUtils {
         info.setReceptionistId(SobotSPUtil.getStringData(context, "sobot_receptionistId", ""));
         info.setRobotCode(SobotSPUtil.getStringData(context, "sobot_demo_robot_code", ""));
         info.setTranReceptionistFlag(SobotSPUtil.getBooleanData(context, "sobot_receptionistId_must", false) ? 1 : 0);
+        info.setCustomerFields(customerFields);
         if (SobotSPUtil.getBooleanData(context, "sobot_isArtificialIntelligence", false)) {
             info.setArtificialIntelligence(true);
             if (!TextUtils.isEmpty(SobotSPUtil.getStringData(context, "sobot_isArtificialIntelligence_num_value", "")) && !"".equals(SobotSPUtil.getStringData(context, "sobot_isArtificialIntelligence_num_value", ""))) {

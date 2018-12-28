@@ -20,7 +20,7 @@ public class SobotSatisfactionSetActivity extends AppCompatActivity implements V
     private RelativeLayout sobot_isShowSatisfaction;//是否弹出满意度评价
     private RelativeLayout sobot_evaluationCompletedExit;//评价完是否结束会话
     private boolean isShowSatisfaction = false, isEvaluationCompletedExit = false;
-    private ImageView sobot_tv_left;
+    private RelativeLayout sobot_tv_left;
     private ImageView imageView3, imageView4;
 
     @Override
@@ -40,7 +40,7 @@ public class SobotSatisfactionSetActivity extends AppCompatActivity implements V
         imageView4 = (ImageView) findViewById(R.id.img_open_notify4);
         sobot_isShowSatisfaction.setOnClickListener(this);
         sobot_evaluationCompletedExit.setOnClickListener(this);
-        sobot_tv_left = (ImageView) findViewById(R.id.sobot_demo_tv_left);
+        sobot_tv_left = (RelativeLayout) findViewById(R.id.sobot_demo_tv_left);
         sobot_tv_left .setOnClickListener(this);
         TextView sobot_text_title = (TextView) findViewById(R.id.sobot_demo_tv_title);
         sobot_text_title.setText("评价设置");

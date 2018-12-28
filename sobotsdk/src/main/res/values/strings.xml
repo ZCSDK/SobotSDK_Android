@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="sobot_app_name">智齿sdk</string>
     <string name="sobot_restart_talk">重新建立会话</string>
     <string name="sobot_choice_test">选择咨询内容</string>
     <string name="sobot_clear_history_message">清空聊天记录</string>
     <string name="sobot_btn_cancle">取消</string>
     <string name="sobot_btn_submit">确定</string>
     <string name="sobot_button_send">发送</string>
-    <string name="sobot_attach_take_pic">拍照</string>
+    <string name="sobot_attach_take_pic">拍摄</string>
     <string name="sobot_btn_submit_text">提交评价</string>
     <string name="sobot_move_up_to_cancel">手指上滑，取消发送</string>
     <string name="sobot_release_to_cancel">松开手指，取消发送</string>
     <string name="sobot_up_send_calcel">松开手指 取消发送</string>
     <string name="sobot_upload">图片</string>
     <string name="sobot_choose_file">文件</string>
+    <string name="sobot_location">位置</string>
     <string name="sobot_cancel">取消</string>
     <string name="sobot_prompt">提示</string>
     <string name="sobot_button_end_now">立即结束</string>
@@ -140,5 +140,6 @@
     <string name="sobot_file_upload_failed_unknown_format">不能上传此格式的文件</string>
     <string name="sobot_notification_name">客服通知</string>
     <string name="sobot_cannot_open_file">您的手机无法打开此文件</string>
-
+    <string name="sobot_notification_tip">客服%1$s:%2$s</string>
+    <string name="sobot_notification_tip_title">客服提示</string>
 </resources>

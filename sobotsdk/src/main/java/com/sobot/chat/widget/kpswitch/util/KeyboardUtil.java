@@ -31,7 +31,6 @@ import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 
 import com.sobot.chat.utils.ResourceUtils;
-import com.sobot.chat.utils.SharedPreferencesUtil;
 import com.sobot.chat.widget.kpswitch.IPanelHeightTarget;
 
 /**
@@ -395,7 +394,7 @@ public class KeyboardUtil {
 
             } else {
 
-                final int phoneDisplayHeight = contentView.getResources()
+                /*final int phoneDisplayHeight = contentView.getResources()
                         .getDisplayMetrics().heightPixels;
                 if (!isTranslucentStatus
                         && phoneDisplayHeight == actionBarOverlayLayoutHeight) {
@@ -407,7 +406,7 @@ public class KeyboardUtil {
                             actionBarOverlayLayoutHeight));
                     return;
 
-                }
+                }*/
 
                 if (maxOverlayLayoutHeight == 0) {
                     // non-used.

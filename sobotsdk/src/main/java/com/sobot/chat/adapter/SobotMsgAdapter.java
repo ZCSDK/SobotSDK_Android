@@ -22,6 +22,7 @@ import com.sobot.chat.viewHolder.ConsultMessageHolder;
 import com.sobot.chat.viewHolder.CusEvaluateMessageHolder;
 import com.sobot.chat.viewHolder.FileMessageHolder;
 import com.sobot.chat.viewHolder.ImageMessageHolder;
+import com.sobot.chat.viewHolder.LocationMessageHolder;
 import com.sobot.chat.viewHolder.RetractedMessageHolder;
 import com.sobot.chat.viewHolder.RobotAnswerItemsMsgHolder;
 import com.sobot.chat.viewHolder.RobotKeyWordMessageHolder;
@@ -35,6 +36,7 @@ import com.sobot.chat.viewHolder.RobotTemplateMessageHolder4;
 import com.sobot.chat.viewHolder.RobotTemplateMessageHolder5;
 import com.sobot.chat.viewHolder.SobotChatMsgItemSDKHistoryR;
 import com.sobot.chat.viewHolder.TextMessageHolder;
+import com.sobot.chat.viewHolder.VideoMessageHolder;
 import com.sobot.chat.viewHolder.VoiceMessageHolder;
 import com.sobot.chat.viewHolder.base.MessageHolderBase;
 
@@ -68,6 +70,8 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
             "sobot_chat_msg_item_robot_keyword_items_l",//机器人关键字转人工 布局
             "sobot_chat_msg_item_file_l",//文件消息左边的布局文件
             "sobot_chat_msg_item_file_r",//文件消息右边的布局文件
+            "sobot_chat_msg_item_video_r",//小视频右边的布局文件
+            "sobot_chat_msg_item_location_r",//位置信息的布局文件
     };
 
     /**
@@ -158,6 +162,14 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
      * 发送的文件消息
      */
     public static final int MSG_TYPE_FILE_R = 20;
+    /**
+     * 发送的小视频
+     */
+    public static final int MSG_TYPE_VIDEO_R = 21;
+    /**
+     * 发送的位置信息
+     */
+    public static final int MSG_TYPE_LOCATION_R = 22;
 
     private String senderface;
     private String sendername;
@@ -306,6 +318,13 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
         }
     }
 
+    public void updateDataStateById(String id, ZhiChiMessageBase data) {
+        ZhiChiMessageBase info = getMsgInfo(id);
+        if (info != null) {
+            info.setSendSuccessState(data.getSendSuccessState());
+        }
+    }
+
     public void updateDataById(String id, ZhiChiMessageBase data) {
         ZhiChiMessageBase info = getMsgInfo(id);
         if (info != null) {
@@ -331,11 +350,11 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
 
     private ZhiChiMessageBase getMsgInfo(String id) {
 
-        for (Object obj : list) {
-            if (!(obj instanceof ZhiChiMessageBase)) {
+        for (int i = list.size() - 1; i >=0; i--) {
+            ZhiChiMessageBase msgInfo = list.get(i);
+            if (msgInfo == null) {
                 continue;
             }
-            ZhiChiMessageBase msgInfo = (ZhiChiMessageBase) obj;
             if (msgInfo.getId() != null && msgInfo.getId().equals(id)) {
                 return msgInfo;
             }
@@ -461,6 +480,16 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
                     } else {
                         holder.setRight(true);
                     }
+                    break;
+                }
+                case MSG_TYPE_VIDEO_R: {
+                    holder = new VideoMessageHolder(context, convertView);
+                    holder.setRight(true);
+                    break;
+                }
+                case MSG_TYPE_LOCATION_R: {
+                    holder = new LocationMessageHolder(context, convertView);
+                    holder.setRight(true);
                     break;
                 }
                 default: {
@@ -616,6 +645,20 @@ public class SobotMsgAdapter extends SobotBaseAdapter<ZhiChiMessageBase> {
                         } else if (ZhiChiConstant.message_sender_type_customer == Integer
                                 .parseInt(message.getSenderType())) {
                             return MSG_TYPE_FILE_R;
+                        }
+                    } else if (ZhiChiConstant.message_type_video.equals(message.getAnswer().getMsgType())) {
+                        if (ZhiChiConstant.message_sender_type_customer == Integer
+                                .parseInt(message.getSenderType())) {
+                            if (message.getAnswer().getCacheFile() != null){
+                                return MSG_TYPE_VIDEO_R;
+                            }
+                        }
+                    } else if (ZhiChiConstant.message_type_location.equals(message.getAnswer().getMsgType())) {
+                        if (ZhiChiConstant.message_sender_type_customer == Integer
+                                .parseInt(message.getSenderType())) {
+                            if (message.getAnswer().getLocationData() != null){
+                                return MSG_TYPE_LOCATION_R;
+                            }
                         }
                     }
                 } else {

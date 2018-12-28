@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sobot.demo.SobotSPUtil;
@@ -20,7 +21,7 @@ public class SobotSkillSetActivity extends AppCompatActivity implements View.OnC
 
     private EditText sobot_demo_skillname;//技能组名称
     private EditText sobot_demo_skillid;//技能组id
-    private ImageView sobot_tv_left;
+    private RelativeLayout sobot_tv_left;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,7 +34,7 @@ public class SobotSkillSetActivity extends AppCompatActivity implements View.OnC
     }
 
     private void findvViews(){
-        sobot_tv_left = (ImageView) findViewById(R.id.sobot_demo_tv_left);
+        sobot_tv_left = (RelativeLayout) findViewById(R.id.sobot_demo_tv_left);
         sobot_tv_left .setOnClickListener(this);
         TextView sobot_text_title = (TextView) findViewById(R.id.sobot_demo_tv_title);
         sobot_text_title.setText("对接技能组设置");

@@ -9,7 +9,6 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.sobot.chat.utils.LogUtils;
 import com.sobot.chat.utils.ScreenUtils;
 
 /**
@@ -133,6 +132,7 @@ public class RoundProgressBar extends View {
         paint.setStrokeWidth(0);
         paint.setColor(textColor);
         paint.setTextSize(textSize);
+        paint.setStyle(Paint.Style.FILL);
         paint.setTypeface(Typeface.DEFAULT_BOLD); //设置字体
         int percent = (int) (((float) progress / (float) max) * 100);  //中间的进度百分比，先转换成float在进行除法运算，不然都为0
         float textWidth = paint.measureText(percent + "%");   //测量字体宽度，我们需要根据字体的宽度设置在圆环中间
@@ -255,5 +255,8 @@ public class RoundProgressBar extends View {
         this.roundWidth = roundWidth;
     }
 
+    public void setTextDisplayable(boolean flag) {
+        textIsDisplayable = flag;
+    }
 
 }

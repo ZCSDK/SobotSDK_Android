@@ -18,7 +18,7 @@ import com.sobot.chat.core.http.download.SobotDownloadTask;
 import com.sobot.chat.core.http.model.SobotProgress;
 import com.sobot.chat.utils.ChatUtils;
 import com.sobot.chat.utils.FileOpenHelper;
-import com.sobot.chat.utils.MD5Util;
+import com.sobot.chat.utils.SobotPathManager;
 import com.sobot.chat.utils.ZhiChiConstant;
 
 import java.io.File;
@@ -107,8 +107,8 @@ public class SobotFileDetailActivity extends SobotBaseActivity implements View.O
             sobot_file_name.setText(mCacheFile.getFileName());
             sobot_tv_file_size.setText(String.format(getResString("sobot_file_size"), mCacheFile.getFileSize()));
 
-            SobotDownload.getInstance().initFolder(MD5Util.encode(getApplicationContext().getPackageName() + "_sobot"));
-//            LogUtils.i("initFolder:" + MD5Util.encode(getApplicationContext().getPackageName() + "_sobot"));
+            SobotDownload.getInstance().setFolder(SobotPathManager.getInstance().getCacheDir());
+//            LogUtils.i("initFolder:" +SobotPathManager.getInstance().getCacheDir()));
             if (!TextUtils.isEmpty(mCacheFile.getFilePath())) {
                 showFinishUi();
             } else {
@@ -237,7 +237,9 @@ public class SobotFileDetailActivity extends SobotBaseActivity implements View.O
     @Override
     protected void onDestroy() {
         SobotDownload.getInstance().unRegister(SobotDownload.CancelTagType.SOBOT_TAG_DOWNLOAD_ACT);
-        if (mTask != null && (mTask.progress.status == SobotProgress.FINISH || mTask.progress.status == SobotProgress.ERROR)) {
+        if (mTask != null && (mTask.progress.status == SobotProgress.FINISH
+                || mTask.progress.status == SobotProgress.NONE
+                || mTask.progress.status == SobotProgress.ERROR)) {
             SobotDownload.getInstance().removeTask(mTask.progress.tag);
         }
         super.onDestroy();

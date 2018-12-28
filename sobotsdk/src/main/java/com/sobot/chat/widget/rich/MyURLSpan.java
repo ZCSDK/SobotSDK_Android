@@ -79,7 +79,7 @@ public class MyURLSpan extends URLSpan {
 
     private String fixUrl(String url){
         if (!(url.startsWith("http://") || url.startsWith("https://"))) {
-            url = "http://" + url;
+            url = "https://" + url;
             LogUtils.i("url:" + url);
         }
         return url;

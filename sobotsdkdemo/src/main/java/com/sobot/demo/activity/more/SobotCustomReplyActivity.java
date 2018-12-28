@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sobot.demo.SobotSPUtil;
@@ -24,7 +25,7 @@ public class SobotCustomReplyActivity extends AppCompatActivity implements View.
     private EditText sobot_customadmintipword;
     private EditText sobot_customadminnonelinetitle;
     private EditText sobot_customuseroutword;
-    private ImageView sobot_tv_left;
+    private RelativeLayout sobot_tv_left;
     private TextView sobot_text_title;
 
     @Override
@@ -38,7 +39,7 @@ public class SobotCustomReplyActivity extends AppCompatActivity implements View.
     }
 
     private void initView(){
-        sobot_tv_left = (ImageView) findViewById(R.id.sobot_demo_tv_left);
+        sobot_tv_left = (RelativeLayout) findViewById(R.id.sobot_demo_tv_left);
         sobot_tv_left .setOnClickListener(this);
         sobot_text_title = (TextView) findViewById(R.id.sobot_demo_tv_title);
         sobot_text_title.setText("自定义应答语设置");

@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sobot.chat.api.enumtype.SobotChatTitleDisplayMode;
@@ -28,7 +29,7 @@ public class SobotCustomTitleActivity extends AppCompatActivity implements View.
     private RadioButton sobot_show_company_name;//公司名称
     private EditText sobot_tv_chat_index_show_text;//如果聊天页头部显示固定文案，则要获取text
     private String sobot_title_value_show_type = "0";//头部显示文案类型默认值
-    private ImageView sobot_tv_left;
+    private RelativeLayout sobot_tv_left;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,7 +42,7 @@ public class SobotCustomTitleActivity extends AppCompatActivity implements View.
     }
 
     private void initViews(){
-        sobot_tv_left = (ImageView) findViewById(R.id.sobot_demo_tv_left);
+        sobot_tv_left = (RelativeLayout) findViewById(R.id.sobot_demo_tv_left);
         sobot_tv_left .setOnClickListener(this);
         TextView sobot_text_title = (TextView) findViewById(R.id.sobot_demo_tv_title);
         sobot_text_title.setText("自定义标题设置");

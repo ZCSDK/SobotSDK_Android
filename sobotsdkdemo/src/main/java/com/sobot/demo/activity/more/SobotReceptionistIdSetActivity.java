@@ -21,7 +21,7 @@ public class SobotReceptionistIdSetActivity extends AppCompatActivity implements
 
     private EditText sobot_receptionistId;//指定转入的人工客服id
     private RelativeLayout sobot_receptionistId_must;//是否必须转入指定客服
-    private ImageView sobot_tv_left;
+    private RelativeLayout sobot_tv_left;
     private boolean isReceptionistIdMust = false;
     private ImageView img_open_notify;
 
@@ -36,7 +36,7 @@ public class SobotReceptionistIdSetActivity extends AppCompatActivity implements
     }
 
     private void findvViews(){
-        sobot_tv_left = (ImageView) findViewById(R.id.sobot_demo_tv_left);
+        sobot_tv_left = (RelativeLayout) findViewById(R.id.sobot_demo_tv_left);
         sobot_tv_left .setOnClickListener(this);
         TextView sobot_text_title = (TextView) findViewById(R.id.sobot_demo_tv_title);
         sobot_text_title.setText("对接客服设置");

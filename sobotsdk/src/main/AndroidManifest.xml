@@ -91,6 +91,16 @@
             android:screenOrientation="portrait"
             android:theme="@style/sobot_AppTheme"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.sobot.chat.activity.SobotCameraActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/sobot_AppTheme"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.sobot.chat.activity.SobotVideoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/sobot_AppTheme"
+            android:windowSoftInputMode="adjustResize" />
 
         <service
             android:name="com.sobot.chat.core.channel.SobotTCPServer"

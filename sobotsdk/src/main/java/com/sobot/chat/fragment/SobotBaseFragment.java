@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sobot.chat.SobotUIConfig;
+import com.sobot.chat.activity.SobotCameraActivity;
 import com.sobot.chat.api.ZhiChiApi;
 import com.sobot.chat.core.channel.SobotMsgManager;
 import com.sobot.chat.core.http.OkHttpUtils;
@@ -31,9 +32,9 @@ import java.io.File;
  * @author Created by jinxl on 2018/2/1.
  */
 public abstract class SobotBaseFragment extends Fragment {
-    public ZhiChiApi zhiChiApi;
+    public static final int REQUEST_CODE_CAMERA = 108;
 
-    protected File cameraFile;
+    public ZhiChiApi zhiChiApi;
 
     public SobotBaseFragment() {
 
@@ -221,22 +222,31 @@ public abstract class SobotBaseFragment extends Fragment {
     }
 
     /**
-     * 检查相机权限
+     * 检查拍摄权限
      *
      * @return true, 已经获取权限;false,没有权限,尝试获取
      */
-    protected boolean checkStorageAndCameraPermission() {
+    protected boolean checkStorageAudioAndCameraPermission() {
         if (Build.VERSION.SDK_INT >= 23 && CommonUtils.getTargetSdkVersion(getContext().getApplicationContext()) >= 23) {
             if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA},
-                        ZhiChiConstant.SOBOT_PERMISSIONS_REQUEST_CODE);
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE
+                                ,Manifest.permission.CAMERA,Manifest.permission.RECORD_AUDIO}
+                                , ZhiChiConstant.SOBOT_PERMISSIONS_REQUEST_CODE);
                 return false;
             }
             if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
                     != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA},
-                        ZhiChiConstant.SOBOT_PERMISSIONS_REQUEST_CODE);
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE
+                                ,Manifest.permission.CAMERA,Manifest.permission.RECORD_AUDIO}
+                                , ZhiChiConstant.SOBOT_PERMISSIONS_REQUEST_CODE);
+                return false;
+            }
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE
+                                ,Manifest.permission.CAMERA,Manifest.permission.RECORD_AUDIO}
+                                , ZhiChiConstant.SOBOT_PERMISSIONS_REQUEST_CODE);
                 return false;
             }
         }
@@ -253,10 +263,12 @@ public abstract class SobotBaseFragment extends Fragment {
             return;
         }
 
-        if (!checkStorageAndCameraPermission()) {
+        if (!checkStorageAudioAndCameraPermission()) {
             return;
         }
-        cameraFile = ChatUtils.openCamera(getActivity(),SobotBaseFragment.this);
+
+        // 打开拍摄页面
+        startActivityForResult(SobotCameraActivity.newIntent(getContext()),REQUEST_CODE_CAMERA);
     }
 
     /**

@@ -21,6 +21,7 @@ import com.sobot.chat.api.apiUtils.ZhiChiConstants;
 import com.sobot.chat.api.model.Information;
 import com.sobot.chat.api.model.SobotMsgCenterModel;
 import com.sobot.chat.core.channel.SobotMsgManager;
+import com.sobot.chat.core.http.OkHttpUtils;
 import com.sobot.chat.core.http.callback.StringResultCallBack;
 import com.sobot.chat.handler.SobotMsgCenterHandler;
 import com.sobot.chat.receiver.SobotMsgCenterReceiver;
@@ -186,7 +187,7 @@ public class SobotConsultationListActivity extends SobotBaseActivity implements 
 
     @Override
     public void initData() {
-        SobotMsgCenterHandler.getMsgCenterAllData(SobotConsultationListActivity.this,currentUid,this);
+        SobotMsgCenterHandler.getMsgCenterAllData(SobotConsultationListActivity.this,SobotConsultationListActivity.this,currentUid,this);
     }
 
     @Override
@@ -235,11 +236,12 @@ public class SobotConsultationListActivity extends SobotBaseActivity implements 
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
+        OkHttpUtils.getInstance().cancelTag(SobotConsultationListActivity.this);
         // 取消广播接受者
         if (localBroadcastManager != null) {
             localBroadcastManager.unregisterReceiver(receiver);
         }
+        super.onDestroy();
     }
 
 }

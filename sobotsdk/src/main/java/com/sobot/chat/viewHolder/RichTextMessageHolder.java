@@ -185,7 +185,7 @@ public class RichTextMessageHolder extends MessageHolderBase {
         }
 
         checkShowTransferBtn();
-        resetRevaluateBtn();
+        refreshItem();
 
         msg.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -257,7 +257,7 @@ public class RichTextMessageHolder extends MessageHolderBase {
         });
     }
 
-    public void resetRevaluateBtn(){
+    public void refreshItem(){
         //顶 踩的状态 0 不显示顶踩按钮  1显示顶踩 按钮  2 显示顶之后的view  3显示踩之后view
         switch (message.getRevaluateState()){
             case 1:

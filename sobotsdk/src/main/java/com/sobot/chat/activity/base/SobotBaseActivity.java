@@ -195,7 +195,6 @@ public abstract class SobotBaseActivity extends FragmentActivity {
     @Override
     protected void onDestroy() {
         OkHttpUtils.getInstance().cancelTag(SobotBaseActivity.this);
-        OkHttpUtils.getInstance().cancelTag(ZhiChiConstant.SOBOT_GLOBAL_REQUEST_CANCEL_TAG);
         MyApplication.getInstance().deleteActivity(this);
         super.onDestroy();
     }

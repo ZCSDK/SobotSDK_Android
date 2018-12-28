@@ -21,7 +21,8 @@ public class SobotConsultationSetActivity extends AppCompatActivity implements V
     private EditText sobot_goods_imgUrl;//图片Url 必须为有效连接才可以显示这张图片
     private EditText sobot_goods_fromUrl;//发送内容
     private boolean isShow = false;//是否显示咨询信息，默认不显示
-    private ImageView sobot_tv_left, imgOpenVoice;
+    private ImageView imgOpenVoice;
+    private RelativeLayout sobot_tv_left;
     ;
 
     @Override
@@ -35,7 +36,7 @@ public class SobotConsultationSetActivity extends AppCompatActivity implements V
     }
 
     private void initSobotView() {
-        sobot_tv_left = (ImageView) findViewById(R.id.sobot_demo_tv_left);
+        sobot_tv_left = (RelativeLayout) findViewById(R.id.sobot_demo_tv_left);
         sobot_tv_left.setOnClickListener(this);
         TextView sobot_text_title = (TextView) findViewById(R.id.sobot_demo_tv_title);
         sobot_text_title.setText("商品信息设置");

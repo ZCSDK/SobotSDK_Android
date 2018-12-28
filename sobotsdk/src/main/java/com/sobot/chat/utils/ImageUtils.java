@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -167,7 +168,27 @@ public class ImageUtils {
 			if (isGooglePhotosUri(uri))
 				return uri.getLastPathSegment();
 
-			return getDataColumn(context, uri, null, null);
+			String tmpDataPath;
+            try {
+                tmpDataPath = getDataColumn(context, uri, null, null);
+            } catch (Exception e) {
+                tmpDataPath = uri.getPath();
+				if (!TextUtils.isEmpty(tmpDataPath)) {
+					try {
+						String rootpath = Environment.getExternalStorageDirectory().getPath();
+						if (rootpath.length() < tmpDataPath.length()) {
+							int indexOf = tmpDataPath.indexOf(rootpath);
+							if (indexOf != -1) {
+								tmpDataPath = tmpDataPath.substring(indexOf);
+							}
+						}
+					} catch (Exception exce) {
+						exce.printStackTrace();
+					}
+
+				}
+			}
+			return tmpDataPath;
 		}
 		// File
 		else if ("file".equalsIgnoreCase(uri.getScheme())) {

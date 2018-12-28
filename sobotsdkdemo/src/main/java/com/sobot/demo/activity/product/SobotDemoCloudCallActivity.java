@@ -12,7 +12,7 @@ import com.sobot.demo.SobotUtils;
 
 public class SobotDemoCloudCallActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private ImageView sobot_tv_left;
+    private RelativeLayout sobot_tv_left;
     private RelativeLayout sobot_demo_bottom_layout;
 
     @Override
@@ -26,7 +26,7 @@ public class SobotDemoCloudCallActivity extends AppCompatActivity implements Vie
     }
 
     private void findvViews() {
-        sobot_tv_left = (ImageView) findViewById(R.id.sobot_demo_tv_left);
+        sobot_tv_left = (RelativeLayout) findViewById(R.id.sobot_demo_tv_left);
         TextView sobot_text_title = (TextView) findViewById(R.id.sobot_demo_tv_title);
         sobot_demo_bottom_layout = (RelativeLayout) findViewById(R.id.sobot_demo_bottom_layout);
         sobot_demo_bottom_layout.setOnClickListener(this);

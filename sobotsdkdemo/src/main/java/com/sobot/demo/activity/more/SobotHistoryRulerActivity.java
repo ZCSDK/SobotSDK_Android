@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sobot.demo.SobotSPUtil;
@@ -20,7 +21,7 @@ public class SobotHistoryRulerActivity extends AppCompatActivity implements View
 
     private String sobot_show_history = "0";//显示历史记录默认时间段
     private EditText sobot_show_history_ruler;//历史记录的显示规则
-    private ImageView sobot_tv_left;
+    private RelativeLayout sobot_tv_left;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,7 +35,7 @@ public class SobotHistoryRulerActivity extends AppCompatActivity implements View
 
     private void findvViews(){
         sobot_show_history_ruler = (EditText) findViewById(R.id.sobot_show_history_ruler);
-        sobot_tv_left = (ImageView) findViewById(R.id.sobot_demo_tv_left);
+        sobot_tv_left = (RelativeLayout) findViewById(R.id.sobot_demo_tv_left);
         sobot_tv_left .setOnClickListener(this);
         TextView sobot_text_title = (TextView) findViewById(R.id.sobot_demo_tv_title);
         sobot_text_title.setText("历史记录的时间范围设置");

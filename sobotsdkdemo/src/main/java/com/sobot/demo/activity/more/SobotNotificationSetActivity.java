@@ -15,7 +15,7 @@ public class SobotNotificationSetActivity extends AppCompatActivity implements V
 
     private RelativeLayout sobot_isOpenNotification;//是否开启消息提醒
     private RelativeLayout sobot_btn_open_leave_msg;//开启离线消息
-    private ImageView sobot_tv_left;
+    private RelativeLayout sobot_tv_left;
     private ImageView imgOpenVoice, imgOpenVoice1;
     private boolean isOpenNotification = false, isOpenLeaveMsg = false;
 
@@ -31,7 +31,7 @@ public class SobotNotificationSetActivity extends AppCompatActivity implements V
     }
 
     private void initSobotView() {
-        sobot_tv_left = (ImageView) findViewById(R.id.sobot_demo_tv_left);
+        sobot_tv_left = (RelativeLayout) findViewById(R.id.sobot_demo_tv_left);
         sobot_tv_left .setOnClickListener(this);
         TextView sobot_text_title = (TextView) findViewById(R.id.sobot_demo_tv_title);
         sobot_text_title.setText("推送设置");

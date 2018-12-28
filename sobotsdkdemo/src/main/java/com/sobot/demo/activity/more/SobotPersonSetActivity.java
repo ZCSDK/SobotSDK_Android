@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sobot.demo.SobotSPUtil;
@@ -23,8 +24,11 @@ public class SobotPersonSetActivity extends AppCompatActivity implements View.On
             sobot_person_visitTitle,
             sobot_person_visitUrl,
             sobot_person_key1,
-            sobot_person_key2;
-    private ImageView sobot_tv_left;
+            sobot_person_key2,
+            sobot_person_key9,
+            sobot_person_key8,
+            sobot_person_key7;
+    private RelativeLayout sobot_tv_left;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +41,7 @@ public class SobotPersonSetActivity extends AppCompatActivity implements View.On
     }
 
     private void initSobotView() {
-        sobot_tv_left = (ImageView) findViewById(R.id.sobot_demo_tv_left);
+        sobot_tv_left = (RelativeLayout) findViewById(R.id.sobot_demo_tv_left);
         sobot_tv_left .setOnClickListener(this);
         TextView sobot_text_title = (TextView) findViewById(R.id.sobot_demo_tv_title);
         sobot_text_title.setText("用户信息设置");

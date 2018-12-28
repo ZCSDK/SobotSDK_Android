@@ -251,6 +251,9 @@ public class ChattingPanelUploadView extends BaseChattingPanelView implements Vi
                 tmpList.addAll(robotList);
             } else {
                 tmpList.addAll(operatorList);
+                if (SobotUIConfig.pulsMenu.operatorMenus != null) {
+                    tmpList.addAll(SobotUIConfig.pulsMenu.operatorMenus);
+                }
             }
             if (SobotUIConfig.pulsMenu.menus != null) {
                 tmpList.addAll(SobotUIConfig.pulsMenu.menus);
