@@ -27,10 +27,11 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-//        SobotBaseUrl.setHost("https://test.sobot.com");
         String appkey = SobotSPUtil.getStringData(this, "sobot_appkey", "");
+        appkey="dd0e991266a94723af14cc23cda5e1f1";
+        SobotBaseUrl.setHost("https://test.sobot.com");
         if (TextUtils.isEmpty(appkey)) {
-            appkey = "07a5ff1050c047c4b9d3c57eeb7ced29";
+            appkey = "991bcba6975246448640724385796b81";
         }
         SobotApi.initSobotSDK(this, appkey, SobotSPUtil.getStringData(this, "sobot_partnerId", ""));
         initUi();
