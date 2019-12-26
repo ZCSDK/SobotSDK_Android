@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 28
 
     defaultConfig {
         minSdkVersion 14
@@ -15,9 +15,10 @@ android {
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
     compileOnly 'com.squareup.okhttp3:okhttp:3.10.0'
-    compileOnly 'com.android.support:support-v4:26.1.0'
+    compileOnly 'com.android.support:support-v4:28.0.0'
     compileOnly 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compileOnly 'com.github.bumptech.glide:glide:3.7.0'
     compileOnly 'com.squareup.picasso:picasso:2.5.2'
+    compileOnly 'com.android.support:recyclerview-v7:28.0.0'
     api 'com.sobot.chat:sobotsupport-glidev4:1.0.8'
 }
