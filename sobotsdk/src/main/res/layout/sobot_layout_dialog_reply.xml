@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/sobot_container"
+    android:background="@color/sobot_bg_white"
+    android:gravity="bottom"
+    android:orientation="vertical">
+
+    <include layout="@layout/sobot_dialog_title"/>
+
+
+        <EditText
+            android:layout_margin="20dp"
+            android:id="@+id/sobot_reply_edit"
+            android:layout_width="match_parent"
+            android:layout_height="104dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/sobot_f2f5f7_corners_6dpl"
+            android:enabled="true"
+            android:gravity="top"
+            android:hint="@string/sobot_please_input_reply_hint"
+            android:inputType="textMultiLine"
+            android:maxLength="200"
+            android:maxLines="4"
+            android:minLines="4"
+            android:padding="10dp"
+            android:scrollbars="vertical"
+            android:textColorHint="#bbbbbb"
+            android:textSize="14sp" />
+
+    <LinearLayout
+        android:id="@+id/sobot_reply_enclosure_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical"
+        >
+
+        <GridView
+            android:id="@+id/sobot_reply_msg_pic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:cacheColorHint="@android:color/transparent"
+            android:fadingEdge="none"
+            android:horizontalSpacing="6dp"
+            android:listSelector="@android:color/transparent"
+            android:numColumns="4"
+            android:overScrollMode="never"
+            android:verticalSpacing="2dp" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/sobot_phone_line"
+        android:layout_width="wrap_content"
+        android:layout_height="0.4dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/sobot_line_1dp" />
+
+
+    <Button
+        android:id="@+id/sobot_btn_submit"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/sobot_normal_btn_bg"
+        android:gravity="center"
+        android:stateListAnimator="@null"
+        android:text="@string/sobot_submit"
+        android:textColor="@android:color/white"
+        android:textSize="17sp"
+        android:textStyle="bold" />
+
+</LinearLayout>

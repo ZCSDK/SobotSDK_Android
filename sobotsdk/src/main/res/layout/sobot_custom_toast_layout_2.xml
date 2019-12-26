@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@null"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/sobot_toast_lineralayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="15dp"
+        android:paddingLeft="41dp"
+        android:paddingBottom="15dp"
+        android:paddingRight="41dp"
+        android:gravity="center"
+        android:background="@drawable/sobot_round_angle_toast"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/sobot_tv_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/sobot_white" />
+    </LinearLayout>
+
+</LinearLayout>

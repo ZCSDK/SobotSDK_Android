@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/sobot_msg_top_bottom_style"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- 中间提醒内容 -->
+    <TextView
+        android:id="@+id/sobot_reminde_time_Text"
+        style="@style/sobot_center_remind_time" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left">
+
+        <!--头像-->
+        <com.sobot.chat.widget.SobotImageView
+            android:id="@+id/sobot_imgHead"
+            style="@style/sobot_chatting_imghead"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:visibility="gone" />
+
+        <!-- 昵称 -->
+        <TextView
+            android:id="@+id/sobot_name"
+            style="@style/sobot_chatting_nickname"
+            android:layout_toRightOf="@+id/sobot_imgHead"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/sobot_msg_rl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sobot_name"
+            android:layout_toRightOf="@+id/sobot_imgHead">
+
+            <!-- 机械人的消息内容 -->
+            <LinearLayout
+                android:id="@+id/sobot_ll_content"
+                style="@style/sobot_msg_left_content_ll_bg_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/sobot_msg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:lineSpacingExtra="@dimen/sobot_DIMEN_5PX"
+                    android:textColor="@color/sobot_robot_msg_text_color"
+                    android:textSize="@dimen/sobot_robot_msg_text_size"
+                    android:visibility="visible"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <HorizontalScrollView
+            android:id="@+id/sobot_template1_horizontal_scrollview"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_below="@+id/sobot_msg_rl"
+            android:layout_marginTop="10dp"
+            android:fadingEdge="none"
+            android:overScrollMode="never"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/sobot_template1_horizontal_scrollview_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/sobot_lv_message_bg"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+    </RelativeLayout>
+
+</LinearLayout>

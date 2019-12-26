@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--自定义滚动条样式-->
+    <gradient
+        android:angle="45"
+        android:centerColor="#E1E7F0"
+        android:endColor="#E1E7F0"
+        android:startColor="#E1E7F0" />
+
+    <corners android:radius="2dp" />
+    <size android:width="4dp" />
+</shape>

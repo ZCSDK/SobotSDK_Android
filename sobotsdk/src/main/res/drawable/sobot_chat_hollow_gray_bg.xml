@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--顶和踩阴影边框-->
+    <!--最底下的一层-->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#0386a3bf" />
+        </shape>
+    </item>
+
+    <!--上一层设置距离下层的边距，显示出来下层的阴影-->
+    <item
+        android:bottom="1dp"
+        android:left="1dp"
+        android:right="1dp"
+        android:top="1dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#0486a3bf" />
+        </shape>
+    </item>
+
+    <!--上一层设置距离下层的边距，显示出来下层的阴影-->
+    <item
+        android:bottom="2dp"
+        android:left="2dp"
+        android:right="2dp"
+        android:top="2dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#0586a3bf" />
+        </shape>
+    </item>
+    <!--上一层设置距离下层的边距，显示出来下层的阴影-->
+    <item
+        android:bottom="3dp"
+        android:left="3dp"
+        android:right="3dp"
+        android:top="3dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#ffffff" />
+        </shape>
+    </item>
+</layer-list>

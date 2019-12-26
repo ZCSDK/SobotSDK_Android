@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/sobot_msg_top_bottom_style"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- 中间提醒内容 -->
+    <TextView
+        android:id="@+id/sobot_reminde_time_Text"
+        style="@style/sobot_center_remind_time" />
+
+    <LinearLayout
+        android:id="@+id/sobot_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- 消息内容 -->
+        <LinearLayout
+            android:id="@+id/sobot_ll_content"
+            style="@style/sobot_msg_left_content_ll_bg_no_right_style"
+            android:layout_gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/sobot_msg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/sobot_robot_msg_text_color"
+                android:textSize="@dimen/sobot_robot_msg_text_size" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/sobot_right_empty_rl"
+            style="@style/sobot_msg_right_empty_bg_style"
+            android:layout_gravity="bottom|right"
+            android:layout_toRightOf="@id/sobot_ll_content"
+            android:gravity="bottom|center_vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/sobot_ll_likeBtn"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/sobot_chat_circular_hollow_gray_bg"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/sobot_tv_likeBtn"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:drawableLeft="@drawable/sobot_evaluate_btn_yes_selector"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/sobot_ll_dislikeBtn"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/sobot_chat_circular_hollow_gray_bg"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/sobot_tv_dislikeBtn"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:drawableLeft="@drawable/sobot_evaluate_btn_no_selector"
+                    android:gravity="center" />
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!--头像-->
+    <com.sobot.chat.widget.SobotImageView
+        android:id="@+id/sobot_imgHead"
+        style="@style/sobot_chatting_imghead"
+        android:layout_marginLeft="10dp"
+        android:visibility="gone" />
+
+    <!-- 昵称 -->
+    <TextView
+        android:id="@+id/sobot_name"
+        style="@style/sobot_chatting_nickname"
+        android:layout_toRightOf="@+id/sobot_imgHead"
+        android:visibility="gone" />
+</LinearLayout>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sobot_real_ll_content"
+    style="@style/sobot_msg_top_bottom_style"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/sobot_reminde_time_Text"
+        style="@style/sobot_center_remind_time" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right">
+
+        <!-- 我的名称 -->
+        <TextView
+            android:id="@+id/sobot_name"
+            style="@style/sobot_chatting_nickname"
+            android:layout_toLeftOf="@+id/sobot_imgHead"
+            android:visibility="gone" />
+
+        <com.sobot.chat.widget.SobotImageView
+            android:id="@+id/sobot_imgHead"
+            style="@style/sobot_chatting_imghead"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            tools:background="@drawable/sobot_chatting_default_head" />
+
+        <!-- 我的消息的内容 -->
+        <LinearLayout
+            android:id="@+id/sobot_my_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:id="@+id/sobot_frame_layout"
+                style="@style/sobot_msg_left_empty_bg_style">
+
+                <!-- 消息的状态 -->
+                <ImageView
+                    android:id="@+id/sobot_msgStatus"
+                    style="@style/sobot_msg_send_status_style"
+                    android:visibility="gone" />
+
+                <!-- 消息的loading -->
+                <ProgressBar
+                    android:id="@+id/sobot_msgProgressBar"
+                    style="@style/sobot_msg_send_loading_style"
+                    android:indeterminateDrawable="@drawable/sobot_progressbar_circle_loading"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <RelativeLayout
+                android:id="@+id/sobot_rl_hollow_container"
+                style="@style/sobot_msg_file_right_content_ll_bg_style"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:id="@+id/sobot_goods_rl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <com.sobot.chat.widget.image.SobotRCImageView
+                        android:id="@+id/sobot_goods_pic"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginRight="6dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/sobot_icon_consulting_default_pic"
+                        android:visibility="visible"
+                        app:round_corner="6dp" />
+
+                    <TextView
+                        android:id="@+id/sobot_goods_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@id/sobot_goods_pic"
+                        android:layout_toRightOf="@id/sobot_goods_pic"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textColor="@color/sobot_goods_label_text_color"
+                        android:textSize="14sp" />
+
+
+                    <TextView
+                        android:id="@+id/sobot_goods_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/sobot_goods_title"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginRight="4dp"
+                        android:layout_toRightOf="@id/sobot_goods_pic"
+                        android:textColor="@color/sobot_goods_des_text_color"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/sobot_goods_total_money"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/sobot_goods_title"
+                        android:layout_alignTop="@id/sobot_goods_count"
+                        android:layout_toRightOf="@id/sobot_goods_count"
+                        android:textColor="@color/sobot_goods_des_text_color"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/sobot_goods_order_split"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/line_height_0_4_dp"
+                    android:layout_below="@id/sobot_goods_rl"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/sobot_line_1dp" />
+
+                <TextView
+                    android:id="@+id/sobot_order_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/sobot_goods_order_split"
+                    android:textColor="@color/sobot_goods_label_text_color"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/sobot_order_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/sobot_order_status"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/sobot_goods_label_text_color"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/sobot_order_createtime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/sobot_order_number"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/sobot_goods_label_text_color"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
+</LinearLayout>

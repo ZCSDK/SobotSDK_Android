@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/sobot_common_bg"
+    android:orientation="vertical">
+
+    <include layout="@layout/sobot_layout_titlebar1" />
+
+    <include layout="@layout/sobot_layout_top_divider" />
+
+    <ListView
+        android:id="@+id/sobot_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="12dp"
+        android:divider="@color/sobot_line_1dp"
+        android:dividerHeight="0.6dp"
+        android:listSelector="@android:color/transparent"
+        android:scrollbarThumbVertical="@drawable/custom_scroll_style"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/sobot_tv_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/sobot_no_content"
+        android:textColor="@color/sobot_common_black"
+        android:textSize="16sp" />
+
+</LinearLayout>

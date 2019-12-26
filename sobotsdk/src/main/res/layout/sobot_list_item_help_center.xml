@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sobot_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/sobot_item_skill_selector"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="0.4dp"
+    android:visibility="visible">
+
+    <RelativeLayout
+        android:id="@+id/sobot_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/sobot_white">
+
+        <com.sobot.chat.widget.SobotImageView
+            android:id="@+id/sobot_tv_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="18dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="18dp"
+            android:background="@drawable/sobot_bg_default_pic_img" />
+
+
+        <TextView
+            android:id="@+id/sobot_tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@id/sobot_tv_icon"
+            android:ellipsize="end"
+            android:maxLength="10"
+            android:textColor="@color/sobot_common_black"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/sobot_tv_descripe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sobot_tv_title"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@id/sobot_tv_icon"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/sobot_common_gray"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
+</LinearLayout>

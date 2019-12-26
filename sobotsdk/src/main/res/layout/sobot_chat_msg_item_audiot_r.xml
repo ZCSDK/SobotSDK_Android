@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/sobot_msg_top_bottom_style"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/sobot_reminde_time_Text"
+        style="@style/sobot_center_remind_time" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:gravity="center_vertical">
+
+        <!-- 我的名称 -->
+        <TextView
+            android:id="@+id/sobot_name"
+            style="@style/sobot_chatting_nickname"
+            android:layout_toLeftOf="@+id/sobot_imgHead"
+            android:visibility="gone" />
+
+        <com.sobot.chat.widget.SobotImageView
+            android:id="@+id/sobot_imgHead"
+            style="@style/sobot_chatting_imghead"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            tools:background="@drawable/sobot_chatting_default_head" />
+
+        <LinearLayout
+            android:id="@+id/sobot_linear_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/sobot_name"
+            android:layout_gravity="right"
+            android:layout_toLeftOf="@+id/sobot_imgHead">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="8dp">
+
+                <ImageView
+                    android:id="@+id/sobot_msgStatus"
+                    android:layout_width="@dimen/sobot_DIMEN_48PX"
+                    android:layout_height="@dimen/sobot_DIMEN_48PX"
+                    android:layout_marginLeft="@dimen/sobot_DIMEN_24PX"
+                    android:background="@drawable/sobot_re_send_selector"
+                    android:contentDescription="@null"
+                    android:textSize="16sp"
+                    android:visibility="gone" />
+                <!-- 消息的状态 -->
+
+                <ProgressBar
+                    android:id="@+id/sobot_msgProgressBar"
+                    android:indeterminateDrawable="@drawable/sobot_progressbar_circle_loading"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/sobot_ll_voice_layout"
+                style="@style/sobot_msg_audio_right_content_ll_bg_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="12dp"
+                android:gravity="center_vertical|right"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/sobot_voiceTimeLong"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="00:00"
+                    android:layout_marginRight="10dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/sobot_listview_remind_text_size"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/sobot_iv_voice"
+                    android:layout_width="12dp"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@null"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/sobot_pop_voice_send_anime_3"
+                    android:visibility="visible" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

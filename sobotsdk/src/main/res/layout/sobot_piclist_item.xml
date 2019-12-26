@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.sobot.chat.widget.image.SobotRCImageView
+        android:id="@+id/sobot_iv_pic"
+        android:layout_width="76dp"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/sobot_default_pic"
+        android:contentDescription="@null"
+        android:scaleType="fitXY"
+        app:round_corner="4dp"
+
+
+        />
+
+    <LinearLayout
+        android:id="@+id/sobot_iv_pic_add_ll"
+        android:layout_width="76dp"
+        android:layout_height="60dp"
+        android:background="@drawable/sobot_hollow_bg"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/sobot_iv_pic_add"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/sobot_pic_list_add" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/sobot_iv_pic_delete"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_alignTop="@id/sobot_iv_pic"
+        android:layout_alignRight="@id/sobot_iv_pic"
+        android:layout_margin="4dp"
+        android:src="@drawable/sobot_icon_remove" />
+</RelativeLayout>

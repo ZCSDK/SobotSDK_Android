@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <include layout="@layout/sobot_layout_titlebar1" />
+
+    <include layout="@layout/sobot_layout_top_divider" />
+
+    <WebView
+        android:id="@+id/sobot_webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_weight="1"
+        android:scrollbars="none" />
+
+    <include layout="@layout/sobot_layout_online_service_btn" />
+
+</LinearLayout>

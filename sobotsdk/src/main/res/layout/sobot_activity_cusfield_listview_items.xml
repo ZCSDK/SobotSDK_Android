@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/sobot_activity_cusfield_listview_items_rl"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@color/sobot_white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:id="@+id/sobot_activity_cusfield_listview_items_title"
+            style="?android:attr/textViewStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:textColor="@color/sobot_common_black"
+            android:textSize="@dimen/sobot_text_font_small" />
+
+        <ImageView
+            android:id="@+id/sobot_activity_cusfield_listview_items_ishave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/sobot_work_order_selected_mark"
+            android:contentDescription="@null"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/sobot_activity_cusfield_listview_items_checkbox"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/sobot_post_category_checkbox_selector"
+            android:contentDescription="@null"
+            android:visibility="visible" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/sobot_activity_cusfield_listview_items_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_height_0_4_dp"
+        android:layout_marginBottom="@dimen/line_height_0_4_dp"
+        android:background="@color/sobot_line_1dp" />
+
+</LinearLayout>

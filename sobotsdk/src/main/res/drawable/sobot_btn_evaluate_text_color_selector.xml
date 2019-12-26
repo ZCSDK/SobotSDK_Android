@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:color="@color/sobot_white" android:state_pressed="true"/>
+    <item android:color="@color/sobot_white" android:state_checked="true"/>
+    <item android:color="@color/sobot_white" android:state_selected="true"/>
+    <item android:color="@color/sobot_chat_evaluate_question_select_textColor"/>
+
+</selector>

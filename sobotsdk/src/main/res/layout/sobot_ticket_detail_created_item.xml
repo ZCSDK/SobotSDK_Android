@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/sobot_common_black"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/sobot_line_split"
+        android:layout_width="match_parent"
+        android:layout_height="0.4dp"
+        android:background="@color/sobot_line_1dp" />
+
+    <LinearLayout
+        android:id="@+id/sobot_ll_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/sobot_white"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/sobot_tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textColor="@drawable/sobot_ticket_deal_text_color_selector"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/sobot_tv_secod"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textColor="@drawable/sobot_ticket_deal_text_color_selector"
+                android:textSize="10sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sobot_ll_icon"
+            android:layout_width="19dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/sobot_tv_time"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <View
+                android:id="@+id/sobot_line_view"
+                android:layout_width="1dp"
+                android:layout_height="2dp"
+                android:background="@color/sobot_ticket_deal_line_grey" />
+
+            <TextView
+                android:id="@+id/sobot_tv_icon2"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_gravity="center"
+                android:background="@drawable/sobot_icon_processing_point_selector" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/sobot_tv_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/sobot_tv_time"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/sobot_ll_icon"
+            android:text="@string/sobot_created_1"
+            android:textColor="@drawable/sobot_ticket_deal_text_color_selector"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.4dp"
+        android:background="@color/sobot_line_1dp" />
+
+</LinearLayout>

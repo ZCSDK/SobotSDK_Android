@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/sobot_msg_top_bottom_style"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- 中间提醒内容 -->
+    <TextView
+        android:id="@+id/sobot_reminde_time_Text"
+        style="@style/sobot_center_remind_time" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right">
+
+        <!-- 我的名称 -->
+        <TextView
+            android:id="@+id/sobot_name"
+            style="@style/sobot_chatting_nickname"
+            android:layout_toLeftOf="@+id/sobot_imgHead"
+            android:visibility="gone" />
+
+        <com.sobot.chat.widget.SobotImageView
+            android:id="@+id/sobot_imgHead"
+            style="@style/sobot_chatting_imghead"
+            android:layout_alignParentRight="true"
+            android:contentDescription="@null"
+            android:visibility="gone"
+            tools:background="@drawable/sobot_chatting_default_head" />
+
+        <LinearLayout
+            android:id="@+id/sobot_ll_content"
+            style="@style/sobot_msg_right_content_ll_bg_style"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/sobot_name"
+            android:layout_toLeftOf="@+id/sobot_imgHead"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/sobot_sdk_history_msg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="1dp"
+                android:textColor="@color/sobot_msg_text_color"
+                android:textSize="@dimen/sobot_msg_text_size"
+                android:visibility="visible" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

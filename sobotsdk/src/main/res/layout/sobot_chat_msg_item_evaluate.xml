@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/sobot_msg_top_bottom_style"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/sobot_reminde_time_Text"
+        style="@style/sobot_center_remind_time" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="18dp"
+        android:background="@drawable/sobot_evaluate_def_bg"
+        android:orientation="vertical"
+        android:padding="15dp">
+
+        <TextView
+            android:id="@+id/sobot_tv_star_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:text="@string/sobot_please_evaluate"
+            android:textColor="#FA333333"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@color/sobot_white"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/sobot_center_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|top"
+                android:layout_marginTop="30dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center_horizontal"
+                android:text="@string/sobot_question"
+                android:textColor="#FF515A7C"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+            <RadioGroup
+                android:id="@+id/sobot_readiogroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sobot_DIMEN_48PX"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <RadioButton
+                    android:id="@+id/sobot_btn_ok_robot"
+                    style="@style/sobot_rb_evaluate_style"
+                    android:layout_marginRight="30dp"
+                    android:drawableLeft="@drawable/sobot_evaluate_btn_yes_selector"
+                    android:text="@string/sobot_evaluate_yes" />
+
+                <RadioButton
+                    android:id="@+id/sobot_btn_no_robot"
+                    style="@style/sobot_rb_evaluate_style"
+                    android:drawableLeft="@drawable/sobot_evaluate_btn_no_selector"
+                    android:text="@string/sobot_evaluate_no" />
+            </RadioGroup>
+
+
+            <View
+                android:id="@+id/sobot_ratingBar_split_view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="20dp"
+                android:visibility="gone"
+                android:background="#F1F1F1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="30dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <RatingBar
+                    android:id="@+id/sobot_ratingBar"
+                    style="@style/sobot_roomRatingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:numStars="5"
+                    android:rating="5"
+                    android:stepSize="0.5"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/sobot_ratingBar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sobot_great_satisfaction"
+                    android:textColor="#FFF0AC0E"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/sobot_submit"
+                    android:layout_width="200dp"
+                    android:layout_height="36dp"
+                    android:layout_marginLeft="60dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginRight="60dp"
+                    android:background="@drawable/sobot_evaluate_commit_selector"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="@string/sobot_submit"
+                    android:textStyle="bold"
+                    android:textColor="@color/sobot_white"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

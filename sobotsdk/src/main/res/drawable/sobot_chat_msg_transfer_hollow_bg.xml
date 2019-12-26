@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--聊天界面 机器人回答 转人工 背景样式-->
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <stroke
+        android:width="1dp"
+        android:color="#F8C46E" />
+
+    <corners android:radius="16dp" />
+</shape>

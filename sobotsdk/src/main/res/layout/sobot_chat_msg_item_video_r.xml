@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sobot_real_ll_content"
+    style="@style/sobot_msg_top_bottom_style"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/sobot_reminde_time_Text"
+        style="@style/sobot_center_remind_time" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:orientation="horizontal">
+
+        <!-- 我的名称 -->
+        <TextView
+            android:id="@+id/sobot_name"
+            style="@style/sobot_chatting_nickname"
+            android:layout_toLeftOf="@+id/sobot_imgHead"
+            android:visibility="gone" />
+
+        <com.sobot.chat.widget.SobotImageView
+            android:id="@+id/sobot_imgHead"
+            style="@style/sobot_chatting_imghead"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            tools:background="@drawable/sobot_chatting_default_head" />
+
+        <FrameLayout
+            android:id="@+id/sobot_frame_layout"
+            android:layout_width="@dimen/sobot_DIMEN_48PX"
+            android:layout_height="@dimen/sobot_DIMEN_48PX"
+            android:layout_marginRight="5dp"
+            android:layout_gravity="center_vertical"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/sobot_msgStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/sobot_failed_normal"
+                android:contentDescription="@null"
+                android:gravity="center"
+                android:visibility="gone" />
+            <!-- 消息的状态 -->
+            <!-- 上传图片的加载的进度显示 -->
+
+            <ProgressBar
+                android:id="@+id/sobot_msgProgressBar"
+                android:indeterminateDrawable="@drawable/sobot_progressbar_circle_loading"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="right"
+                android:visibility="gone" />
+        </FrameLayout>
+
+
+
+        <RelativeLayout
+            android:id="@+id/sobot_rl_hollow_container"
+            style="@style/sobot_msg_right_content_ll_bg_no_padding_style"
+            android:layout_width="126dp"
+            android:layout_height="200dp"
+            android:layout_below="@+id/sobot_name"
+            android:layout_marginLeft="5dp"
+            android:layout_toLeftOf="@+id/sobot_imgHead">
+
+            <com.sobot.chat.widget.image.SobotRCImageView
+                android:id="@+id/st_iv_pic"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:round_corner_bottom_left="16dp"
+                app:round_corner_bottom_right="4dp"
+                app:round_corner_top_left="16dp"
+                app:round_corner_top_right="16dp" />
+
+            <ImageView
+                android:id="@+id/st_tv_play"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/sobot_ic_play" />
+
+            <com.sobot.chat.widget.RoundProgressBar
+                android:id="@+id/sobot_pic_progress_round"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

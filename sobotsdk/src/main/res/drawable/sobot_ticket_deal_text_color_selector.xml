@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:color="@color/sobot_ticket_deal_text_black" android:state_selected="true" />
+    <item android:color="@color/sobot_common_gray" />
+
+</selector>

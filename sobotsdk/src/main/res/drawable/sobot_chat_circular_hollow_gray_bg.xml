@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--顶和踩阴影边框-->
+    <!--最底下的一层-->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#04515A7C" />
+        </shape>
+    </item>
+
+    <!--上一层设置距离下层的边距，显示出来下层的阴影-->
+    <item
+        android:bottom="0.6dp"
+        android:left="0.6dp"
+        android:right="0.6dp"
+        android:top="0.6dp">
+        <shape android:shape="oval">
+            <solid android:color="#05515A7C" />
+        </shape>
+    </item>
+
+    <!--上一层设置距离下层的边距，显示出来下层的阴影-->
+    <item
+        android:bottom="1.2dp"
+        android:left="1.2dp"
+        android:right="1.2dp"
+        android:top="1.2dp">
+        <shape android:shape="oval">
+            <solid android:color="#06515A7C" />
+        </shape>
+    </item>
+
+    <!--上一层设置距离下层的边距，显示出来下层的阴影-->
+    <item
+        android:bottom="1.6dp"
+        android:left="1.6dp"
+        android:right="1.6dp"
+        android:top="1.6dp">
+        <shape android:shape="oval">
+            <solid android:color="#08515A7C" />
+        </shape>
+    </item>
+
+    <!--上一层设置距离下层的边距，显示出来下层的阴影-->
+    <item
+        android:bottom="1.8dp"
+        android:left="1.8dp"
+        android:right="1.8dp"
+        android:top="1.8dp">
+        <shape android:shape="oval">
+            <solid android:color="#10515A7C" />
+        </shape>
+    </item>
+    <!--上一层设置距离下层的边距，显示出来下层的阴影-->
+    <item
+        android:bottom="2dp"
+        android:left="2dp"
+        android:right="2dp"
+        android:top="2dp">
+        <shape android:shape="oval">
+            <solid android:color="#ffffff" />
+        </shape>
+    </item>
+</layer-list>

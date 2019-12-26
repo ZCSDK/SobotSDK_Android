@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
+    style="@style/sobot_msg_top_bottom_style"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/sobot_reminde_time_Text"
+        style="@style/sobot_center_remind_time" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="12dp"
+        android:background="@drawable/sobot_consult_bg_normal"
+        android:padding="15dp">
+
+        <RelativeLayout
+            android:id="@+id/sobot_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/sobot_white"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/sobot_goods_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/sobot_common_black"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+
+            <com.sobot.chat.widget.image.SobotRCImageView
+                android:id="@+id/sobot_goods_pic"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_below="@id/sobot_goods_title"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/sobot_icon_consulting_default_pic"
+                android:visibility="visible"
+                app:round_corner="6dp" />
+
+
+            <TextView
+                android:id="@+id/sobot_goods_des"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/sobot_goods_title"
+                android:layout_alignTop="@id/sobot_goods_pic"
+                android:layout_marginTop="2dp"
+                android:layout_toRightOf="@id/sobot_goods_pic"
+                android:maxLines="1"
+                android:textColor="@color/sobot_goods_des_text_color"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/sobot_goods_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/sobot_goods_des"
+                android:layout_marginTop="16dp"
+                android:layout_toRightOf="@id/sobot_goods_pic"
+                android:textColor="@color/sobot_common_green"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tool:text="2120$" />
+
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/sobot_goods_label"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="15dp">
+
+                <Button
+                    android:id="@+id/sobot_goods_sendBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:background="@drawable/sobot_evaluate_commit_selector"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="1dp"
+                    android:paddingRight="15dp"
+                    android:paddingBottom="1dp"
+                    android:text="@string/sobot_send_cus_service"
+                    android:textColor="@color/sobot_white"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+
+</LinearLayout>

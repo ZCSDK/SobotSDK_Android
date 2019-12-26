@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--发消息 底部 发送按钮背景-->
+    <solid android:color="@color/sobot_btn_bg_send" />
+    <corners android:radius="20dp" />
+</shape>

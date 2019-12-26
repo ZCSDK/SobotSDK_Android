@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:background="@color/sobot_bg_white"
+
+    >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical">
+        <!-- 切换机器人按钮 -->
+        <TextView
+            android:id="@+id/sobot_tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/sobot_choice_business"
+            android:textColor="@color/sobot_color_title_bar_title"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/sobot_negativeButton"
+        android:layout_width="60dp"
+        android:layout_centerVertical="true"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true">
+
+        <TextView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="25dp"
+            android:background="@drawable/sobot_icon_evaluation_cancel" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_height_0_4_dp"
+        android:background="@color/sobot_line_0_4dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="0.5dp"
+        />
+</RelativeLayout>

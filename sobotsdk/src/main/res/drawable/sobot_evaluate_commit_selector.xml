@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--邀请评价提交按钮样式-->
+    <item android:drawable="@drawable/sobot_evaluate_commit_press_selector" android:state_pressed="true" />
+    <item android:drawable="@drawable/sobot_evaluate_commit_def_selector" />
+
+</selector>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/sobot_common_bg"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/sobot_layout_titlebar"
+        layout="@layout/sobot_layout_titlebar1" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_height_0_4_dp"
+        android:background="@color/sobot_line_0_4dp"
+        android:layout_below="@id/sobot_layout_titlebar"
+        android:id="@+id/sobot_title_below_line"
+        />
+
+
+    <LinearLayout
+        android:id="@+id/sobot_ticket_bottom_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/sobot_white"
+        android:orientation="vertical"
+        android:elevation="5dp"
+        android:layout_marginTop="3dp"
+        android:visibility="visible">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.4dp"
+            android:visibility="gone"
+            android:background="@color/sobot_line_1dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <LinearLayout
+                android:id="@+id/sobot_reply_ll"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/sobot_reply" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:text="@string/sobot_reply"
+                    android:textColor="@color/sobot_common_green"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/sobot_evaluate_ll"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp"
+                android:paddingTop="7dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="7dp"
+                android:visibility="visible">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:background="@drawable/sobot_normal_btn_bg"
+                    android:gravity="center"
+                    android:text="@string/sobot_str_bottom_satisfaction"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/sobot_listview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_above="@id/sobot_ticket_bottom_ll"
+        android:layout_below="@id/sobot_title_below_line"
+        android:layout_weight="1"
+        android:divider="@null"
+        android:layout_marginBottom="-3dp"
+        android:listSelector="@android:color/transparent"
+        android:scrollbarThumbVertical="@drawable/custom_scroll_style" />
+
+
+</RelativeLayout>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/sobot_line_split"
+        android:layout_width="match_parent"
+        android:layout_height="0.4dp"
+        android:background="@color/sobot_line_1dp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/sobot_ll_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/sobot_white"
+        android:orientation="horizontal"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/sobot_tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textColor="@drawable/sobot_ticket_deal_text_color_selector"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/sobot_tv_secod"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textColor="@drawable/sobot_ticket_deal_text_color_selector"
+                android:textSize="10sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sobot_ll_icon"
+            android:layout_width="19dp"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/sobot_tv_time"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <View
+                android:id="@+id/sobot_top_line_view"
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:background="@color/sobot_ticket_deal_line_grey" />
+
+            <TextView
+                android:id="@+id/sobot_tv_icon2"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_gravity="center"
+                android:background="@drawable/sobot_icon_processing_point_selector" />
+
+            <View
+                android:id="@+id/sobot_line_view"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/sobot_ticket_deal_line_grey" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/sobot_ll_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical"
+            android:layout_marginBottom="30dp">
+
+            <TextView
+                android:id="@+id/sobot_tv_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/sobot_tv_time"
+                android:layout_toRightOf="@+id/sobot_ll_icon"
+                android:text="@string/sobot_processing"
+                android:textColor="@drawable/sobot_ticket_deal_text_color_selector"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/sobot_tv_content_ll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/sobot_tv_title"
+                android:layout_marginTop="2dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/sobot_tv_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:textColor="@drawable/sobot_ticket_deal_text_color_selector"
+                    android:textSize="14sp" />
+
+                <View
+                    android:id="@+id/sobot_tv_content_detail_split"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.4dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@color/sobot_ticket_deal_line_grey"
+                    android:visibility="visible" />
+
+
+                <TextView
+                    android:id="@+id/sobot_tv_content_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/sobot_tv_title"
+                    android:gravity="center"
+                    android:padding="11dp"
+                    android:text="@string/sobot_see_detail"
+                    android:textColor="#45B2E6"
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/sobot_attachment_file_layout"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_height="wrap_content"
+                tools:listitem="@layout/layout_attachment_view">
+
+
+            </android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

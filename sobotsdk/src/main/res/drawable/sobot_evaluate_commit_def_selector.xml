@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 评价 提交按钮  默认样式 -->
+    <solid android:color="@color/sobot_evaluate_btn_nor" />
+    <corners android:radius="22dp" />
+
+</shape>

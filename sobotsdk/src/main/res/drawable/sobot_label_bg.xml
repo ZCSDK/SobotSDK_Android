@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><!--<shape xmlns:android="http://schemas.android.com/apk/res/android">--><!--<stroke--><!--android:width="1dp"--><!--android:color="@color/divider_color" />--><!--<solid android:color="@color/pink_color" />--><!--<corners android:radius="4dp" />--><!--</shape>-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 标签选中时的背景
+    <item android:state_pressed="true">
+        <shape>
+            <stroke android:width="1dp" android:color="#EFF4F5" />
+            <corners android:radius="4dp" />
+            <solid android:color="@android:color/white" />
+        </shape>
+    </item>
+    -->
+    <item android:state_enabled="false">
+        <shape>
+            <stroke android:width="1dp" android:color="#EFF4F5" />
+            <corners android:radius="4dp" />
+            <solid android:color="@color/sobot_lable_view_history_bg" />
+        </shape>
+    </item>
+    <!-- 标签的正常背景 -->
+    <item>
+        <shape>
+            <stroke android:width="1dp" android:color="#d6dbe5" />
+            <corners android:radius="4dp" />
+            <solid android:color="@android:color/white" />
+        </shape>
+    </item>
+</selector>

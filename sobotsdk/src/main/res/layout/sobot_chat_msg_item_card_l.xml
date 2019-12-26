@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sobot_real_ll_content"
+    style="@style/sobot_msg_top_bottom_style"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/sobot_reminde_time_Text"
+        style="@style/sobot_center_remind_time" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right">
+
+        <!-- 我的名称 -->
+        <TextView
+            android:id="@+id/sobot_name"
+            style="@style/sobot_chatting_nickname"
+            android:layout_toLeftOf="@+id/sobot_imgHead"
+            android:visibility="gone" />
+
+        <com.sobot.chat.widget.SobotImageView
+            android:id="@+id/sobot_imgHead"
+            style="@style/sobot_chatting_imghead"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            tools:background="@drawable/sobot_chatting_default_head" />
+
+        <!-- 我的消息的内容 -->
+        <LinearLayout
+            android:id="@+id/sobot_my_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/sobot_name"
+            android:layout_gravity="right"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/sobot_imgHead">
+
+
+
+            <RelativeLayout
+                android:id="@+id/sobot_rl_hollow_container"
+                style="@style/sobot_msg_file_left_content_ll_bg_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/sobot_goods_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:textColor="@color/sobot_common_black"
+                    android:textSize="14sp" />
+
+
+                <com.sobot.chat.widget.BorderImageView
+                    android:id="@+id/sobot_goods_pic"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_below="@id/sobot_goods_title"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/sobot_icon_consulting_default_pic"
+                    android:visibility="visible" />
+
+
+                <TextView
+                    android:id="@+id/sobot_goods_des"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:layout_marginTop="2dp"
+                    android:layout_below="@id/sobot_goods_title"
+                    android:layout_alignTop="@id/sobot_goods_pic"
+                    android:layout_toRightOf="@id/sobot_goods_pic"
+                    android:textColor="@color/sobot_goods_des_text_color"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/sobot_goods_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_toRightOf="@id/sobot_goods_pic"
+                    android:layout_below="@id/sobot_goods_des"
+                    android:textColor="@color/sobot_goods_label_text_color"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
+</LinearLayout>

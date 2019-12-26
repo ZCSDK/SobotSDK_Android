@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/sobot_msg_top_bottom_style"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- 中间提醒内容 -->
+    <TextView
+        android:id="@+id/sobot_reminde_time_Text"
+        style="@style/sobot_center_remind_time" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left">
+
+        <!--头像-->
+        <com.sobot.chat.widget.SobotImageView
+            android:id="@+id/sobot_imgHead"
+            style="@style/sobot_chatting_imghead"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:visibility="gone" />
+
+        <!-- 昵称 -->
+        <TextView
+            android:id="@+id/sobot_name"
+            style="@style/sobot_chatting_nickname"
+            android:layout_toRightOf="@+id/sobot_imgHead"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/sobot_ll_content"
+            style="@style/sobot_msg_left_content_ll_bg_no_padding_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sobot_name"
+            android:layout_gravity="left"
+            android:layout_toRightOf="@+id/sobot_imgHead"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/sobot_rl_real_pic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+
+                <!--客服发送的单张图片显示控件-->
+                <com.sobot.chat.widget.image.SobotRCImageView
+                    android:id="@+id/sobot_iv_picture"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone"
+                    app:round_corner_bottom_left="4dp"
+                    app:round_corner_bottom_right="16dp"
+                    app:round_corner_top_left="16dp"
+                    app:round_corner_top_right="16dp" />
+
+                <TextView
+                    android:id="@+id/sobot_pic_isgif"
+                    android:layout_width="20dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/sobot_color"
+                    android:gravity="center"
+                    android:text="gif"
+                    android:textSize="10sp"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

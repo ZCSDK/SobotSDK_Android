@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/sobot_common_bg"
+    android:orientation="vertical">
+
+    <include layout="@layout/sobot_layout_titlebar1" />
+
+    <include layout="@layout/sobot_layout_top_divider" />
+
+    <LinearLayout
+        android:id="@+id/ll_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="180dp"
+            android:text="@string/sobot_help_center_no_data"
+            android:textColor="@color/sobot_common_gray"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:text="@string/sobot_help_center_no_data_describe"
+            android:textColor="@color/sobot_common_gray"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <GridView
+        android:id="@+id/sobot_gv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:cacheColorHint="@android:color/transparent"
+        android:fadingEdge="none"
+        android:listSelector="@null"
+        android:scrollbars="none"
+        android:padding="12dp"
+        android:numColumns="2"
+        android:overScrollMode="never"
+        android:scrollbarThumbVertical="@drawable/sobot_skill_group_scroll_img"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="6dp"
+        android:horizontalSpacing="6dp"
+        android:visibility="gone" />
+
+    <include layout="@layout/sobot_layout_online_service_btn" />
+
+</LinearLayout>

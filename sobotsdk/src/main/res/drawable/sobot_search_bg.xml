@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+<!--留言 自定义字段 单选 搜索 背景样式-->
+    <solid android:color="@color/sobot_white" />
+
+    <corners android:radius="18dp" />
+
+
+</shape>

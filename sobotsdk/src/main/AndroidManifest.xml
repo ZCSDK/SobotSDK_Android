@@ -1,0 +1,152 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.sobot.chat">
+
+    <!-- 访问权限 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="com.google.android.apps.photos.permission.GOOGLE_PHOTOS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
+
+    <application android:networkSecurityConfig="@xml/network_security_config"
+        android:usesCleartextTraffic="true"
+        >
+        <activity
+            android:name="com.sobot.chat.conversation.SobotChatActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|touchscreen|navigation|locale|fontScale|uiMode|screenLayout|smallestScreenSize"
+            android:launchMode="singleTask"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.sobot.chat.activity.SobotPhotoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|touchscreen|navigation|locale|fontScale|uiMode|screenLayout|smallestScreenSize"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="behind"
+
+             />
+        <activity
+            android:name="com.sobot.chat.activity.WebViewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|touchscreen|navigation|locale|fontScale|uiMode|screenLayout|smallestScreenSize"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.sobot.chat.activity.SobotSkillGroupActivity"
+            android:theme="@style/sobot_dialog_skill"
+            android:configChanges="orientation|keyboardHidden|screenSize|touchscreen|navigation|locale|fontScale|uiMode|screenLayout|smallestScreenSize"
+            android:screenOrientation="behind"
+            />
+        <activity
+            android:name="com.sobot.chat.activity.SobotPostMsgActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|touchscreen|navigation|locale|fontScale|uiMode|screenLayout|smallestScreenSize"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.sobot.chat.activity.SobotConsultationListActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|touchscreen|navigation|locale|fontScale|uiMode|screenLayout|smallestScreenSize"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.sobot.chat.activity.SobotPhotoListActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|touchscreen|navigation|locale|fontScale|uiMode|screenLayout|smallestScreenSize"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="behind"
+             />
+        <activity
+            android:name="com.sobot.chat.activity.SobotCusFieldActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|touchscreen|navigation|locale|fontScale|uiMode|screenLayout|smallestScreenSize"
+            android:screenOrientation="behind"
+            android:theme="@style/sobot_dialog_skill" />
+        <activity
+            android:name="com.sobot.chat.activity.SobotPostCategoryActivity"
+            android:screenOrientation="behind"
+            android:configChanges="orientation|keyboardHidden|screenSize|touchscreen|navigation|locale|fontScale|uiMode|screenLayout|smallestScreenSize"
+            android:theme="@style/sobot_dialog_skill" />
+        <activity
+            android:name="com.sobot.chat.activity.SobotQueryFromActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|touchscreen|navigation|locale|fontScale|uiMode|screenLayout|smallestScreenSize"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.sobot.chat.activity.SobotChooseCityActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|touchscreen|navigation|locale|fontScale|uiMode|screenLayout|smallestScreenSize"
+            android:screenOrientation="behind"
+            android:theme="@style/sobot_dialog_skill" />
+        <activity
+            android:name="com.sobot.chat.activity.SobotChooseFileActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|touchscreen|navigation|locale|fontScale|uiMode|screenLayout|smallestScreenSize"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.sobot.chat.activity.SobotFileDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|touchscreen|navigation|locale|fontScale|uiMode|screenLayout|smallestScreenSize"
+            android:screenOrientation="behind"
+             />
+        <activity
+            android:name="com.sobot.chat.activity.SobotCameraActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|touchscreen|navigation|locale|fontScale|uiMode|screenLayout|smallestScreenSize"
+            android:screenOrientation="behind"
+             />
+        <activity
+            android:name="com.sobot.chat.activity.SobotVideoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|touchscreen|navigation|locale|fontScale|uiMode|screenLayout|smallestScreenSize"
+            android:screenOrientation="behind"
+             />
+        <activity
+            android:name="com.sobot.chat.activity.SobotTicketDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|touchscreen|navigation|locale|fontScale|uiMode|screenLayout|smallestScreenSize"
+            android:screenOrientation="behind"
+             />
+        <activity
+            android:name="com.sobot.chat.activity.SobotHelpCenterActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|touchscreen|navigation|locale|fontScale|uiMode|screenLayout|smallestScreenSize"
+            android:screenOrientation="behind"
+             />
+        <activity
+            android:name="com.sobot.chat.activity.SobotProblemCategoryActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|touchscreen|navigation|locale|fontScale|uiMode|screenLayout|smallestScreenSize"
+            android:screenOrientation="behind"
+             />
+        <activity
+            android:name="com.sobot.chat.activity.SobotProblemDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|touchscreen|navigation|locale|fontScale|uiMode|screenLayout|smallestScreenSize"
+            android:screenOrientation="behind"
+             />
+        <activity
+            android:name="com.sobot.chat.activity.SobotPostLeaveMsgActivity"
+            android:screenOrientation="behind"
+            android:configChanges="orientation|keyboardHidden|screenSize|touchscreen|navigation|locale|fontScale|uiMode|screenLayout|smallestScreenSize"
+             />
+
+        <service
+            android:name="com.sobot.chat.core.channel.SobotTCPServer"
+            android:exported="false"
+            android:label="SobotChatTCPServer"/>
+        <service android:name="com.sobot.chat.server.SobotSessionServer" />
+
+        <provider
+            android:name="com.sobot.chat.provider.SobotFileProvider"
+            android:authorities="${applicationId}.sobot_fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/sobot_provider_paths" />
+        </provider>
+    </application>
+
+</manifest>

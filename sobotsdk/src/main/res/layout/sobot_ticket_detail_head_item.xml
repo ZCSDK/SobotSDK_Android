@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.4dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/sobot_line_1dp" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/sobot_white"
+        android:paddingLeft="20dp"
+        android:paddingTop="17dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="17dp">
+
+        <TextView
+            android:id="@+id/sobot_tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/sobot_common_black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:id="@+id/sobot_tv_ticket_status"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_alignBaseline="@id/sobot_tv_time"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/sobot_ticket_status_bg3"
+            android:gravity="center"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+
+        <!--        com.sobot.chat.widget.StExpandableTextView-->
+        <com.sobot.chat.widget.StExpandableTextView
+            android:id="@+id/sobot_content_fl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sobot_tv_time"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            app:CollapseStrResId="@drawable/sobot_icon_arrow_up"
+            app:ExpandStrResId="@drawable/sobot_icon_arrow_down"
+            app:maxCollapsedLines="2">
+
+
+            <TextView
+                android:id="@+id/expandable_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/sobot_common_gray"
+                android:textSize="14sp"/>
+
+            <LinearLayout
+                android:id="@+id/expand_other_groupView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/sobot_attachment_file_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    tools:listitem="@layout/layout_attachment_view" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/expand_collapse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingTop="6dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/expand_text_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/sobot_see_detail"
+                    android:textColor="@color/sobot_evaluate_btn_nor"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:id="@+id/expand_image"
+                    android:layout_width="7dp"
+                    android:layout_height="4dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="4dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/sobot_icon_arrow_down" />
+
+            </LinearLayout>
+        </com.sobot.chat.widget.StExpandableTextView>
+
+
+        <TextView
+            android:id="@+id/sobot_tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sobot_tv_time"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+
+        <View
+            android:id="@+id/sobot_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.4dp"
+            android:layout_below="@+id/sobot_content_fl"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="#ebebeb"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.4dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/sobot_line_1dp" />
+</LinearLayout>
