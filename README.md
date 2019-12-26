@@ -1200,7 +1200,7 @@ LogUtils.allowI = false;
 
 
 ## 5 Demo源码
-您可以通过 [点击这里](http://qiyukf.com/download) 下载 Demo 源码
+您可以通过 [点击这里](https://github.com/ZCSDK/SobotSDK_Android) 下载 Demo 源码
 
 ## 6 常见问题链接
    [https://github.com/ZCSDK/FAQ_Android](https://github.com/ZCSDK/FAQ_Android) 
